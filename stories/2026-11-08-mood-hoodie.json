@@ -1,0 +1,569 @@
+{
+ "slug": "mood-hoodie",
+ "date": "2026-11-08",
+ "title": "In this world your hoodie shows your feelings",
+ "caption": "In this world, your hoodie changes color with your feelings... and Leo's had been gray for months \ud83e\ude76 What color would yours be today? #inthisworld #story #storytime #emotional #fyp",
+ "voice": "am_michael",
+ "speed": 1.08,
+ "mood": "emotional",
+ "cast": {
+  "leo": {
+   "shirt": "#8a8f96"
+  },
+  "mia": {
+   "top": "hoodie",
+   "shirt": "#f2c14e",
+   "accent": "#ffffff"
+  },
+  "noah": {
+   "top": "hoodie",
+   "shirt": "#3a7bd5",
+   "accent": "#ffffff"
+  },
+  "tyler": {
+   "top": "hoodie",
+   "shirt": "#d62f2f",
+   "accent": "#ffffff"
+  },
+  "kid1": {
+   "top": "hoodie",
+   "shirt": "#f2c14e"
+  },
+  "kid2": {
+   "top": "hoodie",
+   "shirt": "#3fb37a"
+  }
+ },
+ "shots": [
+  {
+   "line": "In this *world*, your hoodie changes color with your *feelings*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "happy",
+     "act": "cheer"
+    },
+    {
+     "who": "noah",
+     "at": "C",
+     "face": "sad",
+     "act": "sad"
+    },
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "angry",
+     "act": "angry"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "mia",
+     "noah",
+     "tyler"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "*Yellow* means happy. *Blue* means sad. *Red* means angry.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "laugh",
+     "act": "cheer"
+    },
+    {
+     "who": "noah",
+     "at": "C",
+     "face": "crying",
+     "act": "cry"
+    },
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "angry",
+     "act": "angry"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "mia",
+     "tyler"
+    ],
+    "front": "scene",
+    "move": "pan_l"
+   }
+  },
+  {
+   "line": "But Leo's hoodie had been *gray* for months.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "blank"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Gray means *nothing*. No feelings at all.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "blank",
+     "act": "walk",
+     "to": "B"
+    },
+    {
+     "who": "kid1",
+     "at": "E",
+     "face": "smile",
+     "look": "kid2"
+    },
+    {
+     "who": "kid2",
+     "at": "D",
+     "face": "happy",
+     "act": "talk",
+     "talk": true,
+     "look": "kid1"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "front": "scene",
+    "move": "pan_r"
+   }
+  },
+  {
+   "line": "Kids *whispered* that he was broken.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "S1",
+     "face": "smug",
+     "act": "talk",
+     "talk": true,
+     "look": "kid1"
+    },
+    {
+     "who": "kid1",
+     "at": "S2",
+     "face": "laugh",
+     "look": "tyler"
+    },
+    {
+     "who": "leo",
+     "at": "S3",
+     "face": "blank"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "tyler",
+    "height": "high",
+    "angle": 20
+   }
+  },
+  {
+   "line": "Even the teacher said, he'll *grow out of it*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "teacher",
+     "at": "T",
+     "face": "neutral",
+     "act": "talk",
+     "talk": true
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "teacher",
+    "move": "push"
+   }
+  },
+  {
+   "line": "But Mia noticed he always *ran home* right after school.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "worried",
+     "act": "run",
+     "to": "F"
+    },
+    {
+     "who": "mia",
+     "at": "E",
+     "face": "worried",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "mia"
+    ],
+    "front": "scene",
+    "angle": -15
+   }
+  },
+  {
+   "line": "So one day, she *followed* him.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "G",
+     "face": "determined",
+     "act": "walk",
+     "to": "A"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "mia",
+    "front": "scene",
+    "move": "pan_r"
+   }
+  },
+  {
+   "line": "And through the window, she saw Leo with his little sister, Lily.",
+   "set": "hospital",
+   "chars": [
+    {
+     "who": "lily",
+     "at": "BED",
+     "face": "sleepy",
+     "act": "lie"
+    },
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "smile",
+     "look": "lily"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "leo",
+     "lily"
+    ],
+    "front": "scene",
+    "angle": -30,
+    "height": "high"
+   }
+  },
+  {
+   "line": "Lily asked, why is your hoodie *always* gray?",
+   "set": "hospital",
+   "chars": [
+    {
+     "who": "lily",
+     "at": "BED",
+     "face": "worried",
+     "act": "lie",
+     "talk": true
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "lily",
+    "height": "top",
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Because if you saw *blue*, you'd know I was *scared*.",
+   "set": "hospital",
+   "hold": 0.3,
+   "chars": [
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "sad",
+     "act": "talk",
+     "talk": true,
+     "look": "lily"
+    },
+    {
+     "who": "lily",
+     "at": "BED",
+     "face": "sad",
+     "act": "lie"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "angle": 25,
+    "move": "push"
+   }
+  },
+  {
+   "line": "Leo had been hiding *every* feeling, so his sister wouldn't *worry*.",
+   "set": "hospital",
+   "time": "sunset",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "blank",
+     "look": "lily"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "angle": 15,
+    "move": "push"
+   }
+  },
+  {
+   "line": "Outside, Mia told him, you don't have to *hide* from me.",
+   "set": "street",
+   "time": "sunset",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "sad",
+     "act": "talk",
+     "talk": true,
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "shocked",
+     "look": "mia"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "mia",
+    "angle": -20
+   }
+  },
+  {
+   "line": "And for the first time in months, Leo *cried*.",
+   "set": "street",
+   "time": "sunset",
+   "hold": 0.3,
+   "cast": {
+    "leo": {
+     "shirt": "#2f6fd6"
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "crying",
+     "act": "cry"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "His hoodie turned the *deepest* blue anyone had ever seen.",
+   "set": "street",
+   "time": "sunset",
+   "cast": {
+    "leo": {
+     "shirt": "#1f4fbf"
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "crying",
+     "act": "sad",
+     "look": "mia"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "shocked",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "mia"
+    ],
+    "front": "scene",
+    "move": "pull"
+   }
+  },
+  {
+   "line": "Mia didn't say anything. She just *stayed*.",
+   "set": "street",
+   "time": "sunset",
+   "hold": 0.4,
+   "cast": {
+    "leo": {
+     "shirt": "#1f4fbf"
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      -0.35,
+      0.4,
+      35
+     ],
+     "face": "crying",
+     "act": "hug"
+    },
+    {
+     "who": "mia",
+     "at": [
+      0.35,
+      0.5,
+      -35
+     ],
+     "face": "sad",
+     "act": "hug"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "mia"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Three weeks later, Lily came *home*.",
+   "set": "livingroom",
+   "cast": {
+    "leo": {
+     "shirt": "#f2c14e"
+    }
+   },
+   "chars": [
+    {
+     "who": "lily",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer"
+    },
+    {
+     "who": "mom",
+     "at": "C",
+     "face": "happy"
+    },
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "shocked",
+     "look": "lily"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "lily",
+     "mom",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "And Leo's hoodie turned a color *nobody* had ever seen before.",
+   "set": "livingroom",
+   "hold": 0.4,
+   "cast": {
+    "leo": {
+     "shirt": "#7b3cff",
+     "top": "galaxy"
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#d9a8ff"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "height": "low",
+    "move": "push"
+   }
+  },
+  {
+   "line": "What color would *your* hoodie be today?",
+   "set": "schoolyard",
+   "time": "sunset",
+   "hold": 0.6,
+   "cast": {
+    "leo": {
+     "shirt": "#f2c14e"
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": "wave"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "happy",
+     "act": "wave"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "mia"
+    ],
+    "front": "scene",
+    "move": "pull"
+   }
+  }
+ ]
+}

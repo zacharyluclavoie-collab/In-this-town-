@@ -1,0 +1,14 @@
+{
+  "leo":     {"skin": "#f2c9a0", "shirt": "#d9473b", "pants": "#2b3b6b", "shoes": "#f5f5f5", "top": "hoodie", "hair": "spiky", "hair_color": "#5a3720", "accent": "#ffffff"},
+  "mia":     {"skin": "#c68c5a", "shirt": "#f2c14e", "pants": "#3a8be8", "shoes": "#ffffff", "top": "tshirt", "hair": "pigtails", "hair_color": "#2a1a10", "acc": ["bow"]},
+  "noah":    {"skin": "#8d5a3b", "shirt": "#4caf50", "pants": "#3b3b3b", "shoes": "#e53935", "top": "stripes", "accent": "#ffffff", "hair": "curly", "hair_color": "#1b120c", "acc": ["glasses"]},
+  "tyler":   {"skin": "#f5d2b5", "shirt": "#222428", "pants": "#4a4a52", "shoes": "#ffffff", "top": "jacket", "accent": "#e53935", "hair": "cap", "hair_color": "#e53935"},
+  "kid1":    {"skin": "#e8b48a", "shirt": "#9c6ade", "pants": "#2b3b6b", "top": "tshirt", "hair": "short", "hair_color": "#c98a3a"},
+  "kid2":    {"skin": "#b07a52", "shirt": "#ff8a3d", "pants": "#5b4636", "top": "tshirt", "hair": "ponytail", "hair_color": "#3a2214"},
+  "mom":     {"age": "adult", "skin": "#f2c9a0", "shirt": "#3e9b8a", "pants": "#3b3b55", "top": "tshirt", "hair": "bun", "hair_color": "#6b3e22"},
+  "dad":     {"age": "adult", "skin": "#f2c9a0", "shirt": "#4a6fd1", "pants": "#3a3a3a", "top": "jacket", "accent": "#e8e8e8", "hair": "short", "hair_color": "#4a2e1c", "acc": ["glasses"]},
+  "lily":    {"age": "kid", "height": 0.8, "skin": "#f2c9a0", "shirt": "#ff8fc0", "pants": "#ff8fc0", "top": "dress", "hair": "pigtails", "hair_color": "#5a3720"},
+  "grandpa": {"age": "adult", "skin": "#efc7a5", "shirt": "#a07a5a", "pants": "#4a4a4a", "top": "jacket", "accent": "#e9e0cf", "hair": "short", "hair_color": "#dcdcdc", "acc": ["glasses"]},
+  "teacher": {"age": "adult", "skin": "#d9a27a", "shirt": "#7a4fb5", "pants": "#2f2f3a", "top": "tshirt", "hair": "bob", "hair_color": "#2a1a10", "acc": ["glasses"]},
+  "doctor":  {"age": "adult", "skin": "#c68c5a", "shirt": "#f5f5f5", "pants": "#5aa7c9", "top": "jacket", "accent": "#5aa7c9", "hair": "short", "hair_color": "#1b120c"}
+}

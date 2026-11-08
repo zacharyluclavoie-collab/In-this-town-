@@ -1,0 +1,507 @@
+{
+ "slug": "100-words-a-day",
+ "date": "2026-11-08",
+ "title": "In this world you only get 100 words a day",
+ "caption": "In this world, you only get 100 words a day... so Leo saved his for a whole year \ud83d\udcd6\ud83e\udd79 What would YOU save your words for? #inthisworld #story #storytime #emotional #fyp",
+ "voice": "am_michael",
+ "speed": 1.08,
+ "mood": "emotional",
+ "shots": [
+  {
+   "line": "In this *world*, everyone only gets 100 words a *day*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "neutral"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "happy",
+     "act": "talk",
+     "talk": true,
+     "look": "noah"
+    },
+    {
+     "who": "noah",
+     "at": "C",
+     "face": "laugh",
+     "look": "mia"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "leo",
+     "mia",
+     "noah"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Use them up, and your voice is *gone* until midnight.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "A",
+     "face": "shocked",
+     "act": "scared"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "mia",
+    "move": "zoom"
+   }
+  },
+  {
+   "line": "But the words you *don't* use, get *saved*.",
+   "set": "bedroom",
+   "time": "night",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push",
+    "angle": 12
+   }
+  },
+  {
+   "line": "Most kids spend all of theirs before *lunch*.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "noah",
+     "at": "SR",
+     "face": "laugh",
+     "act": "talk",
+     "talk": true
+    },
+    {
+     "who": "kid1",
+     "at": "SL",
+     "face": "happy",
+     "act": "talk",
+     "talk": true
+    },
+    {
+     "who": "kid2",
+     "at": "SR2",
+     "face": "laugh"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "noah",
+     "kid1"
+    ],
+    "front": "scene",
+    "angle": -20,
+    "move": "pan_r"
+   }
+  },
+  {
+   "line": "But Leo didn't say a *single* word. Not for a whole *year*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "S2",
+     "face": "blank"
+    },
+    {
+     "who": "kid1",
+     "at": "S1",
+     "face": "happy",
+     "act": "talk",
+     "talk": true,
+     "look": "kid2"
+    },
+    {
+     "who": "kid2",
+     "at": "S3",
+     "face": "laugh",
+     "look": "kid1"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "height": "high",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Kids started calling him *Silent Leo*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "smug",
+     "act": [
+      "talk",
+      "point"
+     ],
+     "talk": true,
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "act": "sad"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "tyler",
+    "angle": -25,
+    "move": "push"
+   }
+  },
+  {
+   "line": "Even his best friend Mia asked, are you *mad* at me?",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "worried",
+     "act": "talk",
+     "talk": true,
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "look": "mia"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "mia",
+    "angle": -15
+   }
+  },
+  {
+   "line": "Leo just shook his *head*, and walked away.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "act": [
+      "walk",
+      "headshake"
+     ],
+     "to": "G"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "sad",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "front": "scene",
+    "move": "pan_l"
+   }
+  },
+  {
+   "line": "What nobody knew, was that his grandpa was in the *hospital*.",
+   "set": "hospital",
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "BED",
+     "face": "sleepy",
+     "act": "lie"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "grandpa",
+    "height": "top",
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "His eyes had gotten too weak to *read*.",
+   "set": "hospital",
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "BED",
+     "face": "sad",
+     "act": "lie"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "grandpa",
+    "height": "top",
+    "front": "scene"
+   }
+  },
+  {
+   "line": "And his *favorite* book had thirty thousand words.",
+   "set": "bedroom",
+   "time": "night",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "act": "hold",
+     "prop": "book"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push",
+    "prop_focus": true
+   }
+  },
+  {
+   "line": "So every single day, Leo stayed quiet, and *saved*.",
+   "set": "bedroom",
+   "time": "night",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "act": "nod",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "angle": -20,
+    "move": "orbit"
+   }
+  },
+  {
+   "line": "Then, on his *birthday*, grandpa got a visitor.",
+   "set": "hospital",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "D",
+     "face": "smile",
+     "act": [
+      "walk",
+      "hold"
+     ],
+     "prop": "book",
+     "to": "B"
+    },
+    {
+     "who": "grandpa",
+     "at": "BED",
+     "face": "shocked",
+     "act": "lie"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "leo",
+     "grandpa"
+    ],
+    "front": "scene",
+    "angle": -30,
+    "height": "high"
+   }
+  },
+  {
+   "line": "Leo opened the book, and for the first time in a year, he *spoke*.",
+   "set": "hospital",
+   "hold": 0.3,
+   "chars": [
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "smile",
+     "act": [
+      "talk",
+      "hold"
+     ],
+     "talk": true,
+     "prop": "book",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f",
+     "look_amount": 0.25,
+     "yaw": -40
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "He read for *hours*. All the way to the very last *page*.",
+   "set": "hospital",
+   "time": "sunset",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "smile",
+     "act": [
+      "talk",
+      "hold"
+     ],
+     "talk": true,
+     "prop": "book",
+     "yaw": -40
+    },
+    {
+     "who": "grandpa",
+     "at": "BED",
+     "face": "smile",
+     "act": "lie"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "leo",
+     "grandpa"
+    ],
+    "front": "scene",
+    "angle": -30,
+    "height": "high",
+    "move": "pull"
+   }
+  },
+  {
+   "line": "Grandpa squeezed his hand, and *smiled*.",
+   "set": "hospital",
+   "time": "sunset",
+   "hold": 0.4,
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "BED",
+     "face": "crying",
+     "act": "lie"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "grandpa",
+    "height": "top",
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "The next day at school, Leo had *zero* words left.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "worried",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "mia"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "So he just *hugged* Mia. And somehow, she *understood*.",
+   "set": "hallway",
+   "hold": 0.4,
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      0.45,
+      0.4,
+      35
+     ],
+     "face": "happy",
+     "act": "hug"
+    },
+    {
+     "who": "mia",
+     "at": [
+      1.15,
+      0.5,
+      -35
+     ],
+     "face": "crying",
+     "act": "hug"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "mia"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "What would *you* save your words for?",
+   "set": "schoolyard",
+   "time": "sunset",
+   "hold": 0.6,
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": "wave"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "height": "low",
+    "move": "pull"
+   }
+  }
+ ]
+}
