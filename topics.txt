@@ -2,3 +2,5 @@
 # Never reuse a premise. Don't reuse a twist type or main set within the last 6 videos.
 2026-11-08 | 100-words-a-day | everyone only gets 100 words a day | saves for sick grandpa (hospital) | hospital/school
 2026-11-08 | mood-hoodie | hoodie changes color with your feelings | hides fear for sick sister (hospital) | school/street
+2026-11-09 | lost-and-found-power | every kid gets a superpower at ten (Leo finds lost things) | "useless" power saves Tyler's lost sister | park/school
+2026-11-09 | lie-sticky-notes | every lie you tell sticks to your forehead as a note | secret kindness: gives his lunch to the new kid | cafeteria/hallway

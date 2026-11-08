@@ -1,0 +1,542 @@
+{
+ "slug": "lie-sticky-notes",
+ "date": "2026-11-09",
+ "title": "In this world every lie sticks to your forehead",
+ "caption": "In this world, every lie you tell sticks to your forehead \ud83d\udcdd Leo got the same one every single day... and nobody knew why \ud83e\udd79 Would you lie to help someone? #inthisworld #story #storytime #kindness #fyp",
+ "voice": "am_michael",
+ "speed": 1.08,
+ "mood": "emotional",
+ "shots": [
+  {
+   "line": "In this *world*, every lie you tell sticks to your *forehead*.",
+   "set": "classroom",
+   "cast": {
+    "kid1": {
+     "acc": [
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "S2",
+     "face": "shocked"
+    },
+    {
+     "who": "noah",
+     "at": "S1",
+     "face": "laugh",
+     "act": "point",
+     "look": "kid1"
+    },
+    {
+     "who": "kid2",
+     "at": "S3",
+     "face": "laugh",
+     "look": "kid1"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "kid1",
+    "height": "high",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Tell one, and a *sticky note* pops up for everyone to see.",
+   "set": "hallway",
+   "cast": {
+    "noah": {
+     "acc": [
+      "glasses",
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "noah",
+     "at": "A",
+     "face": "shocked",
+     "act": "scared"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "noah",
+    "move": "zoom"
+   }
+  },
+  {
+   "line": "It only falls off when you tell the *truth*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "noah",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "noah",
+    "move": "pull"
+   }
+  },
+  {
+   "line": "So at school, almost *nobody* lied.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "SR",
+     "face": "happy",
+     "act": "talk",
+     "talk": true
+    },
+    {
+     "who": "noah",
+     "at": "SL",
+     "face": "laugh"
+    },
+    {
+     "who": "kid1",
+     "at": "SR2",
+     "face": "smile"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "mia",
+     "noah"
+    ],
+    "front": "scene",
+    "angle": -15,
+    "move": "pan_r"
+   }
+  },
+  {
+   "line": "Except Leo. Every day at lunch, a new note *appeared*.",
+   "set": "cafeteria",
+   "cast": {
+    "leo": {
+     "acc": [
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "And it always said the same thing. I'm not *hungry*.",
+   "set": "cafeteria",
+   "hold": 0.3,
+   "cast": {
+    "leo": {
+     "acc": [
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": "talk",
+     "talk": true
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Kids started calling him *Liar Leo*.",
+   "set": "hallway",
+   "cast": {
+    "leo": {
+     "acc": [
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "smug",
+     "act": [
+      "talk",
+      "point"
+     ],
+     "talk": true,
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "act": "sad",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "leo"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Even the teacher sighed. Just tell the *truth*, Leo.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "teacher",
+     "at": "T",
+     "face": "worried",
+     "act": "talk",
+     "talk": true
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "teacher",
+    "move": "push"
+   }
+  },
+  {
+   "line": "But he never *did*.",
+   "set": "classroom",
+   "cast": {
+    "leo": {
+     "acc": [
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": "S2",
+     "face": "blank",
+     "act": "headshake"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "height": "high"
+   }
+  },
+  {
+   "line": "So one day, Mia *watched* him at lunch.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "D",
+     "face": "determined",
+     "act": "lookaround"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "mia",
+    "angle": 20,
+    "move": "push"
+   }
+  },
+  {
+   "line": "Leo walked over to the *new kid*, who never had a lunch.",
+   "set": "cafeteria",
+   "cast": {
+    "leo": {
+     "acc": [
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": [
+      "walk",
+      "hold"
+     ],
+     "prop": "tray",
+     "to": [
+      -1.75,
+      -0.3
+     ]
+    },
+    {
+     "who": "kid2",
+     "at": "SR",
+     "face": "sad",
+     "act": "sad"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "kid2"
+    ],
+    "front": "scene",
+    "angle": -12
+   }
+  },
+  {
+   "line": "And slid his whole tray *across the table*.",
+   "set": "cafeteria",
+   "cast": {
+    "leo": {
+     "acc": [
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      -1.75,
+      0.0,
+      -60
+     ],
+     "face": "smile",
+     "act": "hold",
+     "prop": "tray"
+    },
+    {
+     "who": "kid2",
+     "at": "SR",
+     "face": "shocked",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "kid2"
+    ],
+    "front": "scene",
+    "angle": 40,
+    "move": "push"
+   }
+  },
+  {
+   "line": "Mia gasped. Leo was skipping lunch *every day*, so the new kid wouldn't have to.",
+   "set": "cafeteria",
+   "hold": 0.3,
+   "chars": [
+    {
+     "who": "mia",
+     "at": "D",
+     "face": "shocked"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "mia",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Why not just tell *everyone*? she whispered.",
+   "set": "hallway",
+   "cast": {
+    "leo": {
+     "acc": [
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "worried",
+     "act": "talk",
+     "talk": true,
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "neutral",
+     "look": "mia"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "mia",
+    "angle": -20
+   }
+  },
+  {
+   "line": "Because then he'd feel *embarrassed*.",
+   "set": "hallway",
+   "hold": 0.4,
+   "cast": {
+    "leo": {
+     "acc": [
+      "note"
+     ]
+    }
+   },
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "act": "talk",
+     "talk": true,
+     "look": "mia"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "angle": 20,
+    "move": "push"
+   }
+  },
+  {
+   "line": "The next day, Mia brought *two* lunches.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "A",
+     "face": "happy",
+     "act": "hold",
+     "prop": "tray"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "mia",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Then Noah brought one. Then the *whole class* did.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "noah",
+     "at": "C",
+     "face": "happy",
+     "act": "hold",
+     "prop": "tray"
+    },
+    {
+     "who": "kid1",
+     "at": "D",
+     "face": "laugh",
+     "act": "hold",
+     "prop": "tray"
+    },
+    {
+     "who": "kid2",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "happy",
+     "act": "hold",
+     "prop": "tray"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "noah",
+     "kid1",
+     "kid2",
+     "mia"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "And for the first time all year, Leo's note fell *off*.",
+   "set": "cafeteria",
+   "hold": 0.4,
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#ffe14d"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "height": "low",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Would *you* tell a lie, to help someone?",
+   "set": "schoolyard",
+   "time": "sunset",
+   "hold": 0.6,
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": "wave"
+    },
+    {
+     "who": "kid2",
+     "at": "B",
+     "face": "happy",
+     "act": "wave"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "pull"
+   }
+  }
+ ]
+}

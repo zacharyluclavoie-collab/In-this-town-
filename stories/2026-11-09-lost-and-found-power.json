@@ -1,0 +1,519 @@
+{
+ "slug": "lost-and-found-power",
+ "date": "2026-11-09",
+ "title": "In this world every kid gets a superpower at ten",
+ "caption": "In this world, every kid gets a superpower at 10... and everyone laughed at Leo's \ud83d\udd0d until the day it mattered most \ud83e\udd79 What power would YOU want? #inthisworld #story #storytime #superpower #fyp",
+ "voice": "am_michael",
+ "speed": 1.08,
+ "mood": "hopeful",
+ "cast": {
+  "ava": {
+   "age": "kid",
+   "height": 0.78,
+   "skin": "#f5d2b5",
+   "shirt": "#ff8a3d",
+   "pants": "#ff8a3d",
+   "top": "dress",
+   "hair": "ponytail",
+   "hair_color": "#c98a3a"
+  }
+ },
+ "shots": [
+  {
+   "line": "In this *world*, every kid gets a superpower on their tenth *birthday*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    },
+    {
+     "who": "noah",
+     "at": "C",
+     "face": "happy",
+     "act": "cheer"
+    },
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "mia",
+     "noah",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Tyler got *super speed*. Mia could *fly*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "G",
+     "face": "smug",
+     "act": "run",
+     "to": "F"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "laugh",
+     "act": "float",
+     "fx": "sparkle",
+     "fx_color": "#9fe0ff"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "mia"
+    ],
+    "front": "scene",
+    "height": "low"
+   }
+  },
+  {
+   "line": "Then on Leo's birthday, it was finally *his* turn.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "happy",
+     "act": "hold",
+     "prop": "cake"
+    },
+    {
+     "who": "mom",
+     "at": "C",
+     "face": "happy",
+     "act": "cheer"
+    },
+    {
+     "who": "dad",
+     "at": "B",
+     "face": "smile",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "leo",
+     "mom",
+     "dad"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "His power? He could find anything that was *lost*.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "fx": "sparkle",
+     "fx_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Lost keys. Lost socks. Lost *homework*.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": "hold",
+     "prop": "paper"
+    },
+    {
+     "who": "dad",
+     "at": "B",
+     "face": "laugh",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "dad"
+    ],
+    "front": "scene",
+    "move": "pan_r"
+   }
+  },
+  {
+   "line": "At school, everyone *laughed*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "S1",
+     "face": "laugh",
+     "act": "point"
+    },
+    {
+     "who": "kid1",
+     "at": "S2",
+     "face": "laugh"
+    },
+    {
+     "who": "kid2",
+     "at": "S3",
+     "face": "laugh"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "kid1"
+    ],
+    "height": "high",
+    "front": "scene"
+   }
+  },
+  {
+   "line": "That's not a superpower, that's a *lost and found*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "smug",
+     "act": "talk",
+     "talk": true,
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "tyler",
+    "angle": -20,
+    "move": "push"
+   }
+  },
+  {
+   "line": "And Leo started to *believe* them.",
+   "set": "bedroom",
+   "time": "night",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "sad",
+     "act": "sad"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "angle": 15,
+    "move": "push"
+   }
+  },
+  {
+   "line": "Then at the town picnic, Tyler's little sister went *missing*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "scared",
+     "act": [
+      "lookaround",
+      "shake"
+     ]
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "tyler",
+    "move": "zoom",
+    "shake": true
+   }
+  },
+  {
+   "line": "Tyler ran the whole park in *seconds*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "F",
+     "face": "worried",
+     "act": "run",
+     "to": "G"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": "tyler",
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Mia flew above the *trees*. Nothing.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "worried",
+     "act": [
+      "float",
+      "lookaround"
+     ],
+     "fx": "sparkle",
+     "fx_color": "#9fe0ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "mia",
+    "height": "low"
+   }
+  },
+  {
+   "line": "Tyler sat down, and started to *cry*.",
+   "set": "park",
+   "hold": 0.3,
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "BENCH",
+     "face": "crying",
+     "act": "cry"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "tyler",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Then Leo closed his eyes, and *listened*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "sleepy",
+     "fx": "sparkle",
+     "fx_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "orbit"
+   }
+  },
+  {
+   "line": "He felt a tiny pull, toward the old *slide*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "act": "walk",
+     "to": [
+      -2.2,
+      0.9
+     ]
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "front": "scene",
+    "angle": -65
+   }
+  },
+  {
+   "line": "Ava was hiding *underneath*, too scared to come out.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "ava",
+     "at": [
+      -3.1,
+      1.2,
+      20
+     ],
+     "face": "crying",
+     "act": "scared"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "ava",
+    "height": "high"
+   }
+  },
+  {
+   "line": "Leo held her hand, and walked her *back*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "G",
+     "face": "smile",
+     "act": "walk",
+     "to": "C"
+    },
+    {
+     "who": "ava",
+     "at": [
+      -3.0,
+      1.4,
+      0
+     ],
+     "face": "smile",
+     "act": "walk",
+     "to": [
+      -0.8,
+      0.9
+     ]
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "leo",
+     "ava"
+    ],
+    "front": "scene",
+    "follow": true
+   }
+  },
+  {
+   "line": "Tyler hugged his sister, then looked at Leo. *Thank you*.",
+   "set": "park",
+   "hold": 0.4,
+   "chars": [
+    {
+     "who": "tyler",
+     "at": [
+      0.2,
+      0.4,
+      -30
+     ],
+     "face": "crying",
+     "act": "hug"
+    },
+    {
+     "who": "ava",
+     "at": [
+      -0.35,
+      0.3,
+      35
+     ],
+     "face": "happy",
+     "act": "hug"
+    },
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "smile",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "ava",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "And nobody ever called it a *useless* power again.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "happy",
+     "act": "cheer"
+    },
+    {
+     "who": "tyler",
+     "at": "C",
+     "face": "smile",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "mia",
+     "tyler"
+    ],
+    "front": "scene",
+    "height": "low"
+   }
+  },
+  {
+   "line": "What power would *you* want on your tenth birthday?",
+   "set": "park",
+   "time": "sunset",
+   "hold": 0.6,
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": "wave"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "height": "low",
+    "move": "pull"
+   }
+  }
+ ]
+}

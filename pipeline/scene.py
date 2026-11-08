@@ -644,6 +644,11 @@ def make_char(name, spec, x, y, yaw):
         elif acc == "cape":
             box((1.9, 0.08, 2.8), (0, 0.58, 0.6), mat(spec.get("cape", "#d32f2f"), 0.6), hips, bevel=0.02,
                 rot=(math.radians(-6), 0, 0))
+        elif acc == "note":  # sticky note on the forehead
+            box((0.55, 0.03, 0.4), (0.05, -0.74, 1.08), mat("#ffe14d", 0.7), neck, bevel=0.0,
+                rot=(0, math.radians(-6), 0))
+            for k in range(3):
+                box((0.36, 0.035, 0.03), (0.03, -0.75, 1.17 - k * 0.09), mat("#5a5a5a", 0.6), neck, bevel=0)
         elif acc == "bow":
             for s in (-1, 1):
                 sphere(0.22, (s * 0.25 + 0.45, -0.1, 1.55), mat("#ff4fa0", 0.5), neck, scale=(1.2, 0.6, 0.8))
