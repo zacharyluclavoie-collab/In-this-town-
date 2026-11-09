@@ -39,6 +39,7 @@ class Account:
     seen_at: float = 0.0
     visits: int = 0
     taps: int = 0
+    eggs: int = 0
     reconnects: int = 0
     focus_fails: int = 0
     dc_streak: int = 0
@@ -114,6 +115,7 @@ class Engine:
                     "idle": None if a.last_input is None else now - a.last_input,
                     "visits": a.visits,
                     "taps": a.taps,
+                    "eggs": a.eggs,
                     "reconnects": a.reconnects,
                 }
                 for a in list(self.accounts.values())
@@ -283,7 +285,7 @@ class Engine:
                     return
             if full:
                 sent |= self._run_steps(a)
-                if cfg.tap_enabled:
+                if cfg.tap_enabled or cfg.egg_enabled:
                     sent |= self._tap(a)
             if not sent:
                 self._nudge(a)
@@ -401,14 +403,20 @@ class Engine:
         io, cfg = self.io, self.cfg
         gap = 1.0 / cfg.taps_per_second
         end = io.now() + self.dwell()
-        sent = False
+        sent, next_egg = False, 0.0
         while io.now() < end:
             self._hotkeys()
             if self.mode != "run":
                 break
-            self._send(a, lambda: io.click(a.hwnd, cfg.tap_x, cfg.tap_y))
-            a.taps += 1
-            sent = True
+            if cfg.egg_enabled and io.now() >= next_egg:
+                self._send(a, lambda: io.key(cfg.egg_key, 0.04))
+                next_egg = io.now() + cfg.egg_every_s
+                a.eggs += 1
+                sent = True
+            if cfg.tap_enabled:
+                self._send(a, lambda: io.click(a.hwnd, cfg.tap_x, cfg.tap_y))
+                a.taps += 1
+                sent = True
             io.sleep(gap * self._rng.uniform(0.85, 1.15))
         return sent
 

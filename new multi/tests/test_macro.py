@@ -159,6 +159,22 @@ class Features(unittest.TestCase):
             self.assertTrue(110 <= w.step_clicks <= 122, w.step_clicks)
             self.assertTrue(9 <= w.keys <= 11, w.keys)
 
+    def test_auto_egg_presses_key_on_every_account(self):
+        for tap in (True, False):
+            with self.subTest(tap=tap):
+                io = SimIO(accounts=4, seed=2)
+                eng = run(io, Config(egg_enabled=True, tap_enabled=tap), hours=2)
+                for w in io.windows.values():
+                    # 2h shared by 4 accounts, one press a second
+                    self.assertTrue(1400 <= w.keys <= 1900, w.keys)
+                    self.assertEqual(w.clicks > 0, tap)
+                self.assertEqual(sum(a.eggs for a in eng.accounts.values()),
+                                 sum(w.keys for w in io.windows.values()))
+                self.assertEqual(io.idle_kicks, 0)
+                self.assertEqual(io.stray_inputs, 0)
+        with self.assertRaises(ConfigError):
+            Config(egg_key="banana").validate()
+
     def test_dwell_shrinks_so_a_lap_fits_the_safe_window(self):
         cfg = Config(dwell_s=120)
         io = SimIO(accounts=20, seed=1)

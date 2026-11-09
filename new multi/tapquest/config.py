@@ -45,6 +45,11 @@ class Config:
     taps_per_second: float = 12.0
     dwell_s: float = 8.0  # how long to tap on one account before moving to the next
 
+    # Auto egg: press the hatch key over and over while on an account
+    egg_enabled: bool = False
+    egg_key: str = "r"
+    egg_every_s: float = 1.0
+
     # Staying connected
     safe_idle_s: float = 480.0  # every account gets input at least this often
     warn_idle_s: float = 900.0  # sound the alarm if an account goes this long
@@ -87,6 +92,9 @@ class Config:
         rng("tap_y", 0, 1)
         rng("taps_per_second", 0.5, 30)
         rng("dwell_s", 0.5, 300)
+        rng("egg_every_s", 0.2, 600)
+        if self.egg_key not in KEYS:
+            raise ConfigError(f"egg_key: unknown key {self.egg_key!r}")
         # Half the Roblox limit at most: a missed visit still leaves a full retry window.
         rng("safe_idle_s", 30, ROBLOX_IDLE_KICK_S / 2)
         rng("warn_idle_s", self.safe_idle_s, ROBLOX_IDLE_KICK_S - 60)

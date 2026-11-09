@@ -104,7 +104,7 @@ class App:
         self.v = {
             "tps": tk.StringVar(), "dwell": tk.StringVar(), "tx": tk.StringVar(), "ty": tk.StringVar(),
             "tap": tk.BooleanVar(), "user": tk.BooleanVar(), "rec": tk.BooleanVar(),
-            "weak": tk.BooleanVar(),
+            "weak": tk.BooleanVar(), "egg": tk.BooleanVar(),
         }
         ttk.Label(side, text="SETTINGS", style="PanelDim.TLabel").grid(row=0, column=0, columnspan=3, sticky="w")
         self._row(side, 1, "Taps per second", "tps")
@@ -116,6 +116,7 @@ class App:
             row=4, column=0, columnspan=3, sticky="ew", pady=(4, 8))
         for i, (key, text) in enumerate((
             ("tap", "Auto-tap"),
+            ("egg", "Auto egg (presses R)"),
             ("user", "Wait while I use the mouse"),
             ("rec", "Press Reconnect on disconnect"),
             ("weak", "Weak PC mode (20+ accounts)"),
@@ -123,20 +124,20 @@ class App:
             ttk.Checkbutton(side, text=text, variable=self.v[key]).grid(
                 row=5 + i, column=0, columnspan=3, sticky="w")
         ttk.Label(side, text="EXTRA STEPS (per account)", style="PanelDim.TLabel").grid(
-            row=9, column=0, columnspan=3, sticky="w", pady=(12, 2))
+            row=10, column=0, columnspan=3, sticky="w", pady=(12, 2))
         self.steps = tk.Listbox(side, height=4, bg=BG, fg=FG, highlightthickness=0, borderwidth=0,
                                 selectbackground="#2f3646", activestyle="none", width=30)
-        self.steps.grid(row=10, column=0, columnspan=3, sticky="ew")
+        self.steps.grid(row=11, column=0, columnspan=3, sticky="ew")
         bar = ttk.Frame(side, style="Panel.TFrame")
-        bar.grid(row=11, column=0, columnspan=3, sticky="ew", pady=(6, 0))
+        bar.grid(row=12, column=0, columnspan=3, sticky="ew", pady=(6, 0))
         ttk.Button(bar, text="+ Click", command=lambda: self.add_step("click")).pack(side="left")
         ttk.Button(bar, text="+ Key", command=lambda: self.add_step("key")).pack(side="left", padx=4)
         ttk.Button(bar, text="Remove", command=self.remove_step).pack(side="left")
 
-        cols = ("name", "state", "idle", "left", "visits", "taps", "rec")
-        heads = ("Account", "Status", "Last input", "Kick timer left", "Visits", "Taps", "Reconnects")
+        cols = ("name", "state", "idle", "left", "visits", "taps", "eggs", "rec")
+        heads = ("Account", "Status", "Last input", "Kick timer left", "Visits", "Taps", "Egg keys", "Reconnects")
         self.tree = ttk.Treeview(mid, columns=cols, show="headings", height=7)
-        for c, h, w in zip(cols, heads, (105, 125, 90, 110, 55, 80, 85)):
+        for c, h, w in zip(cols, heads, (100, 115, 85, 105, 50, 70, 70, 80)):
             self.tree.heading(c, text=h)
             self.tree.column(c, width=w, anchor="w" if c in ("name", "state") else "center")
         for tag, col in (("ok", GREEN), ("warn", AMBER), ("bad", RED), ("info", BLUE)):
@@ -167,6 +168,7 @@ class App:
         v["user"].set(c.pause_on_user_input)
         v["rec"].set(c.reconnect_enabled)
         v["weak"].set(c.weak_pc)
+        v["egg"].set(c.egg_enabled)
         self._fill_steps()
 
     def _fill_steps(self):
@@ -183,7 +185,7 @@ class App:
             data = dict(c.to_dict(), taps_per_second=float(v["tps"].get()), dwell_s=float(v["dwell"].get()),
                         tap_x=float(v["tx"].get()), tap_y=float(v["ty"].get()),
                         tap_enabled=v["tap"].get(), pause_on_user_input=v["user"].get(),
-                        reconnect_enabled=v["rec"].get(), weak_pc=v["weak"].get())
+                        reconnect_enabled=v["rec"].get(), weak_pc=v["weak"].get(), egg_enabled=v["egg"].get())
         except ValueError:
             raise ConfigError("Settings boxes must contain numbers") from None
         return Config.from_dict(data)
@@ -342,7 +344,7 @@ class App:
             values = (
                 a["name"], labels[a["state"]] if idle is not None or a["state"] != "ok" else "Waiting...",
                 "-" if idle is None else _mmss(idle) + " ago", _mmss(left),
-                a["visits"], f"{a['taps']:,}", a["reconnects"])
+                a["visits"], f"{a['taps']:,}", f"{a['eggs']:,}", a["reconnects"])
             if i < len(rows):  # update in place so the list keeps its scroll position
                 self.tree.item(rows[i], values=values, tags=(tag,))
             else:
