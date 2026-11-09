@@ -14,7 +14,7 @@ import sys
 
 import bmesh
 import bpy
-from mathutils import Euler, Vector
+from mathutils import Euler, Quaternion, Vector
 
 ARGS = json.load(open(sys.argv[sys.argv.index("--") + 1]))
 TEX = ARGS["tex"]
@@ -1046,7 +1046,7 @@ def setup_camera(cfg, chars, chars_by_name, interior):
     move = cfg.get("move", "drift")
     dof = cam_d.dof
     dof.use_dof = True
-    dof.aperture_fstop = {"extreme": 1.6, "close": 2.0, "medium": 2.8, "full": 4.0, "wide": 5.6}.get(shot, 2.8)
+    dof.aperture_fstop = {"extreme": 4.0, "close": 5.6, "medium": 8.0, "full": 11.0, "wide": 16.0}.get(shot, 8.0)
     if interior and dirv is not None:
         # keep the camera inside the open front of the set
         dirv.y = min(dirv.y, -0.2)
@@ -1090,7 +1090,10 @@ def setup_camera(cfg, chars, chars_by_name, interior):
             pos += Vector((0.03 * math.sin(t * 37), 0, 0.03 * math.sin(t * 29)))
         cam.location = pos
         dvec = look - pos
-        cam.rotation_euler = dvec.to_track_quat("-Z", "Y").to_euler()
+        q = dvec.to_track_quat("-Z", "Y")
+        if cfg.get("tilt"):  # dutch angle
+            q = q @ Quaternion((0, 0, 1), math.radians(cfg["tilt"]))
+        cam.rotation_euler = q.to_euler()
         cam.keyframe_insert("location", frame=f)
         cam.keyframe_insert("rotation_euler", frame=f)
         dof.focus_distance = max(0.3, dvec.length)
@@ -1167,7 +1170,23 @@ def main():
                     kp.interpolation = "LINEAR"
                 if "hide" in cu.data_path:
                     kp.interpolation = "CONSTANT"
-    setup_camera(ARGS.get("cam", {}), chars, by_name, interior)
+    cam = setup_camera(ARGS.get("cam", {}), chars, by_name, interior)
+    rng = ARGS.get("range")
+    if rng:
+        sc.frame_start, sc.frame_end = rng[0], rng[1]
+    # where each head is on screen (for 2D speech bubbles)
+    from bpy_extras.object_utils import world_to_camera_view
+    mid = ARGS.get("still_frame") if ARGS.get("still") else (rng[0] if rng else 1) + 2
+    sc.frame_set(mid)
+    bpy.context.view_layer.update()
+    heads = {}
+    for cfg, c in zip(ARGS["chars"], chars):
+        top = c.neck.matrix_world @ Vector((0, 0, 1.45))
+        v = world_to_camera_view(sc, cam, top)
+        heads[cfg["who"]] = [v.x, 1 - v.y, v.z]
+    hp = (ARGS["out"][:-4] + "_heads.json") if ARGS.get("still") else os.path.join(ARGS["out"], "heads.json")
+    os.makedirs(os.path.dirname(hp), exist_ok=True)
+    json.dump(heads, open(hp, "w"))
     sc.render.image_settings.file_format = "PNG"
     sc.render.image_settings.color_mode = "RGB"
     sc.render.filepath = os.path.join(ARGS["out"], "f_")

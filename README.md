@@ -28,8 +28,18 @@ Story recipe (what the reference videos do):
 4. The secret / reason is revealed (family, kindness, sacrifice).
 5. Emotional payoff, then a question to the viewer: `What would *you* ...?`
 
-Keep 17-20 lines, each under ~14 words. Wrap the key word in `*stars*` so the caption
-shows it in CAPS (otherwise one word is picked automatically). Use only original ideas.
+Keep 23-28 lines (70-90 s), each under ~14 words. Wrap the key word in `*stars*` so the
+caption shows it in CAPS (otherwise one word is picked automatically). Use only original ideas.
+
+What makes these go viral (from the reference videos):
+- The first 2 seconds SHOW the rule happening (sparkles, a speech bubble, a big reaction), not just say it.
+- A rival (usually Tyler) who uses the rule selfishly, so Leo's choice stands out.
+- A setup early that pays off at the end (e.g. "real ones are worth a fortune").
+- Short comic speech bubbles (`"say": "NO."`) in 4-6 shots: insults, gasps, the key line.
+- Fast pictures: long lines are cut automatically into 2-3 camera angles; add `tilt` for shock.
+- Title in Title Case + one emoji, like `Every Compliment You Get Turns Into Gold Coins 😨`.
+- Caption: the premise, a teaser (`Leo had ZERO… until`), "Wait for the end", then
+  `#inthisworld #robloxstory #roblox #storytime #fyp`.
 
 ```json
 {
@@ -71,12 +81,17 @@ shake scared angry dance float fall lie sit nod headshake lookaround turn.
 
 **Props** (`prop`, held in right hand): ball phone book tray trophy gift cake balloon paper
 shoes letter icecream. **FX**: `"fx": "sparkle"` with optional `fx_color`. `"bubble": true`
-shows a "..." speech bubble.
+shows a "..." speech bubble. `"say": "NO."` shows a comic speech bubble with text
+above the character. `"tag": "3"` floats a number above the head (`tag_color`).
 
 **Camera**: `shot` extreme|close|medium|full|wide, `on` a name or list of names,
 `angle` degrees around the target, `height` eye|low|high|top (top = looking down, good
 for beds), `move` drift|push|pull|pan_l|pan_r|orbit|zoom, `front: "scene"` to frame from the
-set's front instead of the character's, `shake: true`.
+set's front instead of the character's, `shake: true`, `tilt` degrees (dutch angle).
+Lines longer than ~3 s are split into 2-3 cuts automatically (closer shot, new angle);
+set `"nocut": true` on a shot to stop that, or give `"cams": [cam1, cam2]` to choose the cuts.
+Hugs and shots with 4+ characters are never auto-cut. Every cut gets a whoosh; bubbles a pop;
+sparkles a shimmer; `zoom`/`shake` a boom.
 
 Always run `--stills` and look at the contact sheet before the full render: faces must
 be visible, nobody cut off, captions readable.

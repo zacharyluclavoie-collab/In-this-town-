@@ -18,16 +18,18 @@ import sys
 
 import numpy as np
 import soundfile as sf
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PIPE = os.path.join(ROOT, "pipeline")
 sys.path.insert(0, PIPE)
+import fx  # noqa: E402
 import music  # noqa: E402
 import textures  # noqa: E402
 
 MODEL_DIR = os.environ.get("KOKORO_DIR", os.path.expanduser("~/.cache/inthisworld"))
 FONT = "/usr/share/fonts/truetype/roboto/unhinted/RobotoTTF/Roboto-BlackItalic.ttf"
+BUBBLE_FONT = "/usr/share/fonts/truetype/roboto/unhinted/RobotoTTF/Roboto-Black.ttf"
 FPS = 24
 W, H = 1080, 1920
 SR = 24000
@@ -194,50 +196,77 @@ def main():
         voice[i:i + len(c)] += c
     voice = voice[: int(total * SR)]
 
-    # render shots
+    # render shots: every narration line is cut into 1-3 camera parts
     res = [360, 640] if a.preview else [720, 1280]
     samples = 3 if a.preview else story.get("samples", 8)
+    parts = []  # (shot index, part index, first frame in shot, frames, cam)
     for i, s in enumerate(shots):
-        fd = os.path.join(build, f"shot_{i:02d}")
+        for j, (f0, n, cam) in enumerate(fx.plan_parts(s, shot_frames[i], FPS)):
+            parts.append((i, j, f0, n, cam))
+    stills = []
+    for (i, j, f0, n, cam) in parts:
+        s = shots[i]
+        fd = os.path.join(build, f"shot_{i:02d}_{j}")
         spec = {
             "tex": tex, "out": fd + "/", "fps": FPS, "frames": shot_frames[i], "res": res,
+            "range": [f0 + 1, f0 + n],
             "samples": samples, "set": s.get("set", "bedroom"), "time": s.get("time", "day"),
             "cast": {k: {**v, **s.get("cast", {}).get(k, {})} for k, v in cast.items()},
-            "chars": s.get("chars", []), "cam": s.get("cam", {}),
-            "props": s.get("props", []), "seed": i + 1,
+            "chars": s.get("chars", []), "cam": cam,
+            "props": s.get("props", []), "seed": i + 1, "exposure": story.get("exposure", 0.05),
         }
-        if a.preview:
-            spec["frames"] = shot_frames[i]
-        p = os.path.join(build, f"shot_{i:02d}.json")
+        p = os.path.join(build, f"shot_{i:02d}_{j}.json")
         if a.stills:
-            spec.update(still=True, still_frame=shot_frames[i] // 2, res=[540, 960], samples=6,
-                        out=os.path.join(build, f"still_{i:02d}.png"))
+            sp = os.path.join(build, f"still_{i:02d}_{j}.png")
+            spec.update(still=True, still_frame=f0 + n // 2 + 1, res=[540, 960], samples=6, out=sp)
             json.dump(spec, open(p, "w"))
             subprocess.run(["blender", "-b", "--factory-startup", "-P", os.path.join(PIPE, "scene.py"), "--", p],
                            capture_output=True)
+            stills.append((i, j, sp))
             continue
         json.dump(spec, open(p, "w"))
-        print(f"[{slug}] shot {i + 1}/{len(shots)}: {s['set']} {shot_frames[i]} frames", flush=True)
-        render_shot(p, fd, shot_frames[i])
+        print(f"[{slug}] shot {i + 1}/{len(shots)} cut {j + 1}: {s['set']} {n} frames", flush=True)
+        render_shot(p, fd, n)
+
+    def bubbles_for(i, heads_path):
+        """[(image, x, y)] speech bubbles for shot i."""
+        out = []
+        try:
+            heads = json.load(open(heads_path))
+        except Exception:
+            return out
+        for ch in shots[i].get("chars", []):
+            if ch.get("say") and ch["who"] in heads:
+                probe = fx.bubble_image(ch["say"], BUBBLE_FONT)
+                pos = fx.place_bubble(heads[ch["who"]], W, H, probe)
+                if pos:
+                    img = fx.bubble_image(ch["say"], BUBBLE_FONT, tail_dx=1 if pos[2] else -1)
+                    out.append((img, pos[0], pos[1]))
+        return out
+
+    def finish(im):
+        im = ImageEnhance.Color(im).enhance(1.12)
+        return im.filter(ImageFilter.UnsharpMask(radius=2, percent=55, threshold=2))
 
     if a.stills:
         ims = []
-        for i in range(len(shots)):
-            p = os.path.join(build, f"still_{i:02d}.png")
-            im = Image.open(p).convert("RGB") if os.path.exists(p) else Image.new("RGB", (540, 960), "red")
-            im = im.resize((W, H))
-            ch = chunk_caption(shots[i]["line"])[0]
-            ci = caption_image(ch)
-            im.paste(ci, (0, int(H * 0.6)), ci)
-            ims.append(im.resize((270, 480)))
-        cols = 5
+        for (i, j, sp) in stills:
+            im = Image.open(sp).convert("RGB") if os.path.exists(sp) else Image.new("RGB", (540, 960), "red")
+            im = finish(im.resize((W, H)))
+            for (b, bx, by) in bubbles_for(i, sp[:-4] + "_heads.json"):
+                im.paste(b, (bx, by), b)
+            if j == 0:
+                ci = caption_image(chunk_caption(shots[i]["line"])[0])
+                im.paste(ci, (0, int(H * 0.6)), ci)
+            ims.append(im.resize((216, 384)))
+        cols = 8
         rows = (len(ims) + cols - 1) // cols
-        sheet = Image.new("RGB", (cols * 270, rows * 480))
-        for i, im in enumerate(ims):
-            sheet.paste(im, ((i % cols) * 270, (i // cols) * 480))
+        sheet = Image.new("RGB", (cols * 216, rows * 384))
+        for k, im in enumerate(ims):
+            sheet.paste(im, ((k % cols) * 216, (k // cols) * 384))
         sp = os.path.join(build, "stills.png")
         sheet.save(sp)
-        print("stills:", sp, f"total {total:.1f}s")
+        print("stills:", sp, f"total {total:.1f}s, {len(parts)} cuts")
         return
 
     # music + mix
@@ -246,7 +275,21 @@ def main():
     k = int(0.25 * SR)
     env = np.convolve(env, np.ones(k) / k, mode="same")
     duck = 1 - 0.45 * np.clip(env / 0.05, 0, 1)
-    mix = voice * 1.0 + bed * 0.16 * duck
+    sfx = np.zeros_like(voice)
+    shot_t = [b / FPS for b in bounds]
+    for k, (i, j, f0, n, cam) in enumerate(parts):
+        t0 = shot_t[i] + f0 / FPS
+        if k:
+            fx.add(sfx, fx.whoosh(SR, seed=k), t0 - 0.16, SR, 0.5 if j == 0 else 0.3)
+        if j == 0:
+            chs = shots[i].get("chars", [])
+            if any(c.get("say") for c in chs):
+                fx.add(sfx, fx.pop(SR), t0 + 0.12, SR)
+            if any(c.get("fx") == "sparkle" for c in chs):
+                fx.add(sfx, fx.shimmer(SR), t0 + 0.05, SR)
+            if cam.get("move") == "zoom" or cam.get("shake"):
+                fx.add(sfx, fx.boom(SR), t0, SR)
+    mix = voice * 1.0 + bed * 0.16 * duck + sfx
     mix /= max(1.0, np.max(np.abs(mix)) / 0.95)
     wav = os.path.join(build, "mix.wav")
     sf.write(wav, mix, SR)
@@ -276,12 +319,22 @@ def main():
         "-shortest", out], stdin=subprocess.PIPE)
     fno = 0
     cap_y = int(H * 0.60)
-    for i, n in enumerate(shot_frames):
-        fd = os.path.join(build, f"shot_{i:02d}")
+    for (i, j, f0, n, cam) in parts:
+        fd = os.path.join(build, f"shot_{i:02d}_{j}")
         files = sorted(f for f in os.listdir(fd) if f.endswith(".png"))[:n]
-        for f in files:
-            im = Image.open(os.path.join(fd, f)).convert("RGB").resize((W, H), Image.LANCZOS)
+        bubs = bubbles_for(i, os.path.join(fd, "heads.json"))
+        for fi, f in enumerate(files):
+            im = finish(Image.open(os.path.join(fd, f)).convert("RGB").resize((W, H), Image.LANCZOS))
             t = fno / FPS
+            age_b = (f0 + fi) / FPS - 0.12  # bubbles pop in just after the shot starts
+            if age_b > 0:
+                for (b, bx, by) in bubs:
+                    if age_b < 0.12:
+                        sc = 0.6 + 0.4 * age_b / 0.12
+                        b2 = b.resize((max(1, int(b.width * sc)), max(1, int(b.height * sc))), Image.LANCZOS)
+                        im.paste(b2, (bx + (b.width - b2.width) // 2, by + b.height - b2.height), b2)
+                    else:
+                        im.paste(b, (bx, by), b)
             cur = next((c for c in caps if c[0] <= t < c[1]), None)
             if cur:
                 if cur[2] not in cap_imgs:
@@ -301,8 +354,8 @@ def main():
     ff.wait()
     print("wrote", out, f"{total:.1f}s")
     if not a.keep and not a.preview:
-        for i in range(len(shots)):
-            shutil.rmtree(os.path.join(build, f"shot_{i:02d}"), ignore_errors=True)
+        for (i, j, *_r) in parts:
+            shutil.rmtree(os.path.join(build, f"shot_{i:02d}_{j}"), ignore_errors=True)
 
 
 if __name__ == "__main__":

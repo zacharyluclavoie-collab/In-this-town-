@@ -1,0 +1,685 @@
+{
+ "slug": "compliment-coins",
+ "date": "2026-11-10",
+ "title": "Every Compliment You Get Turns Into Gold Coins 😨",
+ "caption": "In this world, every compliment you get turns into gold coins 🪙 Leo had ZERO… until the day someone who couldn't talk said something 🥹 Wait for the end #inthisworld #robloxstory #roblox #storytime #fyp",
+ "voice": "am_michael",
+ "speed": 1.1,
+ "mood": "hopeful",
+ "cast": {
+  "oldman": {
+   "age": "adult",
+   "skin": "#e8b98f",
+   "shirt": "#7b6a52",
+   "pants": "#4a4038",
+   "shoes": "#2a2420",
+   "top": "jacket",
+   "accent": "#c9b79a",
+   "hair": "cap",
+   "hair_color": "#5d6b4f"
+  }
+ },
+ "shots": [
+  {
+   "line": "In this *world*, every compliment you get turns into *gold coins*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "C",
+     "face": "happy",
+     "act": "point",
+     "say": "NICE HAT!",
+     "look": "kid2"
+    },
+    {
+     "who": "kid2",
+     "at": "B",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "kid1",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Fake ones are worth a *penny*. Real ones are worth a *fortune*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "mia",
+    "height": "low",
+    "move": "push"
+   }
+  },
+  {
+   "line": "The richest kid in town was *Tyler*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "smug",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "tyler",
+    "height": "low",
+    "move": "zoom"
+   }
+  },
+  {
+   "line": "Because he *forced* everyone to compliment him.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "angry",
+     "act": [
+      "talk",
+      "point"
+     ],
+     "talk": true,
+     "say": "SAY I'M COOL.",
+     "look": "kid2"
+    },
+    {
+     "who": "kid2",
+     "at": "C",
+     "face": "scared",
+     "act": "scared",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "kid2"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Pennies, every day. *Thousands* of them.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    },
+    {
+     "who": "kid1",
+     "at": "B",
+     "face": "worried",
+     "look": "tyler"
+    },
+    {
+     "who": "kid2",
+     "at": "C",
+     "face": "worried",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "tyler",
+     "kid1",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "And Leo? He had *zero* coins.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "sad",
+     "act": "shrug"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Nobody in town ever said anything nice to *him*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "sad",
+     "act": "sad"
+    },
+    {
+     "who": "kid1",
+     "at": "F",
+     "face": "laugh",
+     "act": "cheer"
+    },
+    {
+     "who": "kid2",
+     "at": "G",
+     "face": "laugh",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": "leo",
+    "front": "scene",
+    "move": "pull"
+   }
+  },
+  {
+   "line": "So every day after school, he walked to the *park*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "G",
+     "face": "smile",
+     "act": "walk",
+     "to": "A"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": "leo",
+    "front": "scene"
+   }
+  },
+  {
+   "line": "To visit an old man that nobody else *noticed*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "oldman",
+     "at": "BENCH",
+     "face": "sad"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "oldman",
+    "move": "push"
+   }
+  },
+  {
+   "line": "The old man couldn't *talk*. He just listened.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "oldman",
+     "at": "BENCH",
+     "face": "smile",
+     "act": "nod"
+    },
+    {
+     "who": "leo",
+     "at": [
+      2.0,
+      1.1,
+      35
+     ],
+     "face": "happy",
+     "act": "talk",
+     "talk": true,
+     "look": "oldman"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "oldman",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "And Leo told him *everything*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      2.0,
+      1.1,
+      35
+     ],
+     "face": "laugh",
+     "act": [
+      "talk",
+      "cheer"
+     ],
+     "talk": true,
+     "look": "oldman"
+    },
+    {
+     "who": "oldman",
+     "at": "BENCH",
+     "face": "laugh",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "angle": -25
+   }
+  },
+  {
+   "line": "The kids laughed. His only friend can't even *talk*!",
+   "set": "park",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "C",
+     "face": "laugh",
+     "act": "point",
+     "say": "HAHA!"
+    },
+    {
+     "who": "kid2",
+     "at": "E",
+     "face": "laugh",
+     "look": "kid1"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "kid1",
+     "kid2"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Tyler smirked. Nobody will *ever* compliment you.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "smug",
+     "act": "talk",
+     "talk": true,
+     "look": "leo",
+     "say": "NOBODY LIKES YOU."
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "That night, Leo almost *believed* him.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "BED",
+     "face": "sad",
+     "act": "lie"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "height": "top"
+   },
+   "time": "night"
+  },
+  {
+   "line": "The next day, the old man was holding a *letter*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "oldman",
+     "at": "BENCH",
+     "face": "worried",
+     "act": "hold",
+     "prop": "letter"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "oldman",
+    "move": "push"
+   }
+  },
+  {
+   "line": "His hands shook as he gave it to *Leo*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "oldman",
+     "at": "BENCH",
+     "face": "smile",
+     "act": "hold",
+     "prop": "letter",
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": [
+      2.0,
+      1.1,
+      35
+     ],
+     "face": "shocked",
+     "look": "oldman"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "oldman",
+     "leo"
+    ],
+    "front": "scene",
+    "angle": 15
+   }
+  },
+  {
+   "line": "It said, You are the *kindest* boy I have ever met.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      2.0,
+      1.1,
+      35
+     ],
+     "face": "crying",
+     "act": "hold",
+     "prop": "letter"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   },
+   "hold": 0.3
+  },
+  {
+   "line": "And then... *clink*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      2.0,
+      1.1,
+      35
+     ],
+     "face": "shocked",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "zoom",
+    "tilt": 8
+   }
+  },
+  {
+   "line": "Coins poured out of his pockets. *Thousands* of them.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "height": "low",
+    "move": "orbit"
+   }
+  },
+  {
+   "line": "One real compliment was worth more than all of Tyler's *fake* ones.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "shocked",
+     "act": "shake"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "tyler",
+    "move": "zoom",
+    "tilt": -9
+   }
+  },
+  {
+   "line": "And for the first time, kids lined up to say something nice to *Leo*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "laugh"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "happy",
+     "act": "wave",
+     "say": "YOU'RE AWESOME!"
+    },
+    {
+     "who": "kid1",
+     "at": "C",
+     "face": "happy",
+     "act": "wave"
+    },
+    {
+     "who": "kid2",
+     "at": "D",
+     "face": "happy",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "leo",
+     "mia",
+     "kid1"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "But Leo spent every single coin on *one* thing.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "G",
+     "face": "determined",
+     "act": "walk",
+     "to": "C"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "front": "scene"
+   }
+  },
+  {
+   "line": "A surprise party for the old man. His first one in *forty years*.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "oldman",
+     "at": "BENCH",
+     "face": "crying",
+     "act": "cry"
+    },
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "happy",
+     "act": "hold",
+     "prop": "cake"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "laugh",
+     "act": "hold",
+     "prop": "balloon"
+    },
+    {
+     "who": "kid1",
+     "at": "D",
+     "face": "laugh",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "oldman",
+     "leo",
+     "mia"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "hold": 0.3
+  },
+  {
+   "line": "He still couldn't say *thank you*. He didn't need to.",
+   "set": "park",
+   "chars": [
+    {
+     "who": "oldman",
+     "at": [
+      2.75,
+      1.0,
+      40
+     ],
+     "face": "crying",
+     "act": "hug"
+    },
+    {
+     "who": "leo",
+     "at": [
+      2.35,
+      0.75,
+      -35
+     ],
+     "face": "happy",
+     "act": "hug"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "oldman",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "hold": 0.4
+  },
+  {
+   "line": "Who was the last person who said something nice to *you*?",
+   "set": "park",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": "wave"
+    },
+    {
+     "who": "oldman",
+     "at": "B",
+     "face": "happy",
+     "act": "wave"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "oldman"
+    ],
+    "front": "scene",
+    "move": "pull"
+   },
+   "time": "sunset",
+   "hold": 0.6
+  }
+ ]
+}
