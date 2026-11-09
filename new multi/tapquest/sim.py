@@ -25,6 +25,8 @@ class SimWindow:
     dc_since: float = 0.0
     rejoin_at: float | None = None
     blocked_until: float = 0.0
+    minimized: bool = False
+    ready_at: float = 0.0
     clicks: int = 0
     keys: int = 0
     step_clicks: int = 0
@@ -44,6 +46,7 @@ class SimIO:
         realtime_speed: float | None = None,  # None = run as fast as possible
         reconnect_offset: tuple = (82, 86),
         tap_pos: tuple = (0.5, 0.55),
+        slow_pc: bool = False,  # laggy focus, swallowed input, random freezes
     ):
         self.rng = random.Random(seed)
         self.t = 0.0
@@ -71,6 +74,13 @@ class SimIO:
         self.beeps = 0
         self._acc = 0.0
         self.pending_hotkey = None
+        self.slow = slow_pc
+        self._pending = None  # (hwnd, time) focus change still in progress
+        self.dropped = 0
+        self.freezes = 0
+        self.tuned = set()
+        self.trims = 0
+        self.max_visible = 0
 
     # ---- time --------------------------------------------------------------
     def now(self) -> float:
@@ -81,6 +91,11 @@ class SimIO:
             time.sleep(s / self.speed)
         self.t += s
         self._acc += s
+        if self.slow and self.rng.random() < s / 120:  # the whole PC hangs for a bit
+            hang = self.rng.uniform(1, 6)
+            self.freezes += 1
+            self.t += hang
+            self._acc += hang
         if self._acc >= 0.5:
             self._world(self._acc)
             self._acc = 0.0
@@ -121,14 +136,52 @@ class SimIO:
         return [(h, "Roblox") for h in self.windows]
 
     def foreground(self) -> int:
+        if self._pending and self.t >= self._pending[1]:
+            hwnd, self._pending = self._pending[0], None
+            self._bring(hwnd)
         return self.fg
+
+    def _bring(self, hwnd: int):
+        w = self.windows.get(hwnd)
+        if hwnd != USER_WINDOW and w is None:
+            return
+        self.fg = hwnd
+        if w:
+            w.minimized = False
+            if self.slow:  # freshly shown window ignores input for a moment
+                w.ready_at = self.t + self.rng.uniform(0.05, 0.5)
+            self.max_visible = max(self.max_visible, self.visible())
+
+    def visible(self) -> int:
+        return sum(1 for w in self.windows.values() if not w.minimized)
 
     def focus(self, hwnd: int):
         w = self.windows.get(hwnd)
-        if hwnd == USER_WINDOW:
-            self.fg = hwnd
-        elif w and self.t >= w.blocked_until and self.rng.random() >= self.focus_fail:
-            self.fg = hwnd
+        if hwnd != USER_WINDOW and not (
+            w and self.t >= w.blocked_until and self.rng.random() >= self.focus_fail
+        ):
+            return
+        if not self.slow:
+            self._bring(hwnd)
+        elif not (self._pending and self._pending[0] == hwnd):
+            # Slower the more windows are being drawn, slower still from minimised.
+            delay = self.rng.uniform(0.3, 1.5) * (1 + 0.08 * self.visible())
+            if w and w.minimized:
+                delay += self.rng.uniform(0.5, 1.5)
+            self._pending = (hwnd, self.t + delay)
+
+    def minimize(self, hwnd: int):
+        w = self.windows.get(hwnd)
+        if w:
+            w.minimized = True
+            if self.fg == hwnd:
+                self.fg = USER_WINDOW
+
+    def tune(self, hwnd: int):
+        self.tuned.add(hwnd)
+
+    def trim(self, hwnd: int):
+        self.trims += 1
 
     def cursor(self):
         return self.cur
@@ -138,9 +191,12 @@ class SimIO:
 
     # ---- input: always lands on whatever is in front, like a real PC -------
     def _target(self):
-        w = self.windows.get(self.fg)
+        w = self.windows.get(self.foreground())
         if w is None:
             self.stray_inputs += 1
+        elif self.slow and (self.t < w.ready_at or self.rng.random() < 0.03):
+            self.dropped += 1  # right window, but the lagging game never saw it
+            return None
         return w
 
     def click(self, hwnd: int, fx: float, fy: float):

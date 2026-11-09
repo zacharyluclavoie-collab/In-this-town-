@@ -25,5 +25,10 @@
     "Windows10Universal.exe"
   ],
   "settle_s": 0.15,
+  "focus_timeout_s": 3.0,
+  "weak_pc": false,
+  "weak_minimize": true,
+  "weak_low_priority": true,
+  "weak_trim_s": 300.0,
   "steps": []
 }

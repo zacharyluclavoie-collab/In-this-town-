@@ -68,6 +68,7 @@ class WinIO:
         self.u = ctypes.windll.user32
         self.k = ctypes.windll.kernel32
         self.g = ctypes.windll.gdi32
+        self.ps = ctypes.windll.psapi
         self.names = {n.lower() for n in process_names}
         self._held = {name: False for name in HOTKEYS}
         self._declare()
@@ -106,6 +107,9 @@ class WinIO:
             k.QueryFullProcessImageNameW: (B, [H, D, ctypes.c_wchar_p, ctypes.POINTER(D)]),
             k.GetCurrentThreadId: (D, []),
             k.SetThreadExecutionState: (D, [D]),
+            k.SetPriorityClass: (B, [H, D]),
+            k.GetCurrentProcess: (H, []),
+            self.ps.EmptyWorkingSet: (B, [H]),
         }
         for fn, (res, args) in sig.items():
             fn.restype, fn.argtypes = res, args
@@ -154,6 +158,29 @@ class WinIO:
 
     def foreground(self):
         return self.u.GetForegroundWindow()
+
+    # ---- weak PC helpers ---------------------------------------------------
+    def _with_process(self, hwnd, access, fn):
+        pid = c_uint32()
+        self.u.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+        h = self.k.OpenProcess(access, False, pid.value)
+        if h:
+            try:
+                fn(h)
+            finally:
+                self.k.CloseHandle(h)
+
+    def minimize(self, hwnd):
+        self.u.ShowWindow(hwnd, 7)  # minimise without stealing focus
+
+    def tune(self, hwnd):
+        """Roblox below normal priority, the macro above: taps stay on time."""
+        self._with_process(hwnd, 0x0200, lambda h: self.k.SetPriorityClass(h, 0x4000))
+        self.k.SetPriorityClass(self.k.GetCurrentProcess(), 0x8000)
+
+    def trim(self, hwnd):
+        """Ask Windows to move this account's unused memory out of RAM."""
+        self._with_process(hwnd, 0x0400 | 0x0100, lambda h: self.ps.EmptyWorkingSet(h))
 
     def focus(self, hwnd):
         u = self.u

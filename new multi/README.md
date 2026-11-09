@@ -1,4 +1,4 @@
-# Tap Quest Multi (v5.0)
+# Tap Quest Multi (v5.1)
 
 Multi-account macro for Tap Quest Sim on a Windows PC. It cycles through every open
 Roblox window, taps, runs your extra steps (claim quest, rebirth...), and makes sure
@@ -40,21 +40,48 @@ no account sits idle long enough for Roblox's 20-minute kick.
 - A closed/crashed Roblox window raises an alert; newly opened windows are picked up
   automatically.
 
+## Weak PC mode (20+ accounts on a slow computer)
+
+Tick **Weak PC mode** before pressing Start. It:
+
+- keeps only the account being tapped on screen and minimises the rest, so the PC draws
+  one game instead of twenty;
+- sets Roblox to below-normal CPU priority and the macro above, so taps stay on time;
+- every 5 minutes asks Windows to move idle accounts' memory out of RAM
+  (`weak_trim_s` in `settings.json`, 0 turns it off);
+- waits up to 10 seconds for a slow window to appear instead of giving up;
+- measures how long this PC takes to switch accounts and sizes each lap to fit;
+- sends the keep-alive key twice, in case lag swallows one;
+- redraws the app's own table less often;
+- alerts you if the PC is too slow to keep that many accounts safe.
+
+![Weak PC mode](screenshots/5-weak-pc-24-accounts.png)
+
+Also do these by hand in each Roblox window, they matter more than anything the macro
+can do: graphics quality 1, lowest frame-rate cap, small window.
+
 ## What was tested, and what wasn't
 
-Tested here (25 automated tests, `Run Tests.bat` runs them on your PC):
+Tested here (32 automated tests, `Run Tests.bat` runs them on your PC):
 
 - 24-hour simulated sessions with 1 to 60 accounts: zero idle kicks.
 - 24-hour sessions with everything going wrong at once (focus failing 25% of the time,
   network drops, stuck windows, a person using the PC): zero idle kicks, zero input sent
   to the wrong window, every network drop reconnected.
 - 72-hour run with 12 accounts: 0 kicks, longest gap without input 9.4 min.
+- Simulated bad PC (windows take seconds to appear, 3%+ of input swallowed, freezes of up
+  to 6 seconds): 24 hours with 20, 30, 45 and 60 accounts, and 72 hours with 30 accounts
+  plus a person using the PC: zero idle kicks. Longest gap without input 12.9 min.
 - Paused mode, tapping switched off, crashes, stop/pause keys, bad settings, the app window.
 
 Not tested (this was built without access to a Windows PC or Roblox):
 
 - The Windows layer in `tapquest/win.py` (finding windows, focusing them, sending clicks).
   Do a short supervised run first.
+- Weak PC mode's Windows calls (minimise, priority, memory trim). The simulated bad PC
+  is my model of lag, not a measurement of yours. If a tweak fails it is skipped and
+  logged; the macro keeps running.
+- How many Roblox clients your PC can actually hold open. The macro can't add RAM.
 - The disconnect pop-up detector. Its colour and Reconnect button position
   (`reconnect_color`, `reconnect_dx`, `reconnect_dy` in `settings.json`) are best guesses
   and may need adjusting. If it misbehaves, untick "Press Reconnect on disconnect".
@@ -75,4 +102,4 @@ Limits to know about:
 - `settings.json` - all settings (the app saves it when you press Start)
 
 `python -m tapquest --demo` shows the app with simulated accounts.
-`python -m tapquest --soak 24 --accounts 10` runs a simulated endurance test.
+`python -m tapquest --soak 24 --accounts 30 --slow-pc` runs a simulated endurance test.

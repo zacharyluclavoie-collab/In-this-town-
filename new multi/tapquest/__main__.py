@@ -13,14 +13,16 @@ from .sim import SimIO
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
-def soak(hours: float, accounts: int, cfg) -> int:
+def soak(hours: float, accounts: int, cfg, slow: bool = False) -> int:
     """Simulate a long rough session and report whether any account would have been kicked."""
     io = SimIO(accounts=accounts, seed=7, focus_fail=0.2, user_per_hour=4, netdrop_per_hour=0.3,
-               block_per_hour=1)
+               block_per_hour=1, slow_pc=slow)
     eng = Engine(cfg, io, seed=7, strict=True)
     eng.run(until=hours * 3600)
     taps = sum(a.taps for a in eng.accounts.values())
-    print(f"Simulated {hours:g} h with {accounts} accounts (flaky focus, network drops, you using the PC)")
+    pc = "a slow, freezing PC" if slow else "a normal PC"
+    print(f"Simulated {hours:g} h with {accounts} accounts on {pc} "
+          f"(flaky focus, network drops, you using the PC)")
     print(f"  taps sent ............... {taps:,}")
     print(f"  idle kicks .............. {io.idle_kicks}")
     print(f"  longest gap w/o input ... {io.max_idle / 60:.1f} min (Roblox kicks at 20.0)")
@@ -38,15 +40,16 @@ def main(argv=None) -> int:
     ap.add_argument("--demo-speed", type=float, default=1.0)
     ap.add_argument("--soak", type=float, metavar="HOURS", help="simulated endurance test, no window")
     ap.add_argument("--accounts", type=int, default=6, help="accounts for --demo / --soak")
+    ap.add_argument("--slow-pc", action="store_true", help="simulate a bad PC in --demo / --soak")
     args = ap.parse_args(argv)
 
     if args.soak:
-        return soak(args.soak, args.accounts, cfgmod.load(args.settings))
+        return soak(args.soak, args.accounts, cfgmod.load(args.settings), args.slow_pc)
 
     demo = args.demo or sys.platform != "win32"
     if demo:
         io = SimIO(accounts=args.accounts, seed=3, netdrop_per_hour=1.0, user_per_hour=3,
-                   realtime_speed=args.demo_speed)
+                   realtime_speed=args.demo_speed, slow_pc=args.slow_pc)
     else:
         from .win import WinIO
 

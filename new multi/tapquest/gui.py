@@ -76,6 +76,8 @@ class App:
         s.configure("Treeview.Heading", background="#262b36", foreground=DIM, borderwidth=0)
         s.map("Treeview", background=[("selected", "#2f3646")])
         s.configure("TEntry", insertcolor=FG)
+        s.configure("Vertical.TScrollbar", background="#2b3140", troughcolor=PANEL, borderwidth=0,
+                    arrowcolor=DIM)
 
     def _build(self):
         r = self.root
@@ -102,6 +104,7 @@ class App:
         self.v = {
             "tps": tk.StringVar(), "dwell": tk.StringVar(), "tx": tk.StringVar(), "ty": tk.StringVar(),
             "tap": tk.BooleanVar(), "user": tk.BooleanVar(), "rec": tk.BooleanVar(),
+            "weak": tk.BooleanVar(),
         }
         ttk.Label(side, text="SETTINGS", style="PanelDim.TLabel").grid(row=0, column=0, columnspan=3, sticky="w")
         self._row(side, 1, "Taps per second", "tps")
@@ -115,16 +118,17 @@ class App:
             ("tap", "Auto-tap"),
             ("user", "Wait while I use the mouse"),
             ("rec", "Press Reconnect on disconnect"),
+            ("weak", "Weak PC mode (20+ accounts)"),
         )):
             ttk.Checkbutton(side, text=text, variable=self.v[key]).grid(
                 row=5 + i, column=0, columnspan=3, sticky="w")
         ttk.Label(side, text="EXTRA STEPS (per account)", style="PanelDim.TLabel").grid(
-            row=8, column=0, columnspan=3, sticky="w", pady=(12, 2))
-        self.steps = tk.Listbox(side, height=5, bg=BG, fg=FG, highlightthickness=0, borderwidth=0,
+            row=9, column=0, columnspan=3, sticky="w", pady=(12, 2))
+        self.steps = tk.Listbox(side, height=4, bg=BG, fg=FG, highlightthickness=0, borderwidth=0,
                                 selectbackground="#2f3646", activestyle="none", width=30)
-        self.steps.grid(row=9, column=0, columnspan=3, sticky="ew")
+        self.steps.grid(row=10, column=0, columnspan=3, sticky="ew")
         bar = ttk.Frame(side, style="Panel.TFrame")
-        bar.grid(row=10, column=0, columnspan=3, sticky="ew", pady=(6, 0))
+        bar.grid(row=11, column=0, columnspan=3, sticky="ew", pady=(6, 0))
         ttk.Button(bar, text="+ Click", command=lambda: self.add_step("click")).pack(side="left")
         ttk.Button(bar, text="+ Key", command=lambda: self.add_step("key")).pack(side="left", padx=4)
         ttk.Button(bar, text="Remove", command=self.remove_step).pack(side="left")
@@ -137,6 +141,9 @@ class App:
             self.tree.column(c, width=w, anchor="w" if c in ("name", "state") else "center")
         for tag, col in (("ok", GREEN), ("warn", AMBER), ("bad", RED), ("info", BLUE)):
             self.tree.tag_configure(tag, foreground=col)
+        scroll = ttk.Scrollbar(mid, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscrollcommand=scroll.set)
+        scroll.pack(side="right", fill="y")
         self.tree.pack(side="left", fill="both", expand=True)
 
         self.logbox = tk.Text(r, height=8, bg=PANEL, fg=DIM, borderwidth=0, highlightthickness=0,
@@ -159,6 +166,7 @@ class App:
         v["tap"].set(c.tap_enabled)
         v["user"].set(c.pause_on_user_input)
         v["rec"].set(c.reconnect_enabled)
+        v["weak"].set(c.weak_pc)
         self._fill_steps()
 
     def _fill_steps(self):
@@ -175,7 +183,7 @@ class App:
             data = dict(c.to_dict(), taps_per_second=float(v["tps"].get()), dwell_s=float(v["dwell"].get()),
                         tap_x=float(v["tx"].get()), tap_y=float(v["ty"].get()),
                         tap_enabled=v["tap"].get(), pause_on_user_input=v["user"].get(),
-                        reconnect_enabled=v["rec"].get())
+                        reconnect_enabled=v["rec"].get(), weak_pc=v["weak"].get())
         except ValueError:
             raise ConfigError("Settings boxes must contain numbers") from None
         return Config.from_dict(data)
@@ -283,7 +291,10 @@ class App:
                 cb, self.capture = self.capture, None
                 cb(*frac)
                 self._log(f"Spot saved: {frac[0]:.3f}, {frac[1]:.3f}")
-        self._refresh()
+        # Weak PC mode redraws the table less often to leave CPU for the games.
+        self._tick = getattr(self, "_tick", 0) + 1
+        if not self.cfg.weak_pc or self._tick % 4 == 0:
+            self._refresh()
         self.root.after(250, self._poll)
 
     def _refresh(self):
@@ -309,12 +320,14 @@ class App:
         live = [a for a in accs if a["state"] != "closed"]
         self.summary.configure(
             text=f"{len(live)} account(s) open   |   {sum(a['taps'] for a in accs):,} taps sent   |   "
-                 f"{snap['dwell']:.1f}s per account per lap   |   input at least every "
+                 f"{snap['dwell']:.1f}s per account, lap {_mmss(snap['lap'])}   |   input at least every "
                  f"{_mmss(self.cfg.safe_idle_s)} (Roblox kicks at 20:00)")
-        self.tree.delete(*self.tree.get_children())
+        rows = self.tree.get_children()
+        for extra in rows[len(accs):]:
+            self.tree.delete(extra)
         labels = {"ok": "Connected", "reconnecting": "Reconnecting...", "blocked": "Window stuck",
                   "closed": "Window closed"}
-        for a in accs:
+        for i, a in enumerate(accs):
             idle = a["idle"]
             left = None if idle is None else ROBLOX_IDLE_KICK_S - idle
             tag = "ok"
@@ -326,10 +339,14 @@ class App:
                 tag = "bad"
             elif idle is None or idle > self.cfg.safe_idle_s * 1.25:
                 tag = "warn"
-            self.tree.insert("", "end", tags=(tag,), values=(
+            values = (
                 a["name"], labels[a["state"]] if idle is not None or a["state"] != "ok" else "Waiting...",
                 "-" if idle is None else _mmss(idle) + " ago", _mmss(left),
-                a["visits"], f"{a['taps']:,}", a["reconnects"]))
+                a["visits"], f"{a['taps']:,}", a["reconnects"])
+            if i < len(rows):  # update in place so the list keeps its scroll position
+                self.tree.item(rows[i], values=values, tags=(tag,))
+            else:
+                self.tree.insert("", "end", values=values, tags=(tag,))
 
     def run(self):
         self.root.mainloop()

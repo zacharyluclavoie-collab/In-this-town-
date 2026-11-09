@@ -225,6 +225,80 @@ class Features(unittest.TestCase):
         self.assertGreater(calls[0], 10000)
 
 
+class WeakPC(unittest.TestCase):
+    """A simulated bad PC: windows take seconds to appear, input gets swallowed, it freezes."""
+
+    def slow(self, n, **kw):
+        return SimIO(accounts=n, seed=n, slow_pc=True, focus_fail=0.15, netdrop_per_hour=0.2,
+                     block_per_hour=1, **kw)
+
+    def test_24h_with_20_to_60_accounts(self):
+        for n in (20, 30, 45, 60):
+            with self.subTest(accounts=n):
+                io = self.slow(n)
+                eng = run(io, Config(weak_pc=True), hours=24)
+                self.assertEqual(io.idle_kicks, 0)
+                self.assertEqual(io.stray_inputs, 0)
+                self.assertLess(io.max_idle, 900)
+                self.assertGreater(io.freezes, 300)
+                self.assertGreater(io.dropped, 1000)
+                for a in eng.accounts.values():
+                    self.assertGreater(a.taps, 2000)
+                # only the account being worked on is ever on screen
+                self.assertLessEqual(io.visible(), 2)
+                self.assertLessEqual(io.max_visible, 4)
+                self.assertEqual(io.tuned, set(io.windows))
+                self.assertGreater(io.trims, 1000)
+
+    def test_24h_many_accounts_while_person_uses_pc(self):
+        for n in (25, 40):
+            with self.subTest(accounts=n):
+                io = self.slow(n, user_per_hour=6)
+                run(io, Config(weak_pc=True), hours=24)
+                self.assertEqual(io.idle_kicks, 0)
+                self.assertEqual(io.stray_inputs, 0)
+                self.assertLess(io.max_idle, 900)
+
+    def test_person_on_slow_pc_nonstop_12h(self):
+        io = self.slow(25)
+        io.always_user = True
+        run(io, Config(weak_pc=True), hours=12)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertEqual(io.stray_inputs, 0)
+
+    def test_slow_pc_is_safe_even_with_weak_mode_off(self):
+        io = self.slow(20)
+        run(io, Config(), hours=24)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertEqual(io.stray_inputs, 0)
+        self.assertEqual(io.trims, 0)
+        self.assertEqual(io.visible(), 20)
+
+    def test_warns_when_pc_cannot_keep_up(self):
+        io = self.slow(40)
+        eng = Engine(Config(weak_pc=True, safe_idle_s=60), io, seed=1, strict=True)
+        eng.run(until=1800)
+        self.assertTrue(any("too slow" in m for _, m in eng.events))
+
+    def test_failed_pc_tweak_never_stops_the_macro(self):
+        io = self.slow(20)
+
+        def boom(hwnd):
+            raise OSError("access denied")
+
+        io.tune = io.trim = io.minimize = boom
+        eng = run(io, Config(weak_pc=True), hours=6)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertGreater(sum(a.taps for a in eng.accounts.values()), 10000)
+
+    def test_trim_setting_limits(self):
+        Config(weak_trim_s=0).validate()
+        with self.assertRaises(ConfigError):
+            Config(weak_trim_s=5).validate()
+        with self.assertRaises(ConfigError):
+            Config(focus_timeout_s=0).validate()
+
+
 class Settings(unittest.TestCase):
     def test_defaults_are_valid_and_round_trip(self):
         cfg = Config(steps=[Step(name="A")])

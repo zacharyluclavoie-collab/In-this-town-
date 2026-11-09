@@ -69,6 +69,11 @@ class Engine:
         self._cursor = None  # where we last left the mouse
         self._counter = 0
         self._errors = 0
+        self._overhead = VISIT_OVERHEAD_S  # measured cost of switching to an account
+        self._focus_ema = 0.1  # measured time for a window to come to the front
+        self._front = None  # account window we last brought forward
+        self._next_trim = 0.0
+        self._slow_warned = False
 
     # ---- control -----------------------------------------------------------
     def stop(self):
@@ -101,6 +106,7 @@ class Engine:
             "mode": self.mode,
             "user_active": now < self.user_until,
             "dwell": self.dwell(),
+            "lap": len(self.live()) * (self.dwell() + self._overhead),
             "accounts": [
                 {
                     "name": a.name,
@@ -142,6 +148,7 @@ class Engine:
             self._next_refresh = now + REFRESH_S
         self._watch_user()
         self._watch_idle()
+        self._housekeep()
         acc, full = self._pick()
         if acc is None:
             self.io.sleep(0.25)
@@ -165,6 +172,10 @@ class Engine:
                 a = Account(hwnd, f"Account {self._counter}", seen_at=self.io.now())
                 self.accounts[hwnd] = a
                 self.log(f"{a.name} found")
+                if self.cfg.weak_pc and self.cfg.weak_low_priority:
+                    self._quiet(self.io.tune, hwnd)
+                if self.cfg.weak_pc and self.cfg.weak_minimize and hwnd != self.io.foreground():
+                    self._quiet(self.io.minimize, hwnd)
             elif a.state == "closed":
                 a.state, a.last_input, a.retry_at, a.warned = "ok", None, 0.0, False
                 a.seen_at = self.io.now()
@@ -202,13 +213,38 @@ class Engine:
             else:
                 a.warned = False
 
+    def _quiet(self, fn, *args):
+        """Run a nice-to-have PC tweak; a failure must never stop the macro."""
+        try:
+            fn(*args)
+        except Exception as e:
+            self.log(f"Skipped {fn.__name__}: {e!r}")
+
+    def _housekeep(self):
+        cfg, now = self.cfg, self.io.now()
+        live = self.live()
+        if cfg.weak_pc and cfg.weak_trim_s and now >= self._next_trim:
+            self._next_trim = now + cfg.weak_trim_s
+            front = self.io.foreground()
+            for a in live:
+                if a.hwnd != front:
+                    self._quiet(self.io.trim, a.hwnd)
+        load = len(live) * self._overhead / cfg.safe_idle_s
+        too_slow = load > (0.7 if self._slow_warned else 0.9)  # no flapping at the edge
+        if too_slow and not self._slow_warned:
+            self.alarm(
+                f"This PC takes {self._overhead:.0f}s to switch accounts - too slow to keep "
+                f"{len(live)} accounts safe. Close a few."
+            )
+        self._slow_warned = too_slow
+
     def live(self) -> list:
         return [a for a in self.accounts.values() if a.state != "closed"]
 
     def dwell(self) -> float:
         """Seconds of tapping per visit, shrunk so a full lap fits the safe window."""
         n = max(1, len(self.live()))
-        budget = self.cfg.safe_idle_s * 0.8 / n - VISIT_OVERHEAD_S
+        budget = self.cfg.safe_idle_s * 0.8 / n - self._overhead
         return max(0.3, min(self.cfg.dwell_s, budget))
 
     def _pick(self):
@@ -219,7 +255,10 @@ class Engine:
             return None, False
         keepalive_only = self.mode == "keepalive" or now < self.user_until
         if keepalive_only:
-            ready = [a for a in ready if a.idle(now) >= self.cfg.safe_idle_s]
+            # start early enough that the last account in the queue is still on time
+            due = max(60.0, self.cfg.safe_idle_s - len(self.live()) * self._overhead)
+            # (an account that just pressed Reconnect is always checked on promptly)
+            ready = [a for a in ready if a.idle(now) >= due or a.state == "reconnecting"]
             if not ready:
                 return None, False
         acc = max(ready, key=lambda a: a.idle(now))
@@ -232,6 +271,10 @@ class Engine:
         try:
             if not self._focus(a):
                 return
+            if cfg.weak_pc and cfg.weak_minimize and self._front not in (None, a.hwnd):
+                if self._front in self.accounts and self.accounts[self._front].state != "closed":
+                    self._quiet(io.minimize, self._front)
+            self._front = a.hwnd
             a.visits += 1
             sent = False
             if cfg.reconnect_enabled and io.now() >= a.next_dc_check:
@@ -251,25 +294,40 @@ class Engine:
                 fg, cur = restore
                 if fg and fg != a.hwnd and io.foreground() == a.hwnd:
                     io.focus(fg)
+                    if cfg.weak_pc and cfg.weak_minimize:
+                        self._quiet(io.minimize, a.hwnd)
+                        self._front = None
                 io.set_cursor(cur)
             self._cursor = io.cursor()
 
     def _focus(self, a: Account) -> bool:
-        io = self.io
+        io, cfg = self.io, self.cfg
+        t0 = io.now()
         if io.foreground() != a.hwnd:
-            for attempt in range(3):
+            # A slow PC can take seconds to bring a window forward: ask, then wait
+            # patiently, asking again twice more before giving up for now.
+            timeout = max(cfg.focus_timeout_s, 10.0 if cfg.weak_pc else 0.0)
+            deadline, ok = t0 + timeout, False
+            while not ok and io.now() < deadline and not self.stopped:
                 io.focus(a.hwnd)
-                io.sleep(0.08 * (attempt + 1))
-                if io.foreground() == a.hwnd:
-                    break
-            else:
+                retry = min(deadline, io.now() + timeout / 3)
+                while io.now() < retry:
+                    io.sleep(0.04)
+                    if io.foreground() == a.hwnd:
+                        ok = True
+                        break
+            if not ok:
                 a.focus_fails += 1
                 a.retry_at = io.now() + min(15.0, 2.0 * a.focus_fails)
                 if a.focus_fails == 3:
                     a.state = "blocked"
                     self.log(f"{a.name}: can't bring its window to the front, retrying")
                 return False
-            io.sleep(self.cfg.settle_s)
+            self._focus_ema += 0.2 * (io.now() - t0 - self._focus_ema)
+            # the slower the window was to appear, the longer it needs before it listens
+            settle = max(cfg.settle_s, 0.4 if cfg.weak_pc else 0.0, min(2.0, 0.5 * self._focus_ema))
+            io.sleep(settle)
+            self._overhead = max(0.3, self._overhead + 0.1 * (io.now() - t0 + 0.2 - self._overhead))
         if a.state == "blocked":
             a.state = "ok"
             self.log(f"{a.name}: window reachable again")
@@ -357,9 +415,13 @@ class Engine:
     def _nudge(self, a: Account):
         """Smallest possible input that resets Roblox's idle timer."""
         io, cfg = self.io, self.cfg
-        self._send(a, lambda: io.key(cfg.nudge_key, 0.06), False)
-        if cfg.nudge_back_key:
-            self._send(a, lambda: io.key(cfg.nudge_back_key, 0.06), False)
+        # A lagging PC can swallow a key press, so weak PC mode sends it twice.
+        for i in range(2 if cfg.weak_pc else 1):
+            if i:
+                io.sleep(0.3)
+            self._send(a, lambda: io.key(cfg.nudge_key, 0.06), False)
+            if cfg.nudge_back_key:
+                self._send(a, lambda: io.key(cfg.nudge_back_key, 0.06), False)
 
 
 def _dist(p, q) -> float:

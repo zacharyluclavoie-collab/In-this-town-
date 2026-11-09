@@ -1,3 +1,3 @@
 """Tap Quest Sim multi-account macro."""
 
-__version__ = "5.0"
+__version__ = "5.1"

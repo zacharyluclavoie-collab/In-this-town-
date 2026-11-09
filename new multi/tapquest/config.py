@@ -68,6 +68,13 @@ class Config:
         default_factory=lambda: ["RobloxPlayerBeta.exe", "Windows10Universal.exe"]
     )
     settle_s: float = 0.15  # pause after switching windows before sending input
+    focus_timeout_s: float = 3.0  # how long to wait for a window to come to the front
+
+    # Weak PC mode: for running many accounts on a slow computer
+    weak_pc: bool = False
+    weak_minimize: bool = True  # keep only the account being tapped on screen
+    weak_low_priority: bool = True  # Roblox yields CPU to the macro and desktop
+    weak_trim_s: float = 300.0  # push idle accounts' memory to disk this often (0 = off)
     steps: list = field(default_factory=list)
 
     def validate(self) -> None:
@@ -87,6 +94,9 @@ class Config:
         rng("reconnect_tolerance", 0, 60)
         rng("reconnect_wait_s", 5, 300)
         rng("settle_s", 0.02, 2)
+        rng("focus_timeout_s", 1, 30)
+        if self.weak_trim_s != 0:
+            rng("weak_trim_s", 30, 3600)
         for name in ("nudge_key", "nudge_back_key"):
             k = getattr(self, name)
             if k and k not in KEYS:
