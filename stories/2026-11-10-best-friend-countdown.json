@@ -1,0 +1,548 @@
+{
+ "slug": "best-friend-countdown",
+ "date": "2026-11-10",
+ "title": "In this world a number counts down to your best friend",
+ "caption": "In this world, a number over your head counts down to the day you meet your best friend ⏳ Everyone hit zero... except Leo 🥹 Who's YOUR best friend? Tag them! #inthisworld #story #storytime #family #fyp",
+ "voice": "am_michael",
+ "speed": 1.08,
+ "mood": "emotional",
+ "cast": {
+  "max": {
+   "age": "baby",
+   "skin": "#f2c9a0",
+   "shirt": "#9fd3ff",
+   "pants": "#9fd3ff",
+   "top": "tshirt",
+   "hair": "short",
+   "hair_color": "#7a5030"
+  }
+ },
+ "shots": [
+  {
+   "line": "In this *world*, a number over your head counts down to your *best friend*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "S2",
+     "face": "happy",
+     "tag": "3"
+    },
+    {
+     "who": "noah",
+     "at": "S1",
+     "face": "smile",
+     "tag": "12"
+    },
+    {
+     "who": "kid2",
+     "at": "S3",
+     "face": "shocked",
+     "tag": "40"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "kid1",
+     "noah",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "When it hits *zero*, you meet them.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "laugh",
+     "act": "hug",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "noah",
+     "at": "C",
+     "face": "laugh",
+     "act": "hug",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "mia",
+     "noah"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "By ten, everyone in Leo's class had hit *zero*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "S1",
+     "face": "happy",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "noah",
+     "at": "S2",
+     "face": "happy",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "kid1",
+     "at": "S3",
+     "face": "smile",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "mia",
+     "noah",
+     "kid1"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Except Leo. His number still said *two hundred*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "S2",
+     "face": "sad",
+     "tag": "200"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "At recess, he played *alone*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "sad",
+     "act": "hold",
+     "prop": "ball",
+     "tag": "150"
+    },
+    {
+     "who": "kid1",
+     "at": "F",
+     "face": "laugh",
+     "act": "cheer"
+    },
+    {
+     "who": "kid2",
+     "at": "G",
+     "face": "laugh",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": "leo",
+    "front": "scene",
+    "move": "pull"
+   }
+  },
+  {
+   "line": "Kids whispered, Maybe nobody *wants* to be his friend.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "B",
+     "face": "smug",
+     "act": "talk",
+     "talk": true,
+     "look": "kid2"
+    },
+    {
+     "who": "kid2",
+     "at": "C",
+     "face": "laugh",
+     "look": "kid1"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "kid1",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Every night, Leo watched his number go *down*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "sad",
+     "act": "sad",
+     "tag": "90"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "front": "scene",
+    "move": "push"
+   },
+   "time": "night"
+  },
+  {
+   "line": "Thirty days. Ten days. *Three*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "tag": "3"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "zoom"
+   },
+   "time": "night"
+  },
+  {
+   "line": "On the last day, he looked for someone *new*. Nobody came.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "S2",
+     "face": "worried",
+     "act": "lookaround",
+     "tag": "1"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "height": "high"
+   }
+  },
+  {
+   "line": "He walked home, sure his number was *broken*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "F",
+     "face": "sad",
+     "act": "walk",
+     "to": "A",
+     "tag": "1"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": "leo",
+    "front": "scene",
+    "follow": true
+   },
+   "time": "sunset"
+  },
+  {
+   "line": "Then Dad burst through the door. It's *time*!",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "dad",
+     "at": "B",
+     "face": "shocked",
+     "act": [
+      "talk",
+      "cheer"
+     ],
+     "talk": true,
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "shocked",
+     "look": "dad",
+     "tag": "1"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "dad",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "time": "sunset"
+  },
+  {
+   "line": "That night, Mom and Dad came home with a tiny *baby brother*.",
+   "set": "nursery",
+   "chars": [
+    {
+     "who": "max",
+     "at": [
+      0.35,
+      -0.25,
+      -15,
+      0.08
+     ],
+     "face": "sleepy"
+    },
+    {
+     "who": "mom",
+     "at": "B",
+     "face": "happy",
+     "look": "max"
+    },
+    {
+     "who": "dad",
+     "at": [
+      -1.1,
+      0.6,
+      0
+     ],
+     "face": "smile",
+     "look": "max"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "max",
+     "mom"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "time": "night"
+  },
+  {
+   "line": "Leo reached out to say hi. Max grabbed his *finger*.",
+   "set": "nursery",
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      -0.6,
+      0.35,
+      0
+     ],
+     "face": "smile",
+     "look": "max",
+     "tag": "1",
+     "act": "point"
+    },
+    {
+     "who": "max",
+     "at": [
+      0.35,
+      -0.25,
+      -15,
+      0.08
+     ],
+     "face": "happy"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "max"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "time": "night"
+  },
+  {
+   "line": "And above Leo's head, the number turned to *zero*.",
+   "set": "nursery",
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      -0.6,
+      0.35,
+      0
+     ],
+     "face": "shocked",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "height": "low",
+    "move": "push"
+   },
+   "time": "night",
+   "hold": 0.3
+  },
+  {
+   "line": "Above the baby's head, there was a zero *too*.",
+   "set": "nursery",
+   "chars": [
+    {
+     "who": "max",
+     "at": [
+      0.35,
+      -0.25,
+      -15,
+      0.08
+     ],
+     "face": "laugh",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "max",
+    "move": "push"
+   },
+   "time": "night"
+  },
+  {
+   "line": "His best friend wasn't late. He just wasn't *born* yet.",
+   "set": "nursery",
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      -0.6,
+      0.35,
+      0
+     ],
+     "face": "crying",
+     "look": "max",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "max",
+     "at": [
+      0.35,
+      -0.25,
+      -15,
+      0.08
+     ],
+     "face": "happy",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "max"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "time": "night",
+   "hold": 0.4
+  },
+  {
+   "line": "Leo whispered, I'm going to teach you *everything*.",
+   "set": "nursery",
+   "chars": [
+    {
+     "who": "leo",
+     "at": [
+      -0.6,
+      0.35,
+      0
+     ],
+     "face": "smile",
+     "act": "talk",
+     "talk": true,
+     "look": "max",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "angle": -20,
+    "move": "push"
+   },
+   "time": "night"
+  },
+  {
+   "line": "Who is *your* best friend? Tag them.",
+   "set": "nursery",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "happy",
+     "act": "wave",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "max",
+     "at": [
+      0.35,
+      -0.25,
+      -15,
+      0.08
+     ],
+     "face": "laugh"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "max"
+    ],
+    "front": "scene",
+    "move": "pull"
+   },
+   "time": "sunset",
+   "hold": 0.6
+  }
+ ]
+}

@@ -47,7 +47,9 @@ def tts(lines, voice, speed, out_dir):
     clips = []
     for i, line in enumerate(lines):
         p = os.path.join(out_dir, f"line_{i:02d}.wav")
-        if os.path.exists(p):
+        tp = p[:-4] + ".txt"
+        same = os.path.exists(tp) and open(tp).read() == clean(line)
+        if os.path.exists(p) and (same or not os.path.exists(tp)):
             a, _ = sf.read(p)
         else:
             a, sr = k.create(clean(line), voice=voice, speed=speed, lang="en-us")
@@ -56,6 +58,7 @@ def tts(lines, voice, speed, out_dir):
             if len(nz):
                 a = a[max(0, nz[0] - 600): nz[-1] + 1200]
             sf.write(p, a, SR)
+            open(tp, "w").write(clean(line))
         clips.append(np.asarray(a, dtype=np.float32))
     return clips
 

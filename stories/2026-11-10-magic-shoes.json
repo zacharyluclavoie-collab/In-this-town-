@@ -1,0 +1,476 @@
+{
+ "slug": "magic-shoes",
+ "date": "2026-11-10",
+ "title": "In this world your shoes walk you to whoever needs you",
+ "caption": "In this world, your shoes walk you to whoever needs you most 👟 Leo's always took him to the meanest kid in school... and nobody knew why 🥹 Where would YOUR shoes take you? #inthisworld #story #storytime #friendship #fyp",
+ "voice": "am_michael",
+ "speed": 1.08,
+ "mood": "hopeful",
+ "shots": [
+  {
+   "line": "In this *world*, your shoes walk you to whoever *needs* you most.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "F",
+     "face": "happy",
+     "act": "walk",
+     "to": "D",
+     "fx": "sparkle",
+     "fx_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": "kid1",
+    "front": "scene",
+    "follow": true
+   }
+  },
+  {
+   "line": "Noah's shoes walked him to his grandpa, who was stuck on his *phone*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "B",
+     "face": "worried",
+     "act": "hold",
+     "prop": "phone"
+    },
+    {
+     "who": "noah",
+     "at": "C",
+     "face": "smile",
+     "act": "walk",
+     "to": "A",
+     "look": "grandpa"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "grandpa",
+     "noah"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "When your shoes stop, you just *know* what to do.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "noah",
+     "at": "A",
+     "face": "happy",
+     "act": "point",
+     "look": "grandpa"
+    },
+    {
+     "who": "grandpa",
+     "at": "B",
+     "face": "laugh",
+     "act": "hold",
+     "prop": "phone"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "noah",
+     "grandpa"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "But Leo's shoes were *weird*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "shocked",
+     "act": "walk",
+     "to": "D",
+     "fx": "sparkle",
+     "fx_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "front": "scene",
+    "height": "low"
+   }
+  },
+  {
+   "line": "Every single day, they walked him to the same house. *Tyler's*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "G",
+     "face": "worried",
+     "act": "walk",
+     "to": "A"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": "leo",
+    "front": "scene",
+    "follow": true
+   }
+  },
+  {
+   "line": "Tyler. The *meanest* kid in school.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "smug",
+     "act": "point",
+     "talk": false
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "tyler",
+    "height": "low",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Your shoes are *broken*, the kids laughed.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "B",
+     "face": "laugh",
+     "act": "point",
+     "look": "leo"
+    },
+    {
+     "who": "kid2",
+     "at": "C",
+     "face": "laugh",
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "D",
+     "face": "sad",
+     "act": "sad"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "kid1",
+     "kid2",
+     "leo"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Even Tyler yelled, Stop *following* me!",
+   "set": "street",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "angry",
+     "act": [
+      "talk",
+      "angry"
+     ],
+     "talk": true,
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "So one night, Leo stopped fighting his shoes, and *knocked*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "fx": "sparkle",
+     "fx_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push"
+   },
+   "time": "night"
+  },
+  {
+   "line": "Tyler's house was dark, and totally *empty*.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "sad",
+     "act": "sad"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "tyler",
+    "front": "scene",
+    "move": "pull"
+   },
+   "time": "night"
+  },
+  {
+   "line": "His mom worked two jobs. Tyler ate dinner *alone*, every night.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "SOFA",
+     "face": "sad",
+     "act": "hold",
+     "prop": "tray"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "tyler",
+    "height": "high",
+    "move": "push"
+   },
+   "time": "night"
+  },
+  {
+   "line": "He wasn't really mean. He was just *lonely*.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "SOFA",
+     "face": "crying",
+     "act": "cry"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "tyler",
+    "move": "push"
+   },
+   "time": "night",
+   "hold": 0.3
+  },
+  {
+   "line": "Leo sat down next to him, and *shared* his dinner.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "SOFA3",
+     "face": "smile",
+     "act": "hold",
+     "prop": "tray",
+     "look": "tyler"
+    },
+    {
+     "who": "tyler",
+     "at": "SOFA2",
+     "face": "shocked",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "tyler"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "time": "night"
+  },
+  {
+   "line": "They played games until his mom got *home*.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "SOFA3",
+     "face": "laugh",
+     "act": "cheer"
+    },
+    {
+     "who": "tyler",
+     "at": "SOFA2",
+     "face": "laugh",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "tyler"
+    ],
+    "front": "scene",
+    "angle": 15
+   },
+   "time": "night"
+  },
+  {
+   "line": "After that, Leo came over *every* night.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "G",
+     "face": "happy",
+     "act": "walk",
+     "to": "A"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": "leo",
+    "front": "scene",
+    "follow": true
+   },
+   "time": "sunset"
+  },
+  {
+   "line": "And Tyler stopped being *mean*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "smile",
+     "act": "wave"
+    },
+    {
+     "who": "kid2",
+     "at": "B",
+     "face": "shocked",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Then one morning, Tyler's shoes started walking *too*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "shocked",
+     "act": "walk",
+     "to": "E",
+     "fx": "sparkle",
+     "fx_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "tyler",
+    "front": "scene",
+    "follow": true
+   }
+  },
+  {
+   "line": "Straight toward the new kid, sitting *alone*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "kid2",
+     "at": "C",
+     "face": "sad",
+     "act": "sad"
+    },
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "smile",
+     "act": "wave",
+     "look": "kid2"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "kid2",
+     "tyler"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "hold": 0.3
+  },
+  {
+   "line": "Where would *your* shoes take you?",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": "wave"
+    },
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "happy",
+     "act": "wave"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "tyler"
+    ],
+    "front": "scene",
+    "move": "pull"
+   },
+   "time": "sunset",
+   "hold": 0.6
+  }
+ ]
+}

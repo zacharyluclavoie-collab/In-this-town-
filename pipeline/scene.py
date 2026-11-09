@@ -964,6 +964,33 @@ def bubble(c):
     sphere(0.06, hp + Vector((-0.25, 0, -0.25)), mat("#ffffff", 0.5))
 
 
+def tag(c, text, color="#7fe7ff"):
+    """Glowing number floating above the head (follows the head)."""
+    cu = bpy.data.curves.new("tag", type="FONT")
+    cu.body = text
+    cu.align_x = "CENTER"
+    cu.align_y = "CENTER"
+    cu.size = 0.6
+    cu.extrude = 0.04
+    for fp in ("/usr/share/fonts/truetype/roboto/unhinted/RobotoTTF/Roboto-Black.ttf",
+               "/usr/share/fonts/truetype/roboto/hinted/Roboto-Black.ttf"):
+        if os.path.exists(fp):
+            cu.font = bpy.data.fonts.load(fp)
+            break
+    ob = link(bpy.data.objects.new("tag", cu))
+    ob.parent = c.neck
+    ob.location = (0, -0.12, 1.95)
+    ob.rotation_euler = (math.radians(90), 0, 0)
+    m = bpy.data.materials.new("tagm")
+    m.use_nodes = True
+    bsdf = m.node_tree.nodes["Principled BSDF"]
+    col = tuple(int(color[i:i + 2], 16) / 255 for i in (1, 3, 5)) + (1,)
+    bsdf.inputs["Base Color"].default_value = (0.07, 0.09, 0.14, 1)
+    ob.data.materials.append(m)
+    w = 0.55 + 0.36 * len(text)
+    box((w, 0.08, 0.78), (0, 0.0, 1.95), mat(color, 0.5, emit=0.6), c.neck, bevel=0.18)
+
+
 # ----------------------------------------------------------------- camera
 
 def setup_camera(cfg, chars, chars_by_name, interior):
@@ -1113,7 +1140,7 @@ def main():
         if isinstance(at, str):
             s = slots[at]
         else:
-            s = (at[0], at[1], at[2] if len(at) > 2 else 0)
+            s = (at[0], at[1], at[2] if len(at) > 2 else 0) + ((at[3],) if len(at) > 3 else ())
         yaw = cfg.get("yaw", s[2] if len(s) > 2 else 0)
         c = make_char(cfg["who"], spec, s[0], s[1], yaw)
         if len(s) > 3:
@@ -1129,6 +1156,8 @@ def main():
             sparkles(c, cfg.get("fx_color", "#7fe7ff"))
         if cfg.get("bubble"):
             bubble(c)
+        if cfg.get("tag") is not None:
+            tag(c, str(cfg["tag"]), cfg.get("tag_color", "#7fe7ff"))
     for pr in ARGS.get("props", []):
         make_prop(pr["kind"], None, tuple(pr["at"]))
     for fc in bpy.data.actions:
