@@ -1,0 +1,29 @@
+{
+  "tap_enabled": true,
+  "tap_x": 0.5,
+  "tap_y": 0.55,
+  "taps_per_second": 12.0,
+  "dwell_s": 8.0,
+  "safe_idle_s": 480.0,
+  "warn_idle_s": 900.0,
+  "nudge_key": "right",
+  "nudge_back_key": "left",
+  "pause_on_user_input": true,
+  "user_grace_s": 4.0,
+  "reconnect_enabled": true,
+  "reconnect_color": [
+    57,
+    59,
+    61
+  ],
+  "reconnect_tolerance": 14,
+  "reconnect_dx": 82,
+  "reconnect_dy": 86,
+  "reconnect_wait_s": 20.0,
+  "process_names": [
+    "RobloxPlayerBeta.exe",
+    "Windows10Universal.exe"
+  ],
+  "settle_s": 0.15,
+  "steps": []
+}

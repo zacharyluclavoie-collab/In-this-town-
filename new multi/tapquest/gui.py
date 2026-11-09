@@ -1,0 +1,381 @@
+"""The window you see: start/pause/stop, live account table, settings, log."""
+
+from __future__ import annotations
+
+import queue
+import threading
+import time
+import tkinter as tk
+from tkinter import messagebox, ttk
+
+from . import __version__
+from . import config as cfgmod
+from .config import ROBLOX_IDLE_KICK_S, Config, ConfigError, Step
+from .engine import Engine
+
+BG, PANEL, FG, DIM = "#14161c", "#1e222b", "#e8eaf0", "#8b93a5"
+GREEN, AMBER, RED, BLUE = "#3ddc84", "#ffb347", "#ff5c5c", "#5aa9ff"
+
+
+def _mmss(s) -> str:
+    if s is None:
+        return "-"
+    s = int(max(0, s))
+    return f"{s // 60}:{s % 60:02d}"
+
+
+class App:
+    def __init__(self, io, settings_path: str, demo: bool = False):
+        self.io, self.path, self.demo = io, settings_path, demo
+        self.engine: Engine | None = None
+        self.thread: threading.Thread | None = None
+        self.logq: queue.Queue = queue.Queue()
+        self.capture = None  # callback waiting for an F7 position
+        try:
+            self.cfg = cfgmod.load(settings_path)
+            load_error = None
+        except ConfigError as e:
+            self.cfg, load_error = Config(), str(e)
+
+        self.root = r = tk.Tk()
+        r.title(f"Tap Quest Multi {__version__}" + ("  (DEMO - simulated accounts)" if demo else ""))
+        r.configure(bg=BG)
+        r.geometry("1120x660")
+        r.minsize(1080, 600)
+        self._style()
+        self._build()
+        self._fill_from_cfg()
+        r.protocol("WM_DELETE_WINDOW", self.close)
+        r.after(200, self._poll)
+        if load_error:
+            self._log("Settings file had a problem, using defaults: " + load_error)
+        self._log("Ready. Open your Roblox windows, then press Start.")
+
+    # ---- layout ------------------------------------------------------------
+    def _style(self):
+        s = ttk.Style(self.root)
+        s.theme_use("clam")
+        s.configure(".", background=BG, foreground=FG, fieldbackground=PANEL, font=("Segoe UI", 10))
+        s.configure("TFrame", background=BG)
+        s.configure("Panel.TFrame", background=PANEL)
+        s.configure("TLabel", background=BG, foreground=FG)
+        s.configure("Dim.TLabel", foreground=DIM)
+        s.configure("Panel.TLabel", background=PANEL)
+        s.configure("PanelDim.TLabel", background=PANEL, foreground=DIM)
+        s.configure("TCheckbutton", background=PANEL, foreground=FG)
+        s.map("TCheckbutton", background=[("active", PANEL)])
+        s.configure("TButton", background="#2b3140", foreground=FG, padding=(12, 7), borderwidth=0)
+        s.map("TButton", background=[("active", "#394156"), ("disabled", "#20242d")],
+              foreground=[("disabled", "#59607a")])
+        s.configure("Go.TButton", background="#1f8f55")
+        s.map("Go.TButton", background=[("active", "#27a866"), ("disabled", "#20242d")])
+        s.configure("Stop.TButton", background="#a83838")
+        s.map("Stop.TButton", background=[("active", "#c44545"), ("disabled", "#20242d")])
+        s.configure("Treeview", background=PANEL, fieldbackground=PANEL, foreground=FG,
+                    rowheight=26, borderwidth=0, bordercolor=PANEL, lightcolor=PANEL, darkcolor=PANEL)
+        s.configure("Treeview.Heading", background="#262b36", foreground=DIM, borderwidth=0)
+        s.map("Treeview", background=[("selected", "#2f3646")])
+        s.configure("TEntry", insertcolor=FG)
+
+    def _build(self):
+        r = self.root
+        top = ttk.Frame(r, padding=(16, 14, 16, 8))
+        top.pack(fill="x")
+        ttk.Label(top, text="Tap Quest Multi", font=("Segoe UI", 17, "bold")).pack(side="left")
+        self.status = tk.Label(top, text="STOPPED", bg="#2b3140", fg=FG, padx=12, pady=4,
+                               font=("Segoe UI", 10, "bold"))
+        self.status.pack(side="left", padx=14)
+        self.b_stop = ttk.Button(top, text="Stop  (F8)", style="Stop.TButton", command=self.stop)
+        self.b_stop.pack(side="right")
+        self.b_pause = ttk.Button(top, text="Pause tapping  (F6)", command=self.toggle_pause)
+        self.b_pause.pack(side="right", padx=8)
+        self.b_start = ttk.Button(top, text="Start", style="Go.TButton", command=self.start)
+        self.b_start.pack(side="right")
+
+        self.summary = ttk.Label(r, text="", style="Dim.TLabel", padding=(18, 0, 16, 6))
+        self.summary.pack(fill="x")
+
+        mid = ttk.Frame(r, padding=(16, 0, 16, 8))
+        mid.pack(fill="both", expand=True)
+        side = ttk.Frame(mid, style="Panel.TFrame", padding=12)
+        side.pack(side="right", fill="y", padx=(12, 0))
+        self.v = {
+            "tps": tk.StringVar(), "dwell": tk.StringVar(), "tx": tk.StringVar(), "ty": tk.StringVar(),
+            "tap": tk.BooleanVar(), "user": tk.BooleanVar(), "rec": tk.BooleanVar(),
+        }
+        ttk.Label(side, text="SETTINGS", style="PanelDim.TLabel").grid(row=0, column=0, columnspan=3, sticky="w")
+        self._row(side, 1, "Taps per second", "tps")
+        self._row(side, 2, "Seconds per account", "dwell")
+        ttk.Label(side, text="Tap spot (x, y)", style="Panel.TLabel").grid(row=3, column=0, sticky="w", pady=3)
+        ttk.Entry(side, textvariable=self.v["tx"], width=6).grid(row=3, column=1, padx=(8, 2))
+        ttk.Entry(side, textvariable=self.v["ty"], width=6).grid(row=3, column=2)
+        ttk.Button(side, text="Pick tap spot (F7)", command=self.pick_tap).grid(
+            row=4, column=0, columnspan=3, sticky="ew", pady=(4, 8))
+        for i, (key, text) in enumerate((
+            ("tap", "Auto-tap"),
+            ("user", "Wait while I use the mouse"),
+            ("rec", "Press Reconnect on disconnect"),
+        )):
+            ttk.Checkbutton(side, text=text, variable=self.v[key]).grid(
+                row=5 + i, column=0, columnspan=3, sticky="w")
+        ttk.Label(side, text="EXTRA STEPS (per account)", style="PanelDim.TLabel").grid(
+            row=8, column=0, columnspan=3, sticky="w", pady=(12, 2))
+        self.steps = tk.Listbox(side, height=5, bg=BG, fg=FG, highlightthickness=0, borderwidth=0,
+                                selectbackground="#2f3646", activestyle="none", width=30)
+        self.steps.grid(row=9, column=0, columnspan=3, sticky="ew")
+        bar = ttk.Frame(side, style="Panel.TFrame")
+        bar.grid(row=10, column=0, columnspan=3, sticky="ew", pady=(6, 0))
+        ttk.Button(bar, text="+ Click", command=lambda: self.add_step("click")).pack(side="left")
+        ttk.Button(bar, text="+ Key", command=lambda: self.add_step("key")).pack(side="left", padx=4)
+        ttk.Button(bar, text="Remove", command=self.remove_step).pack(side="left")
+
+        cols = ("name", "state", "idle", "left", "visits", "taps", "rec")
+        heads = ("Account", "Status", "Last input", "Kick timer left", "Visits", "Taps", "Reconnects")
+        self.tree = ttk.Treeview(mid, columns=cols, show="headings", height=7)
+        for c, h, w in zip(cols, heads, (105, 125, 90, 110, 55, 80, 85)):
+            self.tree.heading(c, text=h)
+            self.tree.column(c, width=w, anchor="w" if c in ("name", "state") else "center")
+        for tag, col in (("ok", GREEN), ("warn", AMBER), ("bad", RED), ("info", BLUE)):
+            self.tree.tag_configure(tag, foreground=col)
+        self.tree.pack(side="left", fill="both", expand=True)
+
+        self.logbox = tk.Text(r, height=8, bg=PANEL, fg=DIM, borderwidth=0, highlightthickness=0,
+                              font=("Consolas", 9), padx=10, pady=8, state="disabled", wrap="word")
+        self.logbox.pack(fill="x", padx=16, pady=(0, 14))
+        self.logbox.tag_configure("alert", foreground=RED)
+
+    def _row(self, parent, row, text, key):
+        ttk.Label(parent, text=text, style="Panel.TLabel").grid(row=row, column=0, sticky="w", pady=3)
+        ttk.Entry(parent, textvariable=self.v[key], width=6).grid(row=row, column=1, columnspan=2,
+                                                                 sticky="e", padx=(8, 0))
+
+    # ---- settings <-> widgets ----------------------------------------------
+    def _fill_from_cfg(self):
+        c, v = self.cfg, self.v
+        v["tps"].set(f"{c.taps_per_second:g}")
+        v["dwell"].set(f"{c.dwell_s:g}")
+        v["tx"].set(f"{c.tap_x:g}")
+        v["ty"].set(f"{c.tap_y:g}")
+        v["tap"].set(c.tap_enabled)
+        v["user"].set(c.pause_on_user_input)
+        v["rec"].set(c.reconnect_enabled)
+        self._fill_steps()
+
+    def _fill_steps(self):
+        self.steps.delete(0, "end")
+        for s in self.cfg.steps:
+            what = f"click {s.x:.2f},{s.y:.2f}" if s.kind == "click" else f"key {s.key.upper()}"
+            times = f" x{s.count}" if s.count > 1 else ""
+            self.steps.insert("end", f"{s.name}: {what}{times} every {s.every_s:g}s")
+
+    def _read_cfg(self) -> Config:
+        """Build settings from the widgets; raises ConfigError with a readable message."""
+        c, v = self.cfg, self.v
+        try:
+            data = dict(c.to_dict(), taps_per_second=float(v["tps"].get()), dwell_s=float(v["dwell"].get()),
+                        tap_x=float(v["tx"].get()), tap_y=float(v["ty"].get()),
+                        tap_enabled=v["tap"].get(), pause_on_user_input=v["user"].get(),
+                        reconnect_enabled=v["rec"].get())
+        except ValueError:
+            raise ConfigError("Settings boxes must contain numbers") from None
+        return Config.from_dict(data)
+
+    # ---- buttons -----------------------------------------------------------
+    @property
+    def running(self) -> bool:
+        return bool(self.thread and self.thread.is_alive())
+
+    def start(self):
+        if self.running:
+            return
+        try:
+            self.cfg = self._read_cfg()
+            cfgmod.save(self.cfg, self.path)
+        except (ConfigError, OSError) as e:
+            messagebox.showerror("Check your settings", str(e))
+            return
+        self.engine = Engine(self.cfg, self.io, log=self.logq.put)
+        if hasattr(self.io, "keep_awake"):
+            self.io.keep_awake(True)
+        self.thread = threading.Thread(target=self._run_engine, args=(self.engine,), daemon=True)
+        self.thread.start()
+        self._log("Started")
+
+    def _run_engine(self, engine: Engine):
+        try:
+            engine.run()
+        finally:
+            self.logq.put("Stopped")
+
+    def stop(self):
+        if self.engine:
+            self.engine.stop()
+        if self.thread:
+            self.thread.join(timeout=5)
+        if hasattr(self.io, "keep_awake"):
+            self.io.keep_awake(False)
+
+    def toggle_pause(self):
+        if self.running:
+            self.engine.set_mode("keepalive" if self.engine.mode == "run" else "run")
+
+    def close(self):
+        if self.running and not messagebox.askokcancel(
+            "Quit?", "The macro is running. If you quit, your accounts will idle out in 20 minutes."):
+            return
+        self.stop()
+        self.root.destroy()
+
+    def pick_tap(self):
+        def got(fx, fy):
+            self.v["tx"].set(f"{fx:g}")
+            self.v["ty"].set(f"{fy:g}")
+        self._capture(got)
+
+    def _capture(self, callback):
+        if not hasattr(self.io, "point_fraction"):
+            messagebox.showinfo("Demo mode", "Picking a spot works on your PC with Roblox open.")
+            return
+        if self.running:
+            messagebox.showinfo("Stop first", "Stop the macro before picking a spot.")
+            return
+        self.capture = callback
+        self.io.pressed("capture")  # forget any earlier press
+        self._log("Hover the mouse over the spot inside a Roblox window, then press F7")
+
+    def add_step(self, kind: str):
+        StepDialog(self, kind)
+
+    def remove_step(self):
+        sel = self.steps.curselection()
+        if sel:
+            del self.cfg.steps[sel[0]]
+            self._fill_steps()
+            self._save_quietly()
+
+    def _save_quietly(self):
+        try:
+            cfgmod.save(self.cfg, self.path)
+        except (ConfigError, OSError) as e:
+            self._log(f"Could not save settings: {e}")
+
+    # ---- refresh -----------------------------------------------------------
+    def _log(self, msg: str):
+        self.logbox.configure(state="normal")
+        self.logbox.insert("end", f"{time.strftime('%H:%M:%S')}  {msg}\n",
+                           "alert" if msg.startswith("ALERT") else "")
+        if int(self.logbox.index("end").split(".")[0]) > 400:
+            self.logbox.delete("1.0", "100.0")
+        self.logbox.see("end")
+        self.logbox.configure(state="disabled")
+
+    def _poll(self):
+        try:
+            while True:
+                self._log(self.logq.get_nowait())
+        except queue.Empty:
+            pass
+        if self.capture and self.io.pressed("capture"):
+            frac = self.io.point_fraction()
+            if frac is None:
+                self._log("That spot isn't inside a Roblox window - try again (F7)")
+            else:
+                cb, self.capture = self.capture, None
+                cb(*frac)
+                self._log(f"Spot saved: {frac[0]:.3f}, {frac[1]:.3f}")
+        self._refresh()
+        self.root.after(250, self._poll)
+
+    def _refresh(self):
+        running = self.running
+        self.b_start.state(["disabled" if running else "!disabled"])
+        self.b_stop.state(["!disabled" if running else "disabled"])
+        self.b_pause.state(["!disabled" if running else "disabled"])
+        if not running or not self.engine:
+            self.status.configure(text="STOPPED", bg="#2b3140", fg=FG)
+            self.b_pause.configure(text="Pause tapping  (F6)")
+            self.summary.configure(text="Accounts are NOT being kept connected while stopped.")
+            return
+        snap = self.engine.snapshot()
+        paused = snap["mode"] == "keepalive"
+        self.b_pause.configure(text="Resume tapping  (F6)" if paused else "Pause tapping  (F6)")
+        if paused:
+            self.status.configure(text="KEEP-ALIVE ONLY", bg=AMBER, fg="#1a1a1a")
+        elif snap["user_active"]:
+            self.status.configure(text="WAITING FOR YOU", bg=BLUE, fg="#10131a")
+        else:
+            self.status.configure(text="RUNNING", bg=GREEN, fg="#0d1a12")
+        accs = snap["accounts"]
+        live = [a for a in accs if a["state"] != "closed"]
+        self.summary.configure(
+            text=f"{len(live)} account(s) open   |   {sum(a['taps'] for a in accs):,} taps sent   |   "
+                 f"{snap['dwell']:.1f}s per account per lap   |   input at least every "
+                 f"{_mmss(self.cfg.safe_idle_s)} (Roblox kicks at 20:00)")
+        self.tree.delete(*self.tree.get_children())
+        labels = {"ok": "Connected", "reconnecting": "Reconnecting...", "blocked": "Window stuck",
+                  "closed": "Window closed"}
+        for a in accs:
+            idle = a["idle"]
+            left = None if idle is None else ROBLOX_IDLE_KICK_S - idle
+            tag = "ok"
+            if a["state"] == "closed":
+                tag, left = "bad", None
+            elif a["state"] == "reconnecting":
+                tag = "info"
+            elif a["state"] == "blocked" or (idle is not None and idle >= self.cfg.warn_idle_s):
+                tag = "bad"
+            elif idle is None or idle > self.cfg.safe_idle_s * 1.25:
+                tag = "warn"
+            self.tree.insert("", "end", tags=(tag,), values=(
+                a["name"], labels[a["state"]] if idle is not None or a["state"] != "ok" else "Waiting...",
+                "-" if idle is None else _mmss(idle) + " ago", _mmss(left),
+                a["visits"], f"{a['taps']:,}", a["reconnects"]))
+
+    def run(self):
+        self.root.mainloop()
+
+
+class StepDialog:
+    def __init__(self, app: App, kind: str):
+        self.app, self.kind = app, kind
+        self.win = w = tk.Toplevel(app.root)
+        w.title("Add click step" if kind == "click" else "Add key step")
+        w.configure(bg=PANEL, padx=16, pady=14)
+        w.transient(app.root)
+        self.name = tk.StringVar(value="Claim quest" if kind == "click" else "Press key")
+        self.key = tk.StringVar(value="e")
+        self.every = tk.StringVar(value="60")
+        self.count = tk.StringVar(value="1")
+        rows = [("Name", self.name)]
+        if kind == "key":
+            rows.append(("Key (a-z, 0-9, space, enter...)", self.key))
+        rows += [("Every (seconds)", self.every), ("Times in a row", self.count)]
+        for i, (text, var) in enumerate(rows):
+            ttk.Label(w, text=text, style="Panel.TLabel").grid(row=i, column=0, sticky="w", pady=4)
+            ttk.Entry(w, textvariable=var, width=18).grid(row=i, column=1, padx=(12, 0))
+        text = "Next: pick the spot (F7)" if kind == "click" else "Add"
+        ttk.Button(w, text=text, style="Go.TButton", command=self.ok).grid(
+            row=len(rows), column=0, columnspan=2, sticky="ew", pady=(12, 0))
+
+    def ok(self):
+        try:
+            step = Step(name=self.name.get().strip() or "Step", kind=self.kind,
+                        key=self.key.get().strip().lower(), every_s=float(self.every.get()),
+                        count=int(self.count.get()))
+            Config(steps=self.app.cfg.steps + [step]).validate()
+        except (ValueError, ConfigError) as e:
+            messagebox.showerror("Check the step", str(e), parent=self.win)
+            return
+        self.win.destroy()
+        if self.kind == "key":
+            self._add(step)
+        else:
+            def got(fx, fy):
+                step.x, step.y = fx, fy
+                self._add(step)
+            self.app._capture(got)
+
+    def _add(self, step: Step):
+        self.app.cfg.steps.append(step)
+        self.app._fill_steps()
+        self.app._save_quietly()

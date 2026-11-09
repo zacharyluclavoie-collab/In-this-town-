@@ -1,0 +1,331 @@
+"""Run with:  python -m unittest discover -s tests   (from the "new multi" folder)"""
+
+import ctypes
+import json
+import os
+import sys
+import tempfile
+import unittest
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from tapquest import config as cfgmod
+from tapquest.config import Config, ConfigError, Step
+from tapquest.engine import Engine
+from tapquest.sim import USER_WINDOW, SimIO
+
+HOUR = 3600
+
+
+def run(io, cfg=None, hours=24, mode="run", seed=1):
+    eng = Engine(cfg or Config(), io, seed=seed, strict=True)
+    eng.set_mode(mode)
+    eng.run(until=hours * HOUR)
+    return eng
+
+
+class StayConnected(unittest.TestCase):
+    def test_24h_clean_run_many_account_counts(self):
+        for n in (1, 2, 5, 10, 25, 60):
+            with self.subTest(accounts=n):
+                io = SimIO(accounts=n, seed=n)
+                eng = run(io, hours=24 if n <= 10 else 8)
+                self.assertEqual(io.idle_kicks, 0)
+                self.assertEqual(io.stray_inputs, 0)
+                self.assertLess(io.max_idle, Config().safe_idle_s)
+                self.assertEqual(eng.alarms, 0)
+                for w in io.windows.values():
+                    self.assertGreater(w.clicks, 100)
+
+    def test_taps_are_shared_evenly(self):
+        io = SimIO(accounts=6, seed=3)
+        run(io, hours=4)
+        clicks = [w.clicks for w in io.windows.values()]
+        self.assertLess(max(clicks) - min(clicks), 0.05 * max(clicks))
+
+    def test_24h_chaos(self):
+        """Flaky focus, network drops, stuck windows, and (half the runs) a person on the PC."""
+        for seed in range(6):
+            user = seed % 2 == 1
+            with self.subTest(seed=seed, user=user):
+                io = SimIO(
+                    accounts=8,
+                    seed=seed,
+                    focus_fail=0.25,
+                    user_per_hour=6 if user else 0,
+                    netdrop_per_hour=0.5,
+                    block_per_hour=2,
+                )
+                eng = run(io, hours=24, seed=seed)
+                self.assertEqual(io.idle_kicks, 0)
+                self.assertEqual(io.stray_inputs, 0)
+                self.assertLess(io.max_idle, 900)
+                self.assertGreater(io.net_drops, 20)
+                # Every network drop was noticed and reconnected. While a person is
+                # on the PC the macro only checks in every safe_idle_s, so it's slower.
+                self.assertLess(io.max_dc_time, 700 if user else 240)
+                self.assertGreaterEqual(sum(a.reconnects for a in eng.accounts.values()), io.net_drops - 8)
+
+    def test_paused_keeps_accounts_alive_without_tapping(self):
+        io = SimIO(accounts=5, seed=2)
+        eng = run(io, hours=24, mode="keepalive")
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertEqual(io.stray_inputs, 0)
+        self.assertEqual(sum(w.clicks for w in io.windows.values()), 0)
+        self.assertEqual(sum(a.taps for a in eng.accounts.values()), 0)
+        self.assertLess(io.max_idle, 600)
+
+    def test_person_on_pc_nonstop_for_12h(self):
+        io = SimIO(accounts=6, seed=5)
+        io.always_user = True
+        eng = run(io, hours=12)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertEqual(io.stray_inputs, 0)
+        self.assertLess(io.max_idle, 600)
+        # it stayed out of the way: only keep-alive visits, a handful per hour each
+        for a in eng.accounts.values():
+            self.assertLess(a.visits, 12 * 10)
+
+    def test_keepalive_visit_hands_window_and_mouse_back(self):
+        io = SimIO(accounts=2, seed=1)
+        eng = Engine(Config(), io, seed=1, strict=True)
+        eng.set_mode("keepalive")
+        eng._cursor = io.cursor()
+        io.fg, io.cur = USER_WINDOW, (321, 123)
+        eng.tick()  # first visit (accounts have never been touched)
+        self.assertEqual(io.fg, USER_WINDOW)
+        self.assertEqual(io.cur, (321, 123))
+        self.assertEqual(sum(w.keys for w in io.windows.values()), 2)
+
+    def test_input_never_sent_when_focus_is_stolen(self):
+        io = SimIO(accounts=3, seed=9, focus_fail=1.0)  # focus never works
+        run(io, hours=1)
+        self.assertEqual(io.stray_inputs, 0)
+        self.assertEqual(sum(w.clicks + w.keys for w in io.windows.values()), 0)
+
+    def test_alarm_before_a_stuck_account_gets_kicked(self):
+        io = SimIO(accounts=3, seed=4)
+        io.windows[101].blocked_until = 10**9  # one window can never be focused
+        eng = Engine(Config(), io, seed=4, strict=True)
+        eng.run(until=1000)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertGreaterEqual(eng.alarms, 1)
+        self.assertEqual(eng.accounts[101].state, "blocked")
+        # the other accounts were not starved by the stuck one
+        self.assertGreater(io.windows[100].clicks, 1000)
+        self.assertGreater(io.windows[102].clicks, 1000)
+
+    def test_crashed_window_is_reported_and_new_one_picked_up(self):
+        io = SimIO(accounts=3, seed=6)
+        eng = Engine(Config(), io, seed=6, strict=True)
+        eng.run(until=60)
+        del io.windows[101]
+        eng.run(until=120)
+        self.assertEqual(eng.accounts[101].state, "closed")
+        self.assertEqual(eng.alarms, 1)
+        from tapquest.sim import SimWindow
+
+        io.windows[777] = SimWindow(777, last_input=io.t)
+        eng.run(until=4 * HOUR)
+        self.assertIn(777, eng.accounts)
+        self.assertGreater(io.windows[777].clicks, 100)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertEqual(io.stray_inputs, 0)
+
+    def test_crashes_during_long_run(self):
+        io = SimIO(accounts=10, seed=8, crash_per_hour=0.1, focus_fail=0.1)
+        run(io, hours=24)
+        self.assertGreater(io.crashes, 3)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertEqual(io.stray_inputs, 0)
+
+    def test_no_accounts_open_just_waits(self):
+        io = SimIO(accounts=0)
+        run(io, hours=1)
+        self.assertEqual(io.stray_inputs, 0)
+
+
+class Features(unittest.TestCase):
+    def test_steps_fire_on_schedule_for_every_account(self):
+        cfg = Config(steps=[
+            Step(name="Claim quest", x=0.9, y=0.2, every_s=300, count=2),
+            Step(name="Rebirth", kind="key", key="r", every_s=1800),
+            Step(name="Off", x=0.1, y=0.1, every_s=10, enabled=False),
+        ])
+        io = SimIO(accounts=4, seed=2)
+        run(io, cfg, hours=5)
+        for w in io.windows.values():
+            # 5h / 300s = 60 rounds of 2 clicks; allow for lap timing
+            self.assertTrue(110 <= w.step_clicks <= 122, w.step_clicks)
+            self.assertTrue(9 <= w.keys <= 11, w.keys)
+
+    def test_dwell_shrinks_so_a_lap_fits_the_safe_window(self):
+        cfg = Config(dwell_s=120)
+        io = SimIO(accounts=20, seed=1)
+        eng = run(io, cfg, hours=6)
+        self.assertLess(eng.dwell(), 20)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertLess(io.max_idle, cfg.safe_idle_s)
+
+    def test_tapping_off_still_stays_connected(self):
+        io = SimIO(accounts=4, seed=1)
+        run(io, Config(tap_enabled=False), hours=6)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertEqual(sum(w.clicks for w in io.windows.values()), 0)
+
+    def test_pause_hotkey_toggles_and_stop_hotkey_stops(self):
+        io = SimIO(accounts=2, seed=1)
+        eng = Engine(Config(), io, seed=1, strict=True)
+        eng.run(until=30)
+        io.pending_hotkey = "pause"
+        eng.run(until=40)
+        self.assertEqual(eng.mode, "keepalive")
+        taps = sum(a.taps for a in eng.accounts.values())
+        eng.run(until=300)
+        self.assertEqual(sum(a.taps for a in eng.accounts.values()), taps)
+        io.pending_hotkey = "pause"
+        eng.run(until=330)
+        self.assertEqual(eng.mode, "run")
+        self.assertGreater(sum(a.taps for a in eng.accounts.values()), taps)
+        io.pending_hotkey = "stop"
+        eng.run(until=10**6)
+        self.assertTrue(eng.stopped)
+        self.assertLess(io.t, 340)
+
+    def test_reconnect_can_be_switched_off(self):
+        io = SimIO(accounts=2, seed=1, netdrop_per_hour=2)
+        eng = run(io, Config(reconnect_enabled=False), hours=3)
+        self.assertEqual(sum(a.reconnects for a in eng.accounts.values()), 0)
+        self.assertEqual(io.stray_inputs, 0)
+
+    def test_reconnect_that_never_works_raises_alarm(self):
+        io = SimIO(accounts=2, seed=1, reconnect_offset=(1, 1))  # button isn't where we click
+        io.windows[100].disconnected = True
+        eng = Engine(Config(), io, seed=1, strict=True)
+        eng.run(until=300)
+        self.assertGreaterEqual(eng.alarms, 1)
+        self.assertGreater(io.windows[101].clicks, 500)
+
+    def test_survives_io_errors_when_not_strict(self):
+        io = SimIO(accounts=2, seed=1)
+        real, calls = io.click, [0]
+
+        def flaky(*a):
+            calls[0] += 1
+            if calls[0] % 50 == 0:
+                raise OSError("glitch")
+            real(*a)
+
+        io.click = flaky
+        eng = Engine(Config(), io, seed=1)
+        eng.run(until=2 * HOUR)
+        self.assertFalse(eng.stopped)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertGreaterEqual(eng.alarms, 1)
+        self.assertGreater(calls[0], 10000)
+
+
+class Settings(unittest.TestCase):
+    def test_defaults_are_valid_and_round_trip(self):
+        cfg = Config(steps=[Step(name="A")])
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "s.json")
+            cfgmod.save(cfg, p)
+            self.assertEqual(cfgmod.load(p).to_dict(), cfg.to_dict())
+            self.assertEqual(cfgmod.load(os.path.join(d, "missing.json")).to_dict(), Config().to_dict())
+
+    def test_shipped_settings_file_loads(self):
+        p = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "settings.json")
+        cfgmod.load(p)
+
+    def test_unsafe_or_broken_settings_are_rejected(self):
+        bad = [
+            {"safe_idle_s": 900},  # too close to the 20 min kick
+            {"safe_idle_s": 5},
+            {"warn_idle_s": 100},
+            {"taps_per_second": 0},
+            {"taps_per_second": 500},
+            {"tap_x": 1.5},
+            {"nudge_key": ""},
+            {"nudge_key": "banana"},
+            {"reconnect_color": [1, 2]},
+            {"process_names": []},
+            {"dwell_s": "fast"},
+            {"typo_setting": 1},
+            {"steps": [{"name": "a", "kind": "swipe"}]},
+            {"steps": [{"name": "a"}, {"name": "a"}]},
+            {"steps": [{"name": "a", "every_s": 0}]},
+            {"steps": [{"name": "a", "bogus": 1}]},
+        ]
+        for data in bad:
+            with self.subTest(data=data):
+                with self.assertRaises(ConfigError):
+                    Config.from_dict(data)
+
+    def test_broken_json_gives_a_clear_error(self):
+        with tempfile.TemporaryDirectory() as d:
+            p = os.path.join(d, "s.json")
+            with open(p, "w") as f:
+                f.write("{not json")
+            with self.assertRaises(ConfigError):
+                cfgmod.load(p)
+            with open(p, "w") as f:
+                json.dump([1, 2], f)
+            with self.assertRaises(ConfigError):
+                cfgmod.load(p)
+
+
+class WindowsLayer(unittest.TestCase):
+    """The parts of the Windows code that can be checked without Windows."""
+
+    def test_input_struct_matches_windows_64bit_layout(self):
+        from tapquest import win
+
+        if ctypes.sizeof(ctypes.c_void_p) == 8:
+            self.assertEqual(ctypes.sizeof(win.INPUT), 40)
+            self.assertEqual(win.INPUT.u.offset, 8)
+
+    def test_every_allowed_key_has_a_key_code(self):
+        from tapquest import win
+
+        for k in cfgmod.KEYS:
+            self.assertIn(k, win.VK, k)
+
+
+
+
+class Window(unittest.TestCase):
+    def test_app_window_starts_pauses_and_stops(self):
+        try:
+            import tkinter
+
+            tkinter.Tk().destroy()
+        except Exception:
+            self.skipTest("no display / tkinter here")
+        from tapquest.gui import App
+
+        with tempfile.TemporaryDirectory() as d:
+            io = SimIO(accounts=3, seed=1, realtime_speed=200)
+            app = App(io, os.path.join(d, "settings.json"), demo=True)
+            app.v["tps"].set("abc")
+            with self.assertRaises(ConfigError):
+                app._read_cfg()
+            app.v["tps"].set("10")
+            app.start()
+            self.assertTrue(app.running)
+            end = __import__("time").time() + 2
+            while __import__("time").time() < end:
+                app.root.update()
+                app._refresh()
+            self.assertEqual(len(app.tree.get_children()), 3)
+            app.toggle_pause()
+            self.assertEqual(app.engine.mode, "keepalive")
+            app.stop()
+            self.assertFalse(app.running)
+            self.assertTrue(os.path.exists(os.path.join(d, "settings.json")))
+            self.assertEqual(io.stray_inputs, 0)
+            app.root.destroy()
+
+
+if __name__ == "__main__":
+    unittest.main()
