@@ -24,6 +24,14 @@
   "reconnect_dx": 82,
   "reconnect_dy": 86,
   "reconnect_wait_s": 20.0,
+  "alert_webhook": "",
+  "relaunch_command": "",
+  "relaunch_max_per_hour": 6,
+  "ram_alert_pct": 92,
+  "battery_alert": true,
+  "multi_instance": true,
+  "add_account_command": "",
+  "add_account_url": "https://www.roblox.com/home",
   "process_names": [
     "RobloxPlayerBeta.exe",
     "Windows10Universal.exe"

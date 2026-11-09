@@ -58,6 +58,11 @@ def main(argv=None) -> int:
         except cfgmod.ConfigError:
             names = cfgmod.Config().process_names
         io = WinIO(names)
+        try:
+            if cfgmod.load(args.settings).multi_instance:
+                io.allow_multi_instance()
+        except Exception:
+            pass
     from .gui import App
 
     App(io, args.settings, demo=demo).run()

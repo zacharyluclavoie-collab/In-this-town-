@@ -464,10 +464,62 @@ class Extras(unittest.TestCase):
         self.assertLess(io.max_dc_time, 240)
         self.assertEqual(eng.alarms, 0)
 
+    def test_memory_and_battery_alerts(self):
+        got = []
+        io = SimIO(accounts=2, seed=1)
+        eng = Engine(Config(), io, seed=1, strict=True, notify=got.append)
+        eng.run(until=120)
+        self.assertEqual(got, [])
+        self.assertEqual(eng.snapshot()["health"], {"ram": 60, "plugged": True, "battery": 100})
+        io.ram = 95
+        eng.run(until=600)
+        self.assertEqual(len(got), 1)  # said once, not every 30 seconds
+        self.assertIn("95%", got[0])
+        io.ram = 70
+        eng.run(until=700)
+        io.ram = 93
+        eng.run(until=800)
+        self.assertEqual(len(got), 2)
+        io.ram, io.plugged, io.battery = 70, False, 60
+        eng.run(until=900)
+        self.assertIn("unplugged", got[-1])
+        io.battery = 12
+        eng.run(until=1500)
+        self.assertEqual(len(got), 4)
+        self.assertIn("12%", got[-1])
+        # switched off / broken sensor: silence, and no crash
+        io2 = SimIO(accounts=2, seed=1)
+        io2.ram, io2.plugged, io2.battery = 99, False, 5
+        e2 = Engine(Config(ram_alert_pct=0, battery_alert=False), io2, seed=1, strict=True)
+        e2.run(until=300)
+        self.assertEqual(e2.alarms, 0)
+        io2.power = lambda: 1 / 0
+        e3 = Engine(Config(), io2, seed=1, strict=True)
+        e3.run(until=600)
+        self.assertEqual(e3.alarms, 0)
+        self.assertGreater(io2.windows[100].clicks, 1000)
+
+    def test_setup_check_report(self):
+        from tapquest import diag
+
+        io = SimIO(accounts=3, seed=1)
+        io.windows[101].blocked_until = 10**9
+        io.windows[102].disconnected = True
+        io.fg, io.cur = USER_WINDOW, (7, 8)
+        text = diag.report(io, Config())
+        self.assertIn("Roblox windows found: 3", text)
+        self.assertIn("could NOT be brought to the front", text)
+        self.assertIn("pop-up showing?", text)
+        self.assertIn("Result: 2 of 3 windows reachable", text)
+        self.assertEqual((io.fg, io.cur), (USER_WINDOW, (7, 8)))
+        self.assertEqual(io.stray_inputs, 0)
+        self.assertIn("open Roblox first", diag.report(SimIO(accounts=0), Config()))
+
     def test_new_settings_validation(self):
         Config(alert_webhook="https://discord.com/api/webhooks/1/abc").validate()
         for bad in ({"alert_webhook": "http://x"}, {"alert_webhook": 5},
-                    {"relaunch_max_per_hour": 0}, {"relaunch_command": 3}):
+                    {"relaunch_max_per_hour": 0}, {"relaunch_command": 3},
+                    {"ram_alert_pct": 20}, {"add_account_url": "ftp://x"}, {"add_account_command": 1}):
             with self.subTest(bad=bad), self.assertRaises(ConfigError):
                 Config.from_dict(bad)
 
@@ -529,6 +581,8 @@ class WindowsLayer(unittest.TestCase):
         from tapquest import win
 
         self.assertEqual(ctypes.sizeof(win.CPU_RATE), 8)
+        self.assertEqual(ctypes.sizeof(win.MEMORYSTATUSEX), 64)
+        self.assertEqual(ctypes.sizeof(win.SYSTEM_POWER_STATUS), 12)
         self.assertEqual(ctypes.sizeof(win.POWER_THROTTLING), 12)
         if ctypes.sizeof(ctypes.c_void_p) == 8:
             self.assertEqual(ctypes.sizeof(win.INPUT), 40)
@@ -571,6 +625,13 @@ class Window(unittest.TestCase):
             self.assertEqual(app.engine.mode, "keepalive")
             app.stop()
             self.assertFalse(app.running)
+            app.add_account()
+            self.assertEqual(io.launched[-1][1], "https://www.roblox.com/home")
+            app.check_setup()
+            with open(os.path.join(d, "diagnostics.txt")) as f:
+                self.assertIn("Result: 3 of 3 windows reachable", f.read())
+            with open(os.path.join(d, "macro.log")) as f:
+                self.assertIn("Started", f.read())
             self.assertTrue(os.path.exists(os.path.join(d, "settings.json")))
             self.assertEqual(io.stray_inputs, 0)
             app.root.destroy()

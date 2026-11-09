@@ -81,6 +81,8 @@ class SimIO:
         self.tuned = set()
         self.sizes = {}
         self.launched = []
+        self.ram = 60  # % of memory in use
+        self.plugged, self.battery = True, 100
         self._spawn_at = []
         self._next_hwnd = 5000
         self.capped = {}
@@ -198,6 +200,15 @@ class SimIO:
         if len(self.capped) >= len(self.windows) and free > self.max_free:
             self.max_free = free
             self.free_log.append((self.t, free))
+
+    def memory_pct(self) -> int:
+        return self.ram
+
+    def power(self):
+        return self.plugged, self.battery
+
+    def open_page(self, url: str):
+        self.launched.append((self.t, url))
 
     def launch(self, command: str):
         self.launched.append((self.t, command))

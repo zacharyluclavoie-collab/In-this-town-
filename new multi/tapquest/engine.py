@@ -90,6 +90,10 @@ class Engine:
         self._started = None
         self._launches: deque = deque()  # times of recent relaunches
         self._relaunch_due = None
+        self.health: dict = {}
+        self._next_health = 0.0
+        self._ram_warned = self._batt_warned = False
+        self._plugged = None
 
     # ---- control -----------------------------------------------------------
     def stop(self):
@@ -129,6 +133,7 @@ class Engine:
         now = self.io.now()
         return {
             "uptime": 0.0 if self._started is None else now - self._started,
+            "health": dict(self.health),
             "mode": self.mode,
             "user_active": now < self.user_until,
             "dwell": self.dwell(),
@@ -279,6 +284,35 @@ class Engine:
             self._quiet(self.io.minimize, hwnd)
         self._throttle(hwnd, True)
 
+    def _check_health(self):
+        """Watch the two things that quietly kill a long session: RAM and power."""
+        cfg = self.cfg
+        try:
+            ram = self.io.memory_pct()
+            plugged, battery = self.io.power()
+        except Exception as e:
+            if self.health != {}:
+                self.log(f"Skipped health check: {e!r}")
+            self.health = {}
+            return
+        self.health = {"ram": ram, "plugged": plugged, "battery": battery}
+        if cfg.ram_alert_pct:
+            if ram >= cfg.ram_alert_pct and not self._ram_warned:
+                self._ram_warned = True
+                self.alarm(f"PC memory is {ram}% full - Roblox windows may crash. Close an account or two.")
+            elif ram < cfg.ram_alert_pct - 7:
+                self._ram_warned = False
+        if cfg.battery_alert:
+            if self._plugged and plugged is False:
+                self.alarm("Charger unplugged - now running on battery")
+            if plugged is False and battery is not None and battery <= 15:
+                if not self._batt_warned:
+                    self._batt_warned = True
+                    self.alarm(f"Battery at {battery}% - plug in or the accounts will drop")
+            else:
+                self._batt_warned = False
+            self._plugged = plugged
+
     def _housekeep(self):
         cfg, now = self.cfg, self.io.now()
         while self._todo:
@@ -303,6 +337,9 @@ class Engine:
                 self._launches.append(now)
                 self.log("Running your relaunch command")
                 self._quiet(self.io.launch, cfg.relaunch_command)
+        if now >= self._next_health:
+            self._next_health = now + 30.0
+            self._check_health()
         live = self.live()
         if cfg.weak_pc and cfg.weak_trim_s and now >= self._next_trim:
             self._next_trim = now + cfg.weak_trim_s

@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import queue
 import threading
 import time
@@ -11,6 +12,7 @@ from tkinter import messagebox, ttk
 from . import __version__
 from . import config as cfgmod
 from .config import ROBLOX_IDLE_KICK_S, Config, ConfigError, Step
+from . import diag
 from .alerts import Notifier
 from .engine import DC_OFFSETS, Engine, popup_color
 
@@ -32,6 +34,8 @@ class App:
         self.thread: threading.Thread | None = None
         self.logq: queue.Queue = queue.Queue()
         self.capture = None  # callback waiting for an F7 position
+        self.folder = os.path.dirname(os.path.abspath(settings_path))
+        self.logfile = os.path.join(self.folder, "macro.log")
         try:
             self.cfg = cfgmod.load(settings_path)
             load_error = None
@@ -94,6 +98,8 @@ class App:
         self.b_pause.pack(side="right", padx=8)
         self.b_start = ttk.Button(top, text="Start", style="Go.TButton", command=self.start)
         self.b_start.pack(side="right")
+        ttk.Button(top, text="Check setup", command=self.check_setup).pack(side="right", padx=8)
+        ttk.Button(top, text="+ Add account", command=self.add_account).pack(side="right")
 
         self.summary = ttk.Label(r, text="", style="Dim.TLabel", padding=(18, 0, 16, 6))
         self.summary.pack(fill="x")
@@ -257,6 +263,40 @@ class App:
             self.v["ty"].set(f"{fy:g}")
         self._capture(got)
 
+    def add_account(self):
+        """Open the way in for one more account; the macro picks its window up by itself."""
+        try:
+            cfg = self._read_cfg()
+        except ConfigError as e:
+            messagebox.showerror("Check your settings", str(e))
+            return
+        try:
+            if cfg.add_account_command:
+                self.io.launch(cfg.add_account_command)
+                self._log("Ran your add-account command")
+            else:
+                self.io.open_page(cfg.add_account_url)
+                self._log("Roblox opened in your browser: log in as the next account, join the game. "
+                          "The new window is added here by itself.")
+        except Exception as e:
+            self._log(f"Could not add an account: {e!r}")
+
+    def check_setup(self):
+        if self.running:
+            messagebox.showinfo("Stop first", "Stop the macro before checking setup.")
+            return
+        try:
+            text = diag.report(self.io, self._read_cfg())
+            path = os.path.join(self.folder, "diagnostics.txt")
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(text + "\n")
+        except Exception as e:
+            self._log(f"Setup check failed: {e!r}")
+            return
+        for line in text.splitlines()[2:]:
+            self._log(line.strip())
+        self._log(f"Full report saved to {path}")
+
     def toggle_skip(self):
         sel = self.tree.selection()
         if not self.running or not sel:
@@ -317,6 +357,13 @@ class App:
 
     # ---- refresh -----------------------------------------------------------
     def _log(self, msg: str):
+        try:  # keep a file too, so there is a record of an overnight run
+            if os.path.exists(self.logfile) and os.path.getsize(self.logfile) > 2_000_000:
+                os.replace(self.logfile, self.logfile + ".old")
+            with open(self.logfile, "a", encoding="utf-8") as f:
+                f.write(f"{time.strftime('%Y-%m-%d %H:%M:%S')}  {msg}\n")
+        except OSError:
+            pass
         self.logbox.configure(state="normal")
         self.logbox.insert("end", f"{time.strftime('%H:%M:%S')}  {msg}\n",
                            "alert" if msg.startswith("ALERT") else "")
@@ -369,11 +416,16 @@ class App:
         live = [a for a in accs if a["state"] != "closed"]
         eggs = sum(a["eggs"] for a in accs)
         hours = max(snap["uptime"], 1.0) / 3600
+        h = snap["health"]
+        health = ""
+        if h:
+            health = f"   |   RAM {h['ram']}%"
+            if h["battery"] is not None:
+                health += f"   |   battery {h['battery']}%" + ("" if h["plugged"] else " (unplugged!)")
         self.summary.configure(
             text=f"{len(live)} open   |   up {_mmss(snap['uptime'] / 60)} h   |   "
                  f"{sum(a['taps'] for a in accs):,} taps   |   {eggs:,} egg keys ({eggs / hours:,.0f}/h)   |   "
-                 f"{snap['dwell']:.1f}s per account, lap {_mmss(snap['lap'])}   |   input at least every "
-                 f"{_mmss(self.cfg.safe_idle_s)}")
+                 f"{snap['dwell']:.1f}s per account, lap {_mmss(snap['lap'])}{health}")
         rows = self.tree.get_children()
         for extra in rows[len(accs):]:
             self.tree.delete(extra)

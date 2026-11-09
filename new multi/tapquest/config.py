@@ -77,6 +77,14 @@ class Config:
     relaunch_command: str = ""  # run this when a Roblox window closes ("" = do nothing)
     relaunch_max_per_hour: int = 6
 
+    ram_alert_pct: int = 92  # alert when PC memory is this full (0 = never)
+    battery_alert: bool = True  # alert when the charger comes out or battery is low
+
+    # Adding accounts
+    multi_instance: bool = True  # let more than one Roblox run at once
+    add_account_command: str = ""  # run by the "Add account" button ("" = open the page below)
+    add_account_url: str = "https://www.roblox.com/home"
+
     # Which windows count as accounts
     process_names: list = field(
         default_factory=lambda: ["RobloxPlayerBeta.exe", "Windows10Universal.exe"]
@@ -117,6 +125,12 @@ class Config:
         rng("reconnect_wait_s", 5, 300)
         rng("settle_s", 0.02, 2)
         rng("relaunch_max_per_hour", 1, 60)
+        if self.ram_alert_pct != 0:
+            rng("ram_alert_pct", 50, 99)
+        if not isinstance(self.add_account_command, str):
+            raise ConfigError("add_account_command must be text")
+        if not isinstance(self.add_account_url, str) or not self.add_account_url.startswith("https://"):
+            raise ConfigError("add_account_url must start with https://")
         if not isinstance(self.alert_webhook, str) or (
             self.alert_webhook and not self.alert_webhook.startswith("https://")
         ):

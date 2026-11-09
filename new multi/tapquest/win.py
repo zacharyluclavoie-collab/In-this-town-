@@ -55,6 +55,19 @@ class POWER_THROTTLING(ctypes.Structure):  # PROCESS_POWER_THROTTLING_STATE
     _fields_ = [("Version", c_uint32), ("ControlMask", c_uint32), ("StateMask", c_uint32)]
 
 
+class MEMORYSTATUSEX(ctypes.Structure):
+    _fields_ = [("dwLength", c_uint32), ("dwMemoryLoad", c_uint32)] + [
+        (name, ctypes.c_uint64)
+        for name in ("TotalPhys", "AvailPhys", "TotalPage", "AvailPage", "TotalVirt", "AvailVirt", "AvailExt")
+    ]
+
+
+class SYSTEM_POWER_STATUS(ctypes.Structure):
+    _fields_ = [("ACLineStatus", ctypes.c_ubyte), ("BatteryFlag", ctypes.c_ubyte),
+                ("BatteryLifePercent", ctypes.c_ubyte), ("SystemStatusFlag", ctypes.c_ubyte),
+                ("BatteryLifeTime", c_uint32), ("BatteryFullLifeTime", c_uint32)]
+
+
 class RECT(ctypes.Structure):
     _fields_ = [("left", c_int32), ("top", c_int32), ("right", c_int32), ("bottom", c_int32)]
 
@@ -120,6 +133,9 @@ class WinIO:
             u.SetWindowPos: (B, [H, H, I, I, I, I, D]),
             k.SetPriorityClass: (B, [H, D]),
             k.CreateJobObjectW: (H, [H, ctypes.c_wchar_p]),
+            k.CreateMutexW: (H, [H, B, ctypes.c_wchar_p]),
+            k.GlobalMemoryStatusEx: (B, [ctypes.POINTER(MEMORYSTATUSEX)]),
+            k.GetSystemPowerStatus: (B, [ctypes.POINTER(SYSTEM_POWER_STATUS)]),
             k.AssignProcessToJobObject: (B, [H, H]),
             k.SetInformationJobObject: (B, [H, I, ctypes.c_void_p, D]),
             k.SetProcessInformation: (B, [H, I, ctypes.c_void_p, D]),
@@ -219,6 +235,27 @@ class WinIO:
 
         # SET_INFORMATION | SET_QUOTA | TERMINATE (the last two are needed to join a job)
         self._with_process(hwnd, 0x0200 | 0x0100 | 0x0001, apply)
+
+    def memory_pct(self) -> int:
+        m = MEMORYSTATUSEX(dwLength=ctypes.sizeof(MEMORYSTATUSEX))
+        self.k.GlobalMemoryStatusEx(ctypes.byref(m))
+        return int(m.dwMemoryLoad)
+
+    def power(self):
+        """(plugged in?, battery % or None). A desktop reports (True, None)."""
+        s = SYSTEM_POWER_STATUS()
+        self.k.GetSystemPowerStatus(ctypes.byref(s))
+        plugged = {0: False, 1: True}.get(s.ACLineStatus)
+        return plugged, (None if s.BatteryLifePercent > 100 else int(s.BatteryLifePercent))
+
+    def allow_multi_instance(self):
+        """Roblox refuses to start twice while it alone owns these names. Owning them
+        first (before any Roblox is opened) lets several run side by side."""
+        self._locks = [self.k.CreateMutexW(None, True, name)
+                       for name in ("ROBLOX_singletonEvent", "ROBLOX_singletonMutex")]
+
+    def open_page(self, url):
+        os.startfile(url)  # default browser
 
     def launch(self, command):
         """Run the user's relaunch command without waiting for it."""
