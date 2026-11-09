@@ -80,6 +80,9 @@ class SimIO:
         self.freezes = 0
         self.tuned = set()
         self.sizes = {}
+        self.launched = []
+        self._spawn_at = []
+        self._next_hwnd = 5000
         self.capped = {}
         self.throttled_inputs = 0  # input sent to a game that was still throttled
         self.max_free = 0  # most accounts running un-throttled at once
@@ -107,6 +110,10 @@ class SimIO:
 
     def _world(self, dt: float):
         t, rng = self.t, self.rng
+        while self._spawn_at and t >= self._spawn_at[0]:
+            self._spawn_at.pop(0)
+            self._next_hwnd += 1
+            self.windows[self._next_hwnd] = SimWindow(self._next_hwnd, last_input=t)
         for w in list(self.windows.values()):
             if w.disconnected:
                 if w.rejoin_at is not None and t >= w.rejoin_at:
@@ -191,6 +198,10 @@ class SimIO:
         if len(self.capped) >= len(self.windows) and free > self.max_free:
             self.max_free = free
             self.free_log.append((self.t, free))
+
+    def launch(self, command: str):
+        self.launched.append((self.t, command))
+        self._spawn_at.append(self.t + 30.0)  # the new game window takes a while to appear
 
     def tune(self, hwnd: int):
         self.tuned.add(hwnd)

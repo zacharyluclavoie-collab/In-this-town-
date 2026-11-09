@@ -11,7 +11,8 @@ from tkinter import messagebox, ttk
 from . import __version__
 from . import config as cfgmod
 from .config import ROBLOX_IDLE_KICK_S, Config, ConfigError, Step
-from .engine import Engine
+from .alerts import Notifier
+from .engine import DC_OFFSETS, Engine, popup_color
 
 BG, PANEL, FG, DIM = "#14161c", "#1e222b", "#e8eaf0", "#8b93a5"
 GREEN, AMBER, RED, BLUE = "#3ddc84", "#ffb347", "#ff5c5c", "#5aa9ff"
@@ -40,8 +41,8 @@ class App:
         self.root = r = tk.Tk()
         r.title(f"Tap Quest Multi {__version__}" + ("  (DEMO - simulated accounts)" if demo else ""))
         r.configure(bg=BG)
-        r.geometry("1120x660")
-        r.minsize(1080, 600)
+        r.geometry("1120x650")
+        r.minsize(1080, 620)
         self._style()
         self._build()
         self._fill_from_cfg()
@@ -104,7 +105,7 @@ class App:
         self.v = {
             "tps": tk.StringVar(), "dwell": tk.StringVar(), "round": tk.StringVar(), "tx": tk.StringVar(), "ty": tk.StringVar(),
             "tap": tk.BooleanVar(), "user": tk.BooleanVar(), "rec": tk.BooleanVar(),
-            "weak": tk.BooleanVar(), "egg": tk.BooleanVar(),
+            "weak": tk.BooleanVar(), "egg": tk.BooleanVar(), "hook": tk.StringVar(),
         }
         ttk.Label(side, text="SETTINGS", style="PanelDim.TLabel").grid(row=0, column=0, columnspan=3, sticky="w")
         self._row(side, 1, "Taps per second", "tps")
@@ -126,7 +127,7 @@ class App:
                 row=5 + i, column=0, columnspan=3, sticky="w")
         ttk.Label(side, text="EXTRA STEPS (per account)", style="PanelDim.TLabel").grid(
             row=10, column=0, columnspan=3, sticky="w", pady=(12, 2))
-        self.steps = tk.Listbox(side, height=4, bg=BG, fg=FG, highlightthickness=0, borderwidth=0,
+        self.steps = tk.Listbox(side, height=3, bg=BG, fg=FG, highlightthickness=0, borderwidth=0,
                                 selectbackground="#2f3646", activestyle="none", width=30)
         self.steps.grid(row=11, column=0, columnspan=3, sticky="ew")
         bar = ttk.Frame(side, style="Panel.TFrame")
@@ -138,7 +139,7 @@ class App:
         cols = ("name", "state", "idle", "left", "visits", "taps", "eggs", "rec")
         heads = ("Account", "Status", "Last input", "Kick timer left", "Visits", "Taps", "Egg keys", "Reconnects")
         self.tree = ttk.Treeview(mid, columns=cols, show="headings", height=7)
-        for c, h, w in zip(cols, heads, (100, 115, 85, 105, 50, 70, 70, 80)):
+        for c, h, w in zip(cols, heads, (92, 108, 82, 100, 44, 62, 64, 78)):
             self.tree.heading(c, text=h)
             self.tree.column(c, width=w, anchor="w" if c in ("name", "state") else "center")
         for tag, col in (("ok", GREEN), ("warn", AMBER), ("bad", RED), ("info", BLUE)):
@@ -148,7 +149,15 @@ class App:
         scroll.pack(side="right", fill="y")
         self.tree.pack(side="left", fill="both", expand=True)
 
-        self.logbox = tk.Text(r, height=8, bg=PANEL, fg=DIM, borderwidth=0, highlightthickness=0,
+        tools = ttk.Frame(r, padding=(16, 0, 16, 8))
+        tools.pack(fill="x")
+        ttk.Button(tools, text="Skip / unskip selected account", command=self.toggle_skip).pack(side="left")
+        ttk.Button(tools, text="Set up Reconnect (F7)", command=self.setup_reconnect).pack(side="left", padx=8)
+        ttk.Label(tools, text="Discord alert webhook", style="Dim.TLabel").pack(side="left", padx=(8, 6))
+        ttk.Entry(tools, textvariable=self.v["hook"]).pack(side="left", fill="x", expand=True)
+        ttk.Button(tools, text="Test", command=self.test_alert).pack(side="left", padx=(8, 0))
+
+        self.logbox = tk.Text(r, height=5, bg=PANEL, fg=DIM, borderwidth=0, highlightthickness=0,
                               font=("Consolas", 9), padx=10, pady=8, state="disabled", wrap="word")
         self.logbox.pack(fill="x", padx=16, pady=(0, 14))
         self.logbox.tag_configure("alert", foreground=RED)
@@ -171,6 +180,7 @@ class App:
         v["rec"].set(c.reconnect_enabled)
         v["weak"].set(c.weak_pc)
         v["egg"].set(c.egg_enabled)
+        v["hook"].set(c.alert_webhook)
         self._fill_steps()
 
     def _fill_steps(self):
@@ -187,7 +197,8 @@ class App:
             data = dict(c.to_dict(), taps_per_second=float(v["tps"].get()), dwell_s=float(v["dwell"].get()), round_every_s=float(v["round"].get()),
                         tap_x=float(v["tx"].get()), tap_y=float(v["ty"].get()),
                         tap_enabled=v["tap"].get(), pause_on_user_input=v["user"].get(),
-                        reconnect_enabled=v["rec"].get(), weak_pc=v["weak"].get(), egg_enabled=v["egg"].get())
+                        reconnect_enabled=v["rec"].get(), weak_pc=v["weak"].get(), egg_enabled=v["egg"].get(),
+                        alert_webhook=v["hook"].get().strip())
         except ValueError:
             raise ConfigError("Settings boxes must contain numbers") from None
         return Config.from_dict(data)
@@ -206,7 +217,9 @@ class App:
         except (ConfigError, OSError) as e:
             messagebox.showerror("Check your settings", str(e))
             return
-        self.engine = Engine(self.cfg, self.io, log=self.logq.put)
+        hook = self.cfg.alert_webhook
+        self.engine = Engine(self.cfg, self.io, log=self.logq.put,
+                             notify=Notifier(hook).send if hook else None)
         if hasattr(self.io, "keep_awake"):
             self.io.keep_awake(True)
         self.thread = threading.Thread(target=self._run_engine, args=(self.engine,), daemon=True)
@@ -244,16 +257,47 @@ class App:
             self.v["ty"].set(f"{fy:g}")
         self._capture(got)
 
-    def _capture(self, callback):
+    def toggle_skip(self):
+        sel = self.tree.selection()
+        if not self.running or not sel:
+            self._log("Start the macro and click an account in the table first")
+            return
+        self.engine.toggle_skip(self.tree.index(sel[0]))
+
+    def setup_reconnect(self):
+        """Learn the real pop-up: its colour, and where its Reconnect button is."""
+        def got(hwnd, dx, dy):
+            color = popup_color(self.io.sample(hwnd, DC_OFFSETS))
+            if color is None:
+                self._log("No disconnect pop-up found in that window - do this while it is showing")
+                return
+            self.cfg.reconnect_dx, self.cfg.reconnect_dy, self.cfg.reconnect_color = dx, dy, color
+            self._save_quietly()
+            self._log(f"Reconnect learned: button at {dx},{dy}, pop-up colour {color}")
+        self._capture(got, "offset")
+        if self.capture:
+            self._log("When an account shows the Disconnected pop-up: hover its Reconnect button, press F7")
+
+    def test_alert(self):
+        url = self.v["hook"].get().strip()
+        if not url.startswith("https://"):
+            self._log("Paste your Discord webhook link (starts with https://) first")
+            return
+        n = Notifier(url, threaded=False)
+        n.send("Tap Quest Multi: test alert - this is where problems will be reported")
+        self._log("Test alert failed - check the link and your internet" if n.errors else "Test alert sent")
+
+    def _capture(self, callback, kind="frac"):
         if not hasattr(self.io, "point_fraction"):
             messagebox.showinfo("Demo mode", "Picking a spot works on your PC with Roblox open.")
             return
         if self.running:
             messagebox.showinfo("Stop first", "Stop the macro before picking a spot.")
             return
-        self.capture = callback
+        self.capture, self.capture_kind = callback, kind
         self.io.pressed("capture")  # forget any earlier press
-        self._log("Hover the mouse over the spot inside a Roblox window, then press F7")
+        if kind == "frac":
+            self._log("Hover the mouse over the spot inside a Roblox window, then press F7")
 
     def add_step(self, kind: str):
         StepDialog(self, kind)
@@ -288,13 +332,14 @@ class App:
         except queue.Empty:
             pass
         if self.capture and self.io.pressed("capture"):
-            frac = self.io.point_fraction()
+            frac = self.io.point_offset() if self.capture_kind == "offset" else self.io.point_fraction()
             if frac is None:
                 self._log("That spot isn't inside a Roblox window - try again (F7)")
             else:
                 cb, self.capture = self.capture, None
                 cb(*frac)
-                self._log(f"Spot saved: {frac[0]:.3f}, {frac[1]:.3f}")
+                if self.capture_kind == "frac":
+                    self._log(f"Spot saved: {frac[0]:.3f}, {frac[1]:.3f}")
         # Weak PC mode redraws the table less often to leave CPU for the games.
         self._tick = getattr(self, "_tick", 0) + 1
         if not self.cfg.weak_pc or self._tick % 4 == 0:
@@ -322,22 +367,25 @@ class App:
             self.status.configure(text="RUNNING", bg=GREEN, fg="#0d1a12")
         accs = snap["accounts"]
         live = [a for a in accs if a["state"] != "closed"]
+        eggs = sum(a["eggs"] for a in accs)
+        hours = max(snap["uptime"], 1.0) / 3600
         self.summary.configure(
-            text=f"{len(live)} account(s) open   |   {sum(a['taps'] for a in accs):,} taps sent   |   "
+            text=f"{len(live)} open   |   up {_mmss(snap['uptime'] / 60)} h   |   "
+                 f"{sum(a['taps'] for a in accs):,} taps   |   {eggs:,} egg keys ({eggs / hours:,.0f}/h)   |   "
                  f"{snap['dwell']:.1f}s per account, lap {_mmss(snap['lap'])}   |   input at least every "
-                 f"{_mmss(self.cfg.safe_idle_s)} (Roblox kicks at 20:00)")
+                 f"{_mmss(self.cfg.safe_idle_s)}")
         rows = self.tree.get_children()
         for extra in rows[len(accs):]:
             self.tree.delete(extra)
         labels = {"ok": "Connected", "reconnecting": "Reconnecting...", "blocked": "Window stuck",
-                  "closed": "Window closed"}
+                  "closed": "Window closed", "skipped": "Skipped (yours)"}
         for i, a in enumerate(accs):
             idle = a["idle"]
             left = None if idle is None else ROBLOX_IDLE_KICK_S - idle
             tag = "ok"
             if a["state"] == "closed":
                 tag, left = "bad", None
-            elif a["state"] == "reconnecting":
+            elif a["state"] in ("reconnecting", "skipped"):
                 tag = "info"
             elif a["state"] == "blocked" or (idle is not None and idle >= self.cfg.warn_idle_s):
                 tag = "bad"

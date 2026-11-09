@@ -1,4 +1,4 @@
-# Tap Quest Multi (v5.5)
+# Tap Quest Multi (v5.6)
 
 Multi-account macro for Tap Quest Sim on a Windows PC. It cycles through every open
 Roblox window, taps, runs your extra steps (claim quest, rebirth...), and makes sure
@@ -43,6 +43,26 @@ no account sits idle long enough for Roblox's 20-minute kick.
 - Windows is stopped from sleeping or locking the screen while the macro runs.
 - A closed/crashed Roblox window raises an alert; newly opened windows are picked up
   automatically.
+
+## Extras
+
+- **Set up Reconnect (F7)**: the first time an account shows the grey Disconnected
+  pop-up, press this, hover the mouse over the pop-up's Reconnect button and press F7.
+  The macro learns the real button position and pop-up colour instead of guessing.
+- **Discord alert webhook**: paste a Discord webhook link (Discord channel > Edit channel >
+  Integrations > Webhooks > New webhook > Copy URL) and press Test. Every alert (window
+  closed, account about to idle out, reconnect failing, PC too slow) is then posted
+  there, so your phone tells you. Anyone with the link can post to that channel, so
+  keep `settings.json` private.
+- **Skip / unskip selected account**: click an account in the table, press this, and
+  the macro stops touching it so you can play it. A skipped account is yours to keep
+  active; the macro will not stop it idling out.
+- **Stats**: the line under the title shows uptime, taps, and egg keys per hour.
+- **Auto relaunch**: put a command in `relaunch_command` in `settings.json` and the
+  macro runs it when a Roblox window closes (at most `relaunch_max_per_hour` times).
+  The macro cannot log an account in by itself; the command has to be something that
+  can, such as a shortcut from your multi-account launcher. The new window is picked
+  up automatically once it appears.
 
 ## Weak PC mode (20+ accounts on a slow computer)
 
@@ -97,7 +117,7 @@ None of this was tested on an Ally. If memory hits 95%+, that is the device's ce
 
 ## What was tested, and what wasn't
 
-Tested here (35 automated tests, `Run Tests.bat` runs them on your PC):
+Tested here (42 automated tests, `Run Tests.bat` runs them on your PC):
 
 - 24-hour simulated sessions with 1 to 60 accounts: zero idle kicks.
 - 24-hour sessions with everything going wrong at once (focus failing 25% of the time,
@@ -117,6 +137,8 @@ Not tested (this was built without access to a Windows PC or Roblox):
   is my model of lag, not a measurement of yours. If a tweak fails it is skipped and
   logged; the macro keeps running.
 - How many Roblox clients your PC can actually hold open. The macro can't add RAM.
+- Posting to a real Discord webhook, the relaunch command actually starting Roblox, and
+  the Reconnect setup button on a real pop-up. Their logic is tested; the real thing is not.
 - The disconnect pop-up detector. Its colour and Reconnect button position
   (`reconnect_color`, `reconnect_dx`, `reconnect_dy` in `settings.json`) are best guesses
   and may need adjusting. If it misbehaves, untick "Press Reconnect on disconnect".
@@ -134,6 +156,7 @@ Limits to know about:
 - `tapquest/win.py` - Windows input and window handling
 - `tapquest/sim.py` - simulated PC used by the tests and `--demo`
 - `tapquest/gui.py` - the app window
+- `tapquest/alerts.py` - Discord alerts
 - `settings.json` - all settings (the app saves it when you press Start)
 
 `python -m tapquest --demo` shows the app with simulated accounts.

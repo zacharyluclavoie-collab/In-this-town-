@@ -349,6 +349,129 @@ class WeakPC(unittest.TestCase):
             Config(focus_timeout_s=0).validate()
 
 
+class Extras(unittest.TestCase):
+    def test_skipped_account_is_left_completely_alone(self):
+        io = SimIO(accounts=3, seed=1)
+        eng = Engine(Config(weak_pc=True), io, seed=1, strict=True)
+        eng.run(until=60)
+        eng.toggle_skip(1)
+        eng.run(until=70)
+        before = io.windows[101].clicks + io.windows[101].keys
+        io.windows[101].last_input = 10**9  # the person is playing it
+        eng.run(until=2 * HOUR)
+        self.assertEqual(io.windows[101].clicks + io.windows[101].keys, before)
+        self.assertEqual(io.capped[101], (0, False))  # and it runs at full speed
+        self.assertEqual(eng.snapshot()["accounts"][1]["state"], "skipped")
+        self.assertEqual(eng.alarms, 0)
+        io.windows[101].last_input = io.t
+        eng.toggle_skip(1)
+        eng.run(until=3 * HOUR)
+        self.assertGreater(io.windows[101].clicks, before + 1000)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertEqual(io.stray_inputs, 0)
+
+    def test_relaunch_command_runs_when_window_closes_with_hourly_limit(self):
+        cfg = Config(relaunch_command="start roblox", relaunch_max_per_hour=2)
+        io = SimIO(accounts=3, seed=1)
+        eng = Engine(cfg, io, seed=1, strict=True)
+        eng.run(until=60)
+        del io.windows[101]
+        eng.run(until=300)
+        self.assertEqual([c for _, c in io.launched], ["start roblox"])
+        self.assertEqual(len(eng.live()), 3)  # the relaunched window was picked up
+        for _ in range(4):  # it keeps crashing: stop after the hourly limit
+            del io.windows[max(io.windows)]
+            eng.run(until=io.t + 200)
+        self.assertEqual(len(io.launched), 2)
+        self.assertEqual(io.idle_kicks, 0)
+        io2 = SimIO(accounts=2, seed=1)
+        eng2 = Engine(Config(), io2, seed=1, strict=True)
+        eng2.run(until=30)
+        del io2.windows[101]
+        eng2.run(until=200)
+        self.assertEqual(io2.launched, [])  # off unless a command is set
+
+    def test_alarms_are_sent_to_the_notifier_and_failures_ignored(self):
+        got = []
+        io = SimIO(accounts=2, seed=1)
+        eng = Engine(Config(), io, seed=1, strict=True, notify=got.append)
+        eng.run(until=30)
+        del io.windows[101]
+        eng.run(until=60)
+        self.assertEqual(len(got), 1)
+        self.assertIn("window closed", got[0])
+
+        def broken(msg):
+            raise OSError("no internet")
+
+        io = SimIO(accounts=2, seed=1)
+        eng = Engine(Config(), io, seed=1, strict=True, notify=broken)
+        eng.run(until=30)
+        del io.windows[101]
+        eng.run(until=600)
+        self.assertGreater(io.windows[100].clicks, 1000)
+
+    def test_notifier_batches_and_survives_post_errors(self):
+        from tapquest.alerts import Notifier
+
+        sent = []
+        n = Notifier("https://example.invalid/hook", post=lambda url, text: sent.append((url, text)),
+                     threaded=False)
+        n.send("one")
+        n.send("two")
+        self.assertEqual([t for _, t in sent], ["one", "two"])
+        self.assertEqual(sent[0][0], "https://example.invalid/hook")
+
+        def bad(url, text):
+            raise OSError("down")
+
+        n = Notifier("https://example.invalid/hook", post=bad, threaded=False)
+        n.send("x")
+        n.send("y")
+        self.assertEqual(n.errors, 2)
+
+        # threaded: a burst while a post is in flight goes out as one message
+        import threading, time
+
+        gate, sent = threading.Event(), []
+
+        def slow(url, text):
+            sent.append(text)
+            gate.wait(2)
+
+        n = Notifier("https://example.invalid/hook", post=slow, min_gap_s=0)
+        n.send("a")
+        time.sleep(0.1)
+        n.send("b")
+        n.send("c")
+        gate.set()
+        time.sleep(0.3)
+        self.assertEqual(sent, ["a", "b\nc"])
+
+    def test_popup_colour_learning(self):
+        from tapquest.engine import popup_color
+
+        grey = (57, 59, 61)
+        self.assertEqual(popup_color([grey] * 13 + [(255, 255, 255)] * 2), [57, 59, 61])
+        self.assertIsNone(popup_color([(i, i * 2 % 256, 9) for i in range(15)]))
+        self.assertIsNone(popup_color([]))
+
+    def test_learned_popup_settings_are_used(self):
+        cfg = Config(reconnect_dx=40, reconnect_dy=70, reconnect_color=[57, 59, 61])
+        io = SimIO(accounts=2, seed=1, reconnect_offset=(40, 70), netdrop_per_hour=3)
+        eng = run(io, cfg, hours=6)
+        self.assertGreater(io.net_drops, 10)
+        self.assertLess(io.max_dc_time, 240)
+        self.assertEqual(eng.alarms, 0)
+
+    def test_new_settings_validation(self):
+        Config(alert_webhook="https://discord.com/api/webhooks/1/abc").validate()
+        for bad in ({"alert_webhook": "http://x"}, {"alert_webhook": 5},
+                    {"relaunch_max_per_hour": 0}, {"relaunch_command": 3}):
+            with self.subTest(bad=bad), self.assertRaises(ConfigError):
+                Config.from_dict(bad)
+
+
 class Settings(unittest.TestCase):
     def test_defaults_are_valid_and_round_trip(self):
         cfg = Config(steps=[Step(name="A")])

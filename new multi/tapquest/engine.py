@@ -14,7 +14,7 @@ from __future__ import annotations
 
 import random
 import threading
-from collections import deque
+from collections import Counter, deque
 from dataclasses import dataclass, field
 
 from .config import Config
@@ -24,6 +24,14 @@ DC_CHECK_S = 20.0  # how often to look for the disconnect pop-up on an account
 VISIT_OVERHEAD_S = 0.6  # rough cost of switching windows
 # Points (pixels from the window centre) sampled to spot the disconnect pop-up.
 DC_OFFSETS = [(dx, dy) for dy in (-40, -15, 10) for dx in (-110, -55, 0, 55, 110)]
+
+
+def popup_color(cols):
+    """The flat colour filling the sampled area, or None if it isn't one flat colour."""
+    if not cols:
+        return None
+    best, n = Counter(tuple(c) for c in cols).most_common(1)[0]
+    return list(best) if n >= 0.6 * len(cols) else None
 
 
 class _Abort(Exception):
@@ -40,6 +48,7 @@ class Account:
     visits: int = 0
     taps: int = 0
     eggs: int = 0
+    skip: bool = False  # you're playing this one yourself: macro leaves it alone
     last_full: float | None = None  # last time it got a full (tap/egg/steps) visit
     reconnects: int = 0
     focus_fails: int = 0
@@ -54,7 +63,7 @@ class Account:
 
 
 class Engine:
-    def __init__(self, cfg: Config, io, log=None, seed=None, strict=False):
+    def __init__(self, cfg: Config, io, log=None, seed=None, strict=False, notify=None):
         cfg.validate()
         self.cfg = cfg
         self.io = io
@@ -76,6 +85,11 @@ class Engine:
         self._front = None  # account window we last brought forward
         self._next_trim = 0.0
         self._slow_warned = False
+        self._notify = notify
+        self._todo: deque = deque()  # requests from the app window
+        self._started = None
+        self._launches: deque = deque()  # times of recent relaunches
+        self._relaunch_due = None
 
     # ---- control -----------------------------------------------------------
     def stop(self):
@@ -101,10 +115,20 @@ class Engine:
         self.alarms += 1
         self.log("ALERT: " + msg)
         self.io.beep()
+        if self._notify:
+            try:
+                self._notify("Tap Quest Multi: " + msg)
+            except Exception:
+                pass
+
+    def toggle_skip(self, index: int):
+        """Called from the app window: skip/unskip the account in table row `index`."""
+        self._todo.append(index)
 
     def snapshot(self) -> dict:
         now = self.io.now()
         return {
+            "uptime": 0.0 if self._started is None else now - self._started,
             "mode": self.mode,
             "user_active": now < self.user_until,
             "dwell": self.dwell(),
@@ -112,7 +136,7 @@ class Engine:
             "accounts": [
                 {
                     "name": a.name,
-                    "state": a.state,
+                    "state": "skipped" if a.skip and a.state != "closed" else a.state,
                     "idle": None if a.last_input is None else now - a.last_input,
                     "visits": a.visits,
                     "taps": a.taps,
@@ -127,6 +151,8 @@ class Engine:
     def run(self, until: float | None = None):
         """Run until stop() (or until io.now() reaches `until`)."""
         self._cursor = self.io.cursor()
+        if self._started is None:
+            self._started = self.io.now()
         try:
             self._loop(until)
         finally:
@@ -201,6 +227,8 @@ class Engine:
             if hwnd not in wins and a.state != "closed":
                 a.state = "closed"
                 self.alarm(f"{a.name}: its Roblox window closed")
+                if self.cfg.relaunch_command and self._relaunch_due is None:
+                    self._relaunch_due = self.io.now() + 5.0
 
     def _watch_user(self):
         """Back off when the mouse moved and it wasn't us."""
@@ -216,7 +244,7 @@ class Engine:
     def _watch_idle(self):
         now = self.io.now()
         for a in self.accounts.values():
-            if a.state == "closed":
+            if a.state == "closed" or a.skip:
                 continue
             # an account we never managed to touch is timed from when it appeared
             idle = now - (a.seen_at if a.last_input is None else a.last_input)
@@ -253,6 +281,28 @@ class Engine:
 
     def _housekeep(self):
         cfg, now = self.cfg, self.io.now()
+        while self._todo:
+            accs = list(self.accounts.values())
+            i = self._todo.popleft()
+            if 0 <= i < len(accs) and accs[i].state != "closed":
+                a = accs[i]
+                if a.skip:  # coming back: we don't know how long it sat idle
+                    a.skip, a.last_input, a.seen_at = False, None, now
+                    self.log(f"{a.name}: macro is running it again")
+                else:
+                    self._throttle(a.hwnd, False)  # full speed for the person playing
+                    a.skip = True
+                    self.log(f"{a.name}: skipped - it's yours, and YOU must keep it active")
+        if self._relaunch_due is not None and now >= self._relaunch_due:
+            self._relaunch_due = None
+            while self._launches and now - self._launches[0] > 3600:
+                self._launches.popleft()
+            if len(self._launches) >= cfg.relaunch_max_per_hour:
+                self.log("Relaunch limit for this hour reached, not relaunching")
+            else:
+                self._launches.append(now)
+                self.log("Running your relaunch command")
+                self._quiet(self.io.launch, cfg.relaunch_command)
         live = self.live()
         if cfg.weak_pc and cfg.weak_trim_s and now >= self._next_trim:
             self._next_trim = now + cfg.weak_trim_s
@@ -270,7 +320,7 @@ class Engine:
         self._slow_warned = too_slow
 
     def live(self) -> list:
-        return [a for a in self.accounts.values() if a.state != "closed"]
+        return [a for a in self.accounts.values() if a.state != "closed" and not a.skip]
 
     def dwell(self) -> float:
         """Seconds of tapping per visit, shrunk so a full lap fits the safe window."""
@@ -312,7 +362,8 @@ class Engine:
                     self._throttle(a.hwnd, True)
                 return
             if self._front not in (None, a.hwnd):
-                if self._front in self.accounts and self.accounts[self._front].state != "closed":
+                prev = self.accounts.get(self._front)
+                if prev and prev.state != "closed" and not prev.skip:
                     self._park(self._front)
             self._front = a.hwnd
             a.visits += 1

@@ -72,6 +72,11 @@ class Config:
     reconnect_dy: int = 86  # ...and below it
     reconnect_wait_s: float = 20.0
 
+    # Alerts and recovery
+    alert_webhook: str = ""  # Discord webhook URL; alerts are posted there
+    relaunch_command: str = ""  # run this when a Roblox window closes ("" = do nothing)
+    relaunch_max_per_hour: int = 6
+
     # Which windows count as accounts
     process_names: list = field(
         default_factory=lambda: ["RobloxPlayerBeta.exe", "Windows10Universal.exe"]
@@ -111,6 +116,13 @@ class Config:
         rng("reconnect_tolerance", 0, 60)
         rng("reconnect_wait_s", 5, 300)
         rng("settle_s", 0.02, 2)
+        rng("relaunch_max_per_hour", 1, 60)
+        if not isinstance(self.alert_webhook, str) or (
+            self.alert_webhook and not self.alert_webhook.startswith("https://")
+        ):
+            raise ConfigError("alert_webhook must be empty or start with https://")
+        if not isinstance(self.relaunch_command, str):
+            raise ConfigError("relaunch_command must be text")
         rng("focus_timeout_s", 1, 30)
         ww = self.weak_window
         if len(ww) != 2 or not all(isinstance(n, int) and not isinstance(n, bool) for n in ww):

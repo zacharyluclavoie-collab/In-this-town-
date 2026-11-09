@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import ctypes
 import os
+import subprocess
 import time
 from ctypes import c_int32, c_size_t, c_uint16, c_uint32
 
@@ -218,6 +219,19 @@ class WinIO:
 
         # SET_INFORMATION | SET_QUOTA | TERMINATE (the last two are needed to join a job)
         self._with_process(hwnd, 0x0200 | 0x0100 | 0x0001, apply)
+
+    def launch(self, command):
+        """Run the user's relaunch command without waiting for it."""
+        subprocess.Popen(command, shell=True)
+
+    def point_offset(self):
+        """(window, pixels right of its centre, pixels below it) under the mouse, or None."""
+        cx, cy = self.cursor()
+        for hwnd, _ in self.list_windows():
+            x, y, w, h = self._client(hwnd)
+            if w > 0 and h > 0 and x <= cx < x + w and y <= cy < y + h:
+                return hwnd, cx - (x + w // 2), cy - (y + h // 2)
+        return None
 
     def tune(self, hwnd):
         """Roblox below normal priority, the macro above: taps stay on time."""
