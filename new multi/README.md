@@ -1,4 +1,4 @@
-# Tap Quest Multi (v5.4)
+# Tap Quest Multi (v5.5)
 
 Multi-account macro for Tap Quest Sim on a Windows PC. It cycles through every open
 Roblox window, taps, runs your extra steps (claim quest, rebirth...), and makes sure
@@ -52,6 +52,10 @@ Tick **Weak PC mode** before pressing Start. It:
   one game instead of twenty;
 - shrinks every Roblox window to 480x360 (`weak_window` in `settings.json`), which cuts
   GPU and memory use a lot;
+- power saver: every account that is waiting its turn is put in Windows efficiency mode
+  and hard-capped at 4% of the CPU (`weak_cpu_cap_pct`), and is released the moment the
+  macro switches to it. 20 waiting accounts can use at most about 80% between them, and
+  in practice far less. Stop lifts all caps;
 - sets Roblox to below-normal CPU priority and the macro above, so taps stay on time;
 - every 5 minutes asks Windows to move idle accounts' memory out of RAM
   (`weak_trim_s` in `settings.json`, 0 turns it off);
@@ -83,6 +87,11 @@ Do these once, or it will likely run out:
 - In each Roblox: graphics quality 1, lowest frame-rate cap.
 - Close everything else (browser, Discord, Steam).
 - Start with 10 accounts, watch Task Manager's memory, then add a few at a time.
+
+A game cannot run on zero power: the client must keep talking to the server or Roblox
+drops it. If accounts start disconnecting with "connection lost", raise
+`weak_cpu_cap_pct` (try 8). If you force-close the macro instead of pressing Stop, the
+caps stay on until you restart those Roblox windows.
 
 None of this was tested on an Ally. If memory hits 95%+, that is the device's ceiling.
 

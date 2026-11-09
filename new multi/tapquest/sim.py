@@ -80,6 +80,10 @@ class SimIO:
         self.freezes = 0
         self.tuned = set()
         self.sizes = {}
+        self.capped = {}
+        self.throttled_inputs = 0  # input sent to a game that was still throttled
+        self.max_free = 0  # most accounts running un-throttled at once
+        self.free_log = []  # (time, count) each time that record was broken
         self.trims = 0
         self.max_visible = 0
 
@@ -181,6 +185,13 @@ class SimIO:
     def resize(self, hwnd: int, w: int, h: int):
         self.sizes[hwnd] = (w, h)
 
+    def throttle(self, hwnd: int, cap_pct: float, eco: bool):
+        self.capped[hwnd] = (cap_pct, eco)
+        free = sum(1 for h in self.windows if self.capped.get(h, (0, False)) == (0, False))
+        if len(self.capped) >= len(self.windows) and free > self.max_free:
+            self.max_free = free
+            self.free_log.append((self.t, free))
+
     def tune(self, hwnd: int):
         self.tuned.add(hwnd)
 
@@ -206,6 +217,8 @@ class SimIO:
     def click(self, hwnd: int, fx: float, fy: float):
         self.cur = (int(fx * 1000) + hwnd, int(fy * 1000))
         w = self._target()
+        if w and self.capped.get(w.hwnd, (0, False)) != (0, False):
+            self.throttled_inputs += 1
         if w and not w.disconnected:
             w.last_input = self.t
             w.clicks += 1

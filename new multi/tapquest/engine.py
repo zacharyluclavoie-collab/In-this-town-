@@ -127,6 +127,18 @@ class Engine:
     def run(self, until: float | None = None):
         """Run until stop() (or until io.now() reaches `until`)."""
         self._cursor = self.io.cursor()
+        try:
+            self._loop(until)
+        finally:
+            # never leave a game throttled once the macro is no longer looking after it
+            for a in self.live():
+                self._throttle(a.hwnd, False)
+
+    def _loop(self, until):
+        front = self.io.foreground()
+        for a in self.live():
+            if a.hwnd != front:
+                self._throttle(a.hwnd, True)
         while not self.stopped and (until is None or self.io.now() < until):
             try:
                 self.tick()
@@ -179,8 +191,8 @@ class Engine:
                     self._quiet(self.io.tune, hwnd)
                 if self.cfg.weak_pc and self.cfg.weak_window != [0, 0]:
                     self._quiet(self.io.resize, hwnd, *self.cfg.weak_window)
-                if self.cfg.weak_pc and self.cfg.weak_minimize and hwnd != self.io.foreground():
-                    self._quiet(self.io.minimize, hwnd)
+                if hwnd != self.io.foreground():
+                    self._park(hwnd)
             elif a.state == "closed":
                 a.state, a.last_input, a.retry_at, a.warned = "ok", None, 0.0, False
                 a.seen_at = self.io.now()
@@ -224,6 +236,20 @@ class Engine:
             fn(*args)
         except Exception as e:
             self.log(f"Skipped {fn.__name__}: {e!r}")
+
+    def _throttle(self, hwnd, on: bool):
+        """Waiting accounts get a CPU cap and efficiency mode; the active one runs free."""
+        cfg = self.cfg
+        if cfg.weak_pc and (cfg.weak_eco or cfg.weak_cpu_cap_pct):
+            if on:
+                self._quiet(self.io.throttle, hwnd, cfg.weak_cpu_cap_pct, cfg.weak_eco)
+            else:
+                self._quiet(self.io.throttle, hwnd, 0, False)
+
+    def _park(self, hwnd):
+        if self.cfg.weak_pc and self.cfg.weak_minimize:
+            self._quiet(self.io.minimize, hwnd)
+        self._throttle(hwnd, True)
 
     def _housekeep(self):
         cfg, now = self.cfg, self.io.now()
@@ -280,11 +306,14 @@ class Engine:
         io, cfg = self.io, self.cfg
         restore = None if full else (io.foreground(), io.cursor())
         try:
+            self._throttle(a.hwnd, False)
             if not self._focus(a):
+                if self._front != a.hwnd:
+                    self._throttle(a.hwnd, True)
                 return
-            if cfg.weak_pc and cfg.weak_minimize and self._front not in (None, a.hwnd):
+            if self._front not in (None, a.hwnd):
                 if self._front in self.accounts and self.accounts[self._front].state != "closed":
-                    self._quiet(io.minimize, self._front)
+                    self._park(self._front)
             self._front = a.hwnd
             a.visits += 1
             if full:
@@ -307,8 +336,8 @@ class Engine:
                 fg, cur = restore
                 if fg and fg != a.hwnd and io.foreground() == a.hwnd:
                     io.focus(fg)
-                    if cfg.weak_pc and cfg.weak_minimize:
-                        self._quiet(io.minimize, a.hwnd)
+                    if cfg.weak_pc:
+                        self._park(a.hwnd)
                         self._front = None
                 io.set_cursor(cur)
             self._cursor = io.cursor()

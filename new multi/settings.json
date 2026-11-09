@@ -37,6 +37,8 @@
     480,
     360
   ],
+  "weak_eco": true,
+  "weak_cpu_cap_pct": 4.0,
   "weak_trim_s": 120,
   "steps": []
 }

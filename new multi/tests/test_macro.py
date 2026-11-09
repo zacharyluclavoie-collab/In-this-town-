@@ -285,6 +285,12 @@ class WeakPC(unittest.TestCase):
                 self.assertLessEqual(io.max_visible, 4)
                 self.assertEqual(io.tuned, set(io.windows))
                 self.assertEqual(io.sizes, {h: (480, 360) for h in io.windows})
+                # waiting accounts are throttled; at most the active one or two run free
+                # (the macro frees them all when it stops, so only look before that)
+                self.assertLessEqual(max(n for t, n in io.free_log if t < 24 * HOUR), 3)
+                self.assertEqual(io.throttled_inputs, 0)
+                # ...and nothing is left throttled when the macro stops
+                self.assertTrue(all(v == (0, False) for v in io.capped.values()))
                 self.assertGreater(io.trims, 1000)
 
     def test_24h_many_accounts_while_person_uses_pc(self):
@@ -325,12 +331,16 @@ class WeakPC(unittest.TestCase):
 
         io.tune = io.trim = io.minimize = boom
         io.resize = lambda hwnd, w, h: boom(hwnd)
+        io.throttle = lambda hwnd, cap, eco: boom(hwnd)
         eng = run(io, Config(weak_pc=True), hours=6)
         self.assertEqual(io.idle_kicks, 0)
         self.assertGreater(sum(a.taps for a in eng.accounts.values()), 10000)
 
     def test_trim_setting_limits(self):
         Config(weak_trim_s=0, weak_window=[0, 0]).validate()
+        Config(weak_cpu_cap_pct=0, weak_eco=False).validate()
+        with self.assertRaises(ConfigError):
+            Config(weak_cpu_cap_pct=0.1).validate()
         with self.assertRaises(ConfigError):
             Config(weak_window=[50, 50]).validate()
         with self.assertRaises(ConfigError):
@@ -395,6 +405,8 @@ class WindowsLayer(unittest.TestCase):
     def test_input_struct_matches_windows_64bit_layout(self):
         from tapquest import win
 
+        self.assertEqual(ctypes.sizeof(win.CPU_RATE), 8)
+        self.assertEqual(ctypes.sizeof(win.POWER_THROTTLING), 12)
         if ctypes.sizeof(ctypes.c_void_p) == 8:
             self.assertEqual(ctypes.sizeof(win.INPUT), 40)
             self.assertEqual(win.INPUT.u.offset, 8)

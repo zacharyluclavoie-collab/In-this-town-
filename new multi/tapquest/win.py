@@ -46,6 +46,14 @@ class POINT(ctypes.Structure):
     _fields_ = [("x", c_int32), ("y", c_int32)]
 
 
+class CPU_RATE(ctypes.Structure):  # JOBOBJECT_CPU_RATE_CONTROL_INFORMATION
+    _fields_ = [("ControlFlags", c_uint32), ("CpuRate", c_uint32)]
+
+
+class POWER_THROTTLING(ctypes.Structure):  # PROCESS_POWER_THROTTLING_STATE
+    _fields_ = [("Version", c_uint32), ("ControlMask", c_uint32), ("StateMask", c_uint32)]
+
+
 class RECT(ctypes.Structure):
     _fields_ = [("left", c_int32), ("top", c_int32), ("right", c_int32), ("bottom", c_int32)]
 
@@ -71,6 +79,7 @@ class WinIO:
         self.ps = ctypes.windll.psapi
         self.names = {n.lower() for n in process_names}
         self._held = {name: False for name in HOTKEYS}
+        self._jobs: dict[int, int] = {}  # Roblox pid -> job object holding its CPU cap
         self._declare()
         try:  # so window coordinates are real pixels on scaled displays
             ctypes.windll.shcore.SetProcessDpiAwareness(2)
@@ -109,6 +118,10 @@ class WinIO:
             k.SetThreadExecutionState: (D, [D]),
             u.SetWindowPos: (B, [H, H, I, I, I, I, D]),
             k.SetPriorityClass: (B, [H, D]),
+            k.CreateJobObjectW: (H, [H, ctypes.c_wchar_p]),
+            k.AssignProcessToJobObject: (B, [H, H]),
+            k.SetInformationJobObject: (B, [H, I, ctypes.c_void_p, D]),
+            k.SetProcessInformation: (B, [H, I, ctypes.c_void_p, D]),
             k.GetCurrentProcess: (H, []),
             self.ps.EmptyWorkingSet: (B, [H]),
         }
@@ -178,6 +191,33 @@ class WinIO:
         """Small windows cost far less GPU and memory than big ones."""
         self.u.ShowWindow(hwnd, 4)  # un-maximise without stealing focus
         self.u.SetWindowPos(hwnd, None, 0, 0, w, h, 0x0002 | 0x0004 | 0x0010)  # keep place/order
+
+    def throttle(self, hwnd, cap_pct, eco):
+        """Cap a waiting game's CPU and put it in efficiency mode; (0, False) lifts both."""
+        pid = c_uint32()
+        self.u.GetWindowThreadProcessId(hwnd, ctypes.byref(pid))
+        pid = pid.value
+
+        def apply(h):
+            # Efficiency mode (what Task Manager's green leaf does) + idle priority.
+            state = POWER_THROTTLING(1, 0x1, 0x1 if eco else 0)
+            self.k.SetProcessInformation(h, 4, ctypes.byref(state), ctypes.sizeof(state))
+            self.k.SetPriorityClass(h, 0x40 if eco else 0x4000)
+            # Hard CPU cap through a job object. Unlike freezing the process, the
+            # game keeps running a little all the time, so its connection stays up.
+            job = self._jobs.get(pid)
+            if job is None and cap_pct:
+                job = self.k.CreateJobObjectW(None, None)
+                if job and not self.k.AssignProcessToJobObject(job, h):
+                    self.k.CloseHandle(job)
+                    job = 0
+                self._jobs[pid] = job
+            if job:
+                rate = CPU_RATE(0x1 | 0x4, int(cap_pct * 100)) if cap_pct else CPU_RATE(0, 0)
+                self.k.SetInformationJobObject(job, 15, ctypes.byref(rate), ctypes.sizeof(rate))
+
+        # SET_INFORMATION | SET_QUOTA | TERMINATE (the last two are needed to join a job)
+        self._with_process(hwnd, 0x0200 | 0x0100 | 0x0001, apply)
 
     def tune(self, hwnd):
         """Roblox below normal priority, the macro above: taps stay on time."""
