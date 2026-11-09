@@ -107,6 +107,7 @@ class WinIO:
             k.QueryFullProcessImageNameW: (B, [H, D, ctypes.c_wchar_p, ctypes.POINTER(D)]),
             k.GetCurrentThreadId: (D, []),
             k.SetThreadExecutionState: (D, [D]),
+            u.SetWindowPos: (B, [H, H, I, I, I, I, D]),
             k.SetPriorityClass: (B, [H, D]),
             k.GetCurrentProcess: (H, []),
             self.ps.EmptyWorkingSet: (B, [H]),
@@ -172,6 +173,11 @@ class WinIO:
 
     def minimize(self, hwnd):
         self.u.ShowWindow(hwnd, 7)  # minimise without stealing focus
+
+    def resize(self, hwnd, w, h):
+        """Small windows cost far less GPU and memory than big ones."""
+        self.u.ShowWindow(hwnd, 4)  # un-maximise without stealing focus
+        self.u.SetWindowPos(hwnd, None, 0, 0, w, h, 0x0002 | 0x0004 | 0x0010)  # keep place/order
 
     def tune(self, hwnd):
         """Roblox below normal priority, the macro above: taps stay on time."""

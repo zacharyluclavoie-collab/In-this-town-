@@ -79,6 +79,7 @@ class SimIO:
         self.dropped = 0
         self.freezes = 0
         self.tuned = set()
+        self.sizes = {}
         self.trims = 0
         self.max_visible = 0
 
@@ -176,6 +177,9 @@ class SimIO:
             w.minimized = True
             if self.fg == hwnd:
                 self.fg = USER_WINDOW
+
+    def resize(self, hwnd: int, w: int, h: int):
+        self.sizes[hwnd] = (w, h)
 
     def tune(self, hwnd: int):
         self.tuned.add(hwnd)

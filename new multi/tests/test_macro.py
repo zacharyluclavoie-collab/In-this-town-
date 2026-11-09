@@ -284,6 +284,7 @@ class WeakPC(unittest.TestCase):
                 self.assertLessEqual(io.visible(), 2)
                 self.assertLessEqual(io.max_visible, 4)
                 self.assertEqual(io.tuned, set(io.windows))
+                self.assertEqual(io.sizes, {h: (480, 360) for h in io.windows})
                 self.assertGreater(io.trims, 1000)
 
     def test_24h_many_accounts_while_person_uses_pc(self):
@@ -323,12 +324,15 @@ class WeakPC(unittest.TestCase):
             raise OSError("access denied")
 
         io.tune = io.trim = io.minimize = boom
+        io.resize = lambda hwnd, w, h: boom(hwnd)
         eng = run(io, Config(weak_pc=True), hours=6)
         self.assertEqual(io.idle_kicks, 0)
         self.assertGreater(sum(a.taps for a in eng.accounts.values()), 10000)
 
     def test_trim_setting_limits(self):
-        Config(weak_trim_s=0).validate()
+        Config(weak_trim_s=0, weak_window=[0, 0]).validate()
+        with self.assertRaises(ConfigError):
+            Config(weak_window=[50, 50]).validate()
         with self.assertRaises(ConfigError):
             Config(weak_trim_s=5).validate()
         with self.assertRaises(ConfigError):

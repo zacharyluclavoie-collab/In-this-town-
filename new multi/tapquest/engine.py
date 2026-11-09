@@ -177,6 +177,8 @@ class Engine:
                 self.log(f"{a.name} found")
                 if self.cfg.weak_pc and self.cfg.weak_low_priority:
                     self._quiet(self.io.tune, hwnd)
+                if self.cfg.weak_pc and self.cfg.weak_window != [0, 0]:
+                    self._quiet(self.io.resize, hwnd, *self.cfg.weak_window)
                 if self.cfg.weak_pc and self.cfg.weak_minimize and hwnd != self.io.foreground():
                     self._quiet(self.io.minimize, hwnd)
             elif a.state == "closed":

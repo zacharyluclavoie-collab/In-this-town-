@@ -1,4 +1,4 @@
-# Tap Quest Multi (v5.3)
+# Tap Quest Multi (v5.4)
 
 Multi-account macro for Tap Quest Sim on a Windows PC. It cycles through every open
 Roblox window, taps, runs your extra steps (claim quest, rebirth...), and makes sure
@@ -50,6 +50,8 @@ Tick **Weak PC mode** before pressing Start. It:
 
 - keeps only the account being tapped on screen and minimises the rest, so the PC draws
   one game instead of twenty;
+- shrinks every Roblox window to 480x360 (`weak_window` in `settings.json`), which cuts
+  GPU and memory use a lot;
 - sets Roblox to below-normal CPU priority and the macro above, so taps stay on time;
 - every 5 minutes asks Windows to move idle accounts' memory out of RAM
   (`weak_trim_s` in `settings.json`, 0 turns it off);
@@ -63,6 +65,26 @@ Tick **Weak PC mode** before pressing Start. It:
 
 Also do these by hand in each Roblox window, they matter more than anything the macro
 can do: graphics quality 1, lowest frame-rate cap, small window.
+
+### ASUS ROG Ally (Z1 Extreme) with 20 accounts
+
+The shipped `settings.json` is set up for this: Weak PC mode on, small windows, memory
+trim every 2 minutes, 8 taps a second, one round every 30 seconds.
+
+Memory is the limit on this device, not the macro. 20 Roblox clients need roughly
+8-14 GB, and the Ally's GPU takes its share out of the same 16 GB (24 GB on the Ally X).
+Do these once, or it will likely run out:
+
+- Armoury Crate > Settings > Performance > "Memory Assigned to GPU": set the lowest
+  option, then restart. This hands several GB back to Windows.
+- Plug in and use Turbo mode.
+- Windows > System > About > Advanced system settings > Performance > Virtual memory:
+  set the page file to at least 24000 MB.
+- In each Roblox: graphics quality 1, lowest frame-rate cap.
+- Close everything else (browser, Discord, Steam).
+- Start with 10 accounts, watch Task Manager's memory, then add a few at a time.
+
+None of this was tested on an Ally. If memory hits 95%+, that is the device's ceiling.
 
 ## What was tested, and what wasn't
 

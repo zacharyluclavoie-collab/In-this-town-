@@ -83,6 +83,7 @@ class Config:
     weak_pc: bool = False
     weak_minimize: bool = True  # keep only the account being tapped on screen
     weak_low_priority: bool = True  # Roblox yields CPU to the macro and desktop
+    weak_window: list = field(default_factory=lambda: [480, 360])  # shrink games ([0, 0] = don't)
     weak_trim_s: float = 300.0  # push idle accounts' memory to disk this often (0 = off)
     steps: list = field(default_factory=list)
 
@@ -109,6 +110,11 @@ class Config:
         rng("reconnect_wait_s", 5, 300)
         rng("settle_s", 0.02, 2)
         rng("focus_timeout_s", 1, 30)
+        ww = self.weak_window
+        if len(ww) != 2 or not all(isinstance(n, int) and not isinstance(n, bool) for n in ww):
+            raise ConfigError("weak_window must be [width, height]")
+        if ww != [0, 0] and not (320 <= ww[0] <= 1920 and 240 <= ww[1] <= 1080):
+            raise ConfigError("weak_window must be [0, 0] or between 320x240 and 1920x1080")
         if self.weak_trim_s != 0:
             rng("weak_trim_s", 30, 3600)
         for name in ("nudge_key", "nudge_back_key"):
