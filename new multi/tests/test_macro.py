@@ -175,6 +175,26 @@ class Features(unittest.TestCase):
         with self.assertRaises(ConfigError):
             Config(egg_key="banana").validate()
 
+    def test_round_mode_visits_each_account_once_per_round(self):
+        cfg = Config(round_every_s=60, dwell_s=1, egg_enabled=True)
+        io = SimIO(accounts=4, seed=2)
+        eng = run(io, cfg, hours=1)
+        for a in eng.accounts.values():
+            self.assertTrue(56 <= a.visits <= 61, a.visits)
+            self.assertTrue(a.visits <= a.eggs <= 2 * a.visits, a.eggs)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertEqual(io.stray_inputs, 0)
+
+    def test_long_gap_between_rounds_still_stays_connected(self):
+        io = SimIO(accounts=5, seed=2)
+        eng = run(io, Config(round_every_s=3600, dwell_s=1, egg_enabled=True), hours=12)
+        self.assertEqual(io.idle_kicks, 0)
+        self.assertLess(io.max_idle, 600)
+        for a in eng.accounts.values():
+            self.assertTrue(12 <= a.eggs <= 26, a.eggs)
+        with self.assertRaises(ConfigError):
+            Config(round_every_s=2).validate()
+
     def test_dwell_shrinks_so_a_lap_fits_the_safe_window(self):
         cfg = Config(dwell_s=120)
         io = SimIO(accounts=20, seed=1)

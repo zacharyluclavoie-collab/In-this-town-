@@ -102,13 +102,14 @@ class App:
         side = ttk.Frame(mid, style="Panel.TFrame", padding=12)
         side.pack(side="right", fill="y", padx=(12, 0))
         self.v = {
-            "tps": tk.StringVar(), "dwell": tk.StringVar(), "tx": tk.StringVar(), "ty": tk.StringVar(),
+            "tps": tk.StringVar(), "dwell": tk.StringVar(), "round": tk.StringVar(), "tx": tk.StringVar(), "ty": tk.StringVar(),
             "tap": tk.BooleanVar(), "user": tk.BooleanVar(), "rec": tk.BooleanVar(),
             "weak": tk.BooleanVar(), "egg": tk.BooleanVar(),
         }
         ttk.Label(side, text="SETTINGS", style="PanelDim.TLabel").grid(row=0, column=0, columnspan=3, sticky="w")
         self._row(side, 1, "Taps per second", "tps")
         self._row(side, 2, "Seconds per account", "dwell")
+        self._row(side, 13, "Round every (sec, 0 = nonstop)", "round")
         ttk.Label(side, text="Tap spot (x, y)", style="Panel.TLabel").grid(row=3, column=0, sticky="w", pady=3)
         ttk.Entry(side, textvariable=self.v["tx"], width=6).grid(row=3, column=1, padx=(8, 2))
         ttk.Entry(side, textvariable=self.v["ty"], width=6).grid(row=3, column=2)
@@ -162,6 +163,7 @@ class App:
         c, v = self.cfg, self.v
         v["tps"].set(f"{c.taps_per_second:g}")
         v["dwell"].set(f"{c.dwell_s:g}")
+        v["round"].set(f"{c.round_every_s:g}")
         v["tx"].set(f"{c.tap_x:g}")
         v["ty"].set(f"{c.tap_y:g}")
         v["tap"].set(c.tap_enabled)
@@ -182,7 +184,7 @@ class App:
         """Build settings from the widgets; raises ConfigError with a readable message."""
         c, v = self.cfg, self.v
         try:
-            data = dict(c.to_dict(), taps_per_second=float(v["tps"].get()), dwell_s=float(v["dwell"].get()),
+            data = dict(c.to_dict(), taps_per_second=float(v["tps"].get()), dwell_s=float(v["dwell"].get()), round_every_s=float(v["round"].get()),
                         tap_x=float(v["tx"].get()), tap_y=float(v["ty"].get()),
                         tap_enabled=v["tap"].get(), pause_on_user_input=v["user"].get(),
                         reconnect_enabled=v["rec"].get(), weak_pc=v["weak"].get(), egg_enabled=v["egg"].get())

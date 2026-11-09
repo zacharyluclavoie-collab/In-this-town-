@@ -1,4 +1,4 @@
-# Tap Quest Multi (v5.2)
+# Tap Quest Multi (v5.3)
 
 Multi-account macro for Tap Quest Sim on a Windows PC. It cycles through every open
 Roblox window, taps, runs your extra steps (claim quest, rebirth...), and makes sure
@@ -16,7 +16,9 @@ no account sits idle long enough for Roblox's 20-minute kick.
    work on every account as long as the windows show the same layout.
 5. Optional: tick **Auto egg** to press R about once a second on each account while the
    macro is on it (stand next to the egg first; `egg_key` and `egg_every_s` in
-   `settings.json` change the key and speed). **+ Click** / **+ Key** add timed steps that run on every account.
+   `settings.json` change the key and speed). Set **Round every** to e.g. 30 to visit each
+   account once every 30 seconds (click, press R, move on) and leave the PC alone in
+   between; 0 means go round nonstop. **+ Click** / **+ Key** add timed steps that run on every account.
 6. Press **Start**.
 
 | Key | Does |
@@ -64,7 +66,7 @@ can do: graphics quality 1, lowest frame-rate cap, small window.
 
 ## What was tested, and what wasn't
 
-Tested here (33 automated tests, `Run Tests.bat` runs them on your PC):
+Tested here (35 automated tests, `Run Tests.bat` runs them on your PC):
 
 - 24-hour simulated sessions with 1 to 60 accounts: zero idle kicks.
 - 24-hour sessions with everything going wrong at once (focus failing 25% of the time,

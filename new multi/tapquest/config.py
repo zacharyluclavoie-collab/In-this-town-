@@ -45,6 +45,10 @@ class Config:
     taps_per_second: float = 12.0
     dwell_s: float = 8.0  # how long to tap on one account before moving to the next
 
+    # Rounds: 0 = go round the accounts nonstop. Otherwise visit each account once
+    # every this many seconds and leave the PC alone in between.
+    round_every_s: float = 0.0
+
     # Auto egg: press the hatch key over and over while on an account
     egg_enabled: bool = False
     egg_key: str = "r"
@@ -93,6 +97,8 @@ class Config:
         rng("taps_per_second", 0.5, 30)
         rng("dwell_s", 0.5, 300)
         rng("egg_every_s", 0.2, 600)
+        if self.round_every_s != 0:
+            rng("round_every_s", 5, 3600)
         if self.egg_key not in KEYS:
             raise ConfigError(f"egg_key: unknown key {self.egg_key!r}")
         # Half the Roblox limit at most: a missed visit still leaves a full retry window.

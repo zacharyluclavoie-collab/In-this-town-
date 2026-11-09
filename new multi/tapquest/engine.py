@@ -40,6 +40,7 @@ class Account:
     visits: int = 0
     taps: int = 0
     eggs: int = 0
+    last_full: float | None = None  # last time it got a full (tap/egg/steps) visit
     reconnects: int = 0
     focus_fails: int = 0
     dc_streak: int = 0
@@ -256,6 +257,12 @@ class Engine:
         if not ready:
             return None, False
         keepalive_only = self.mode == "keepalive" or now < self.user_until
+        every = self.cfg.round_every_s
+        if every and not keepalive_only:
+            due_now = [a for a in ready if a.last_full is None or now - a.last_full >= every]
+            if due_now:
+                return max(due_now, key=lambda a: a.idle(now)), True
+            keepalive_only = True  # between rounds: only step in to stop an idle kick
         if keepalive_only:
             # start early enough that the last account in the queue is still on time
             due = max(60.0, self.cfg.safe_idle_s - len(self.live()) * self._overhead)
@@ -278,6 +285,8 @@ class Engine:
                     self._quiet(io.minimize, self._front)
             self._front = a.hwnd
             a.visits += 1
+            if full:
+                a.last_full = io.now()
             sent = False
             if cfg.reconnect_enabled and io.now() >= a.next_dc_check:
                 a.next_dc_check = io.now() + DC_CHECK_S
