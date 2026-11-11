@@ -1,0 +1,726 @@
+{
+ "slug": "loud-heartbeat",
+ "date": "2026-11-11",
+ "title": "When You're Scared, Everyone Can Hear Your Heartbeat 😨",
+ "caption": "In this world, when you're scared, everyone can hear your heartbeat 💓 Leo's was the LOUDEST in school… until the day it mattered 🥹 Wait for the end #inthisworld #robloxstory #roblox #storytime #fyp",
+ "voice": "am_michael",
+ "speed": 1.1,
+ "mood": "tense",
+ "cast": {
+  "sam": {
+   "age": "kid",
+   "height": 0.92,
+   "skin": "#c68e5e",
+   "shirt": "#5aa9e6",
+   "pants": "#3b3b3b",
+   "top": "tshirt",
+   "hair": "messy",
+   "hair_color": "#2b1d14"
+  }
+ },
+ "shots": [
+  {
+   "line": "In this *world*, when you're scared, everyone can hear your *heartbeat*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "S2",
+     "face": "scared",
+     "act": "shake",
+     "say": "THUMP THUMP",
+     "beat": true
+    },
+    {
+     "who": "noah",
+     "at": "S1",
+     "face": "shocked",
+     "look": "kid1"
+    },
+    {
+     "who": "kid2",
+     "at": "S3",
+     "face": "shocked",
+     "look": "kid1"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "kid1",
+    "move": "zoom",
+    "tilt": 8
+   }
+  },
+  {
+   "line": "The more scared you are, the *louder* it gets.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "kid2",
+     "at": "S3",
+     "face": "scared",
+     "act": "scared",
+     "beat": true
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "kid2",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Tyler's heart was *always* quiet.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "smug"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "tyler",
+    "height": "low",
+    "move": "push"
+   }
+  },
+  {
+   "line": "He jumped off the swings, climbed the fence, and *bragged* about it.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "laugh",
+     "act": "jump",
+     "say": "TOO EASY."
+    },
+    {
+     "who": "kid1",
+     "at": "B",
+     "face": "shocked",
+     "look": "tyler"
+    },
+    {
+     "who": "mia",
+     "at": "C",
+     "face": "worried",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "tyler",
+     "kid1",
+     "mia"
+    ],
+    "front": "scene",
+    "height": "low"
+   },
+   "nocut": true
+  },
+  {
+   "line": "But Leo? His heart was the loudest in *school*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "S2",
+     "face": "scared",
+     "act": "shake",
+     "beat": true,
+     "fx": "sparkle",
+     "fx_color": "#ff5470"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "zoom",
+    "tilt": -8
+   }
+  },
+  {
+   "line": "Thunder. Spelling tests. Even the class *hamster*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "S2",
+     "face": "scared",
+     "act": "scared",
+     "beat": true
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "angle": 20
+   }
+  },
+  {
+   "line": "The kids called him *Drum Boy*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "B",
+     "face": "laugh",
+     "act": "point",
+     "say": "BOOM BOOM!",
+     "look": "leo"
+    },
+    {
+     "who": "kid2",
+     "at": "D",
+     "face": "laugh",
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "act": "sad"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "kid1",
+     "leo"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Tyler smirked. Brave people don't *have* loud hearts.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "smug",
+     "act": "talk",
+     "talk": true,
+     "say": "COWARD.",
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "And Leo believed him. Brave just wasn't *for* him.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "sad",
+     "act": "sad"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "angle": 15,
+    "move": "push"
+   },
+   "time": "night"
+  },
+  {
+   "line": "Then a new kid joined the class. *Sam*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "sam",
+     "at": "A",
+     "face": "worried",
+     "act": "lookaround"
+    },
+    {
+     "who": "teacher",
+     "at": "T",
+     "face": "smile"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "sam",
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Sam was nervous about *everything*. His heart filled the whole room.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "sam",
+     "at": "S4",
+     "face": "scared",
+     "act": "shake",
+     "beat": true
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "sam",
+    "move": "zoom",
+    "tilt": 7
+   }
+  },
+  {
+   "line": "And Tyler made it his favorite *game*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "S5",
+     "face": "laugh",
+     "act": "point",
+     "say": "LISTEN TO HIM!",
+     "look": "sam"
+    },
+    {
+     "who": "sam",
+     "at": "S4",
+     "face": "crying",
+     "act": "cry",
+     "beat": true
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "sam"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "One day, Tyler dumped Sam's backpack all over the *floor*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "angry",
+     "act": "point",
+     "look": "sam"
+    },
+    {
+     "who": "sam",
+     "at": "C",
+     "face": "crying",
+     "act": "cry",
+     "beat": true
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "tyler",
+     "sam"
+    ],
+    "front": "scene",
+    "shake": true
+   },
+   "props": [
+    {
+     "kind": "paper",
+     "at": [
+      0.0,
+      0.2,
+      0.02
+     ]
+    },
+    {
+     "kind": "book",
+     "at": [
+      -0.5,
+      0.0,
+      0.05
+     ]
+    }
+   ]
+  },
+  {
+   "line": "Everyone froze. *Nobody* moved.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "noah",
+     "at": "S1",
+     "face": "shocked"
+    },
+    {
+     "who": "mia",
+     "at": "S2",
+     "face": "shocked"
+    },
+    {
+     "who": "kid1",
+     "at": "S3",
+     "face": "shocked"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "noah",
+     "mia",
+     "kid1"
+    ],
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Then they heard it. The loudest heartbeat in the *world*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "S6",
+     "face": "scared",
+     "act": "shake",
+     "beat": true,
+     "fx": "sparkle",
+     "fx_color": "#ff5470"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "zoom",
+    "tilt": -9
+   }
+  },
+  {
+   "line": "It was *Leo's*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "S6",
+     "face": "scared",
+     "beat": true
+    }
+   ],
+   "cam": {
+    "shot": "extreme",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "His legs were shaking. But he stepped *forward*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "D",
+     "face": "determined",
+     "act": "walk",
+     "to": "A",
+     "beat": true
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Leave him *alone*, Tyler.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "angry",
+     "act": "talk",
+     "talk": true,
+     "say": "LEAVE HIM ALONE.",
+     "look": "tyler",
+     "beat": true
+    },
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "shocked",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "tyler"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Thump. Thump. Thump. The whole class could hear how *scared* he was.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "beat": true,
+     "fx": "sparkle",
+     "fx_color": "#ff5470"
+    },
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "shocked"
+    },
+    {
+     "who": "sam",
+     "at": "C",
+     "face": "shocked"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "tyler",
+     "sam"
+    ],
+    "front": "scene",
+    "move": "orbit"
+   }
+  },
+  {
+   "line": "And that's exactly why it *mattered*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "S2",
+     "face": "shocked",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "mia",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Brave doesn't mean your heart is quiet. It means you go *anyway*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "height": "low",
+    "move": "push"
+   },
+   "hold": 0.3
+  },
+  {
+   "line": "Tyler had nothing to say. He just *walked away*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "sad",
+     "act": "walk",
+     "to": "D"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "tyler",
+    "front": "scene"
+   }
+  },
+  {
+   "line": "Then, one by one, other hearts started *pounding*. And they stood with Leo.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "beat": true
+    },
+    {
+     "who": "mia",
+     "at": "D",
+     "face": "determined",
+     "act": "walk",
+     "to": [
+      -2.1,
+      -1.2
+     ],
+     "beat": true
+    },
+    {
+     "who": "noah",
+     "at": [
+      2.6,
+      -0.4,
+      0
+     ],
+     "face": "determined",
+     "act": "walk",
+     "to": [
+      0.4,
+      -1.0
+     ],
+     "beat": true
+    },
+    {
+     "who": "sam",
+     "at": "C",
+     "face": "smile"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "leo",
+     "sam"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Sam whispered, Thank you, *Drum Boy*.",
+   "set": "classroom",
+   "chars": [
+    {
+     "who": "sam",
+     "at": "C",
+     "face": "smile",
+     "act": "talk",
+     "talk": true,
+     "say": "THANK YOU.",
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "happy",
+     "look": "sam"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "sam",
+     "leo"
+    ],
+    "front": "scene"
+   },
+   "hold": 0.3
+  },
+  {
+   "line": "From then on, Drum Boy wasn't an insult. It was a *title*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    },
+    {
+     "who": "sam",
+     "at": "B",
+     "face": "laugh",
+     "act": "cheer"
+    },
+    {
+     "who": "mia",
+     "at": "C",
+     "face": "happy",
+     "act": "cheer"
+    },
+    {
+     "who": "noah",
+     "at": "D",
+     "face": "laugh",
+     "act": "cheer"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "leo",
+     "sam",
+     "mia"
+    ],
+    "front": "scene",
+    "height": "low"
+   }
+  },
+  {
+   "line": "When was *your* heart the loudest?",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smile",
+     "act": "wave"
+    },
+    {
+     "who": "sam",
+     "at": "B",
+     "face": "happy",
+     "act": "wave"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "sam"
+    ],
+    "front": "scene",
+    "move": "pull"
+   },
+   "time": "sunset",
+   "hold": 0.6
+  }
+ ]
+}

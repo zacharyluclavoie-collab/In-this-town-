@@ -141,3 +141,17 @@ def add(track, clip, at_sec, sr, gain=1.0):
         return
     j = min(len(track), i + len(clip))
     track[i:j] += clip[: j - i] * gain
+
+
+def heartbeat(sr):
+    """One 'lub-dub' heartbeat, about 0.45 s."""
+    n = int(0.45 * sr)
+    out = np.zeros(n)
+    for off, f0, amp in ((0.0, 70, 0.9), (0.17, 58, 0.6)):
+        m = int(0.16 * sr)
+        t = np.arange(m) / sr
+        f = np.linspace(f0, 38, m)
+        hit = np.sin(2 * np.pi * np.cumsum(f) / sr) * np.exp(-t * 22) * amp
+        i = int(off * sr)
+        out[i:i + m] += hit[: n - i]
+    return out * 0.85

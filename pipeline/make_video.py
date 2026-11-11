@@ -289,6 +289,12 @@ def main():
                 fx.add(sfx, fx.shimmer(SR), t0 + 0.05, SR)
             if cam.get("move") == "zoom" or cam.get("shake"):
                 fx.add(sfx, fx.boom(SR), t0, SR)
+            if any(c.get("beat") for c in chs):  # loud heartbeat through the whole line
+                hb = fx.heartbeat(SR)
+                tt = t0 + 0.05
+                while tt < shot_t[i + 1] - 0.3:
+                    fx.add(sfx, hb, tt, SR)
+                    tt += 0.62
     mix = voice * 1.0 + bed * 0.16 * duck + sfx
     mix /= max(1.0, np.max(np.abs(mix)) / 0.95)
     wav = os.path.join(build, "mix.wav")

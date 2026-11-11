@@ -67,7 +67,7 @@ acc[crown|glasses|headband|backpack|cape|bow] age(kid|teen|adult|baby) height`.
 
 **Sets and slots** (`at`): every set has standing slots `A`-`E` (some `F`, `G`).
 - `bedroom` (+`BED` lying, `DESK`), `nursery` (+`CRIB`), `livingroom` (+`SOFA`, `SOFA2`, `SOFA3` seats)
-- `classroom` (desk seats `S1`-`S6`, teacher `T`), `hallway`, `cafeteria` (bench seats `SL SR SL2 SR2`)
+- `classroom` (desk seats `S1`-`S6`, teacher `T`, standing only `A`-`D`), `hallway`, `cafeteria` (bench seats `SL SR SL2 SR2`)
 - `hospital` (`BED` lying), `schoolyard`, `street` (`ROAD`), `park` (`BENCH`)
 - `at` can also be `[x, y, yaw_degrees]`. `time`: `day`, `sunset`, `night`.
 
