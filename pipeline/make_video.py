@@ -112,25 +112,87 @@ def font(size):
     return _font_cache[size]
 
 
+# TikTok safe area (1080x1920): keep text away from the right-hand buttons and the bottom bar
+SAFE_L, SAFE_R = 70, 930
+SAFE_CX = (SAFE_L + SAFE_R) // 2
+KEY_COLOR = "#ffd83d"
+
+
+def _words_line(d, x, y, words, f, colors, stroke=8):
+    for w, c in zip(words, colors):
+        d.text((x, y), w, font=f, fill=c, stroke_width=stroke, stroke_fill="black")
+        x += f.getlength(w + " ")
+
+
 def caption_image(text):
-    """White bold-italic caption with a thick black outline, like the reference style."""
+    """White bold-italic caption with a thick black outline; the CAPS key word is yellow."""
     size = 74
     f = font(size)
-    while f.getlength(text) > W * 0.86 and size > 44:
+    maxw = SAFE_R - SAFE_L
+    while f.getlength(text) > maxw and size > 44:
         size -= 4
         f = font(size)
     tw = f.getlength(text)
     img = Image.new("RGBA", (W, 220), (0, 0, 0, 0))
-    d = ImageDraw.Draw(img)
-    x = (W - tw) / 2
+    x = SAFE_CX - tw / 2
     y = 60
-    # soft drop shadow
     sh = Image.new("RGBA", img.size, (0, 0, 0, 0))
     ImageDraw.Draw(sh).text((x + 5, y + 7), text, font=f, fill=(0, 0, 0, 170), stroke_width=9, stroke_fill=(0, 0, 0, 170))
     img = Image.alpha_composite(img, sh.filter(ImageFilter.GaussianBlur(5)))
-    d = ImageDraw.Draw(img)
-    d.text((x, y), text, font=f, fill="white", stroke_width=8, stroke_fill="black")
+    words = text.split()
+    colors = [KEY_COLOR if (len(re.sub(r"\W", "", w)) > 1 and re.sub(r"\W", "", w).isupper()) else "white" for w in words]
+    _words_line(ImageDraw.Draw(img), x, y, words, f, colors)
     return img
+
+
+def title_image(text, size=104):
+    """Big hook text for the first seconds: up to 2 lines, last word(s) in yellow."""
+    words = text.upper().split()
+    f = font(size)
+    maxw = SAFE_R - SAFE_L
+    lines, cur = [], []
+    for w in words:
+        if cur and f.getlength(" ".join(cur + [w])) > maxw:
+            lines.append(cur)
+            cur = []
+        cur.append(w)
+    lines.append(cur)
+    while any(f.getlength(" ".join(l)) > maxw for l in lines) and size > 60:
+        size -= 6
+        f = font(size)
+    lh = int(size * 1.12)
+    img = Image.new("RGBA", (W, lh * len(lines) + 60), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    n = len(words)
+    k = 0
+    for li, l in enumerate(lines):
+        tw = f.getlength(" ".join(l))
+        cols = []
+        for w in l:
+            cols.append(KEY_COLOR if k >= n - 2 else "white")
+            k += 1
+        _words_line(d, SAFE_CX - tw / 2, 20 + li * lh, l, f, cols, stroke=10)
+    return img
+
+
+def pill_image(text, size=48, bg=KEY_COLOR, fg="black"):
+    f = ImageFont.truetype(BUBBLE_FONT, size)
+    tw = f.getlength(text)
+    w, h = int(tw + 64), size + 34
+    img = Image.new("RGBA", (W, h + 10), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
+    x0 = SAFE_CX - w // 2
+    d.rounded_rectangle((x0, 4, x0 + w, 4 + h), radius=h // 2, fill=bg, outline="black", width=5)
+    d.text((SAFE_CX, 4 + h / 2), text, font=f, fill=fg, anchor="mm")
+    return img
+
+
+def pop(img, age, dur=0.15):
+    """Scale-in for overlays."""
+    if age >= dur:
+        return img
+    sc = 0.7 + 0.3 * max(0.0, age) / dur
+    return img.resize((max(1, int(img.width * sc)), max(1, int(img.height * sc))), Image.LANCZOS)
 
 
 def render_shot(shot_json, frames_dir, n):
@@ -169,6 +231,8 @@ def main():
     shots = story["shots"]
     lines = [s["line"] for s in shots]
     edge = story.get("tts", "edge") == "edge"  # old stories keep the Kokoro voice they were made with
+    global FPS
+    FPS = story.get("fps", 30 if edge else 24)
     if edge:
         nar = narration.build(shots, story, os.path.join(build, "tts"))
     else:
@@ -185,7 +249,7 @@ def main():
         starts.append(t + lead)
         durs.append(d)
         t += d
-    durs[-1] += 0.6 if not edge else 1.6  # room for the music to fade out
+    durs[-1] += 0.6 if not edge else 1.2  # room for the music to fade out
     # round shot boundaries on the cumulative timeline so audio and video never drift
     bounds, acc = [0], 0.0
     for d in durs:
@@ -195,6 +259,11 @@ def main():
     # make frame total match audio exactly
     total_frames = sum(shot_frames)
     total = total_frames / FPS
+    tw_i = next((i for i, n in enumerate(nar) if n["twist"]), None)
+    tl = {"total": total, "fps": FPS, "shot_starts": [b / FPS for b in bounds[:-1]],
+          "twist_at": starts[tw_i] / total if tw_i is not None else None,
+          "sentence_pauses": sum(max(0, len(narration.sentences(s["line"])) - 1) for s in shots) if edge else 0}
+    json.dump(tl, open(os.path.join(build, "timeline.json"), "w"), indent=1)
 
     # narration track
     voice = np.zeros(int(total * SR) + SR, dtype=np.float32)
@@ -273,7 +342,8 @@ def main():
             sheet.paste(im, ((k % cols) * 216, (k // cols) * 384))
         sp = os.path.join(build, "stills.png")
         sheet.save(sp)
-        print("stills:", sp, f"total {total:.1f}s, {len(parts)} cuts")
+        print("stills:", sp, f"total {total:.1f}s, {len(parts)} cuts, twist at "
+              f"{(tl['twist_at'] or 0) * 100:.0f}%, {tl['sentence_pauses']} sentence pauses")
         return
 
     # music + sound effects
@@ -356,6 +426,12 @@ def main():
         "-shortest", out], stdin=subprocess.PIPE)
     fno = 0
     cap_y = int(H * 0.60)
+    hook = story.get("hook_text")
+    hook_img = title_image(hook) if hook else None
+    hook_end = min(2.9, shot_t[1] if len(shot_t) > 1 else 2.9)
+    wait_img = pill_image(story.get("promise", "WAIT FOR THE END")) if edge else None
+    follow_img = pill_image("FOLLOW FOR THE NEXT STORY", bg="white") if edge else None
+    last_start = shot_t[len(shots) - 1]
     for (i, j, f0, n, cam) in parts:
         fd = os.path.join(build, f"shot_{i:02d}_{j}")
         files = sorted(f for f in os.listdir(fd) if f.endswith(".png"))[:n]
@@ -364,6 +440,16 @@ def main():
             im = finish(Image.open(os.path.join(fd, f)).convert("RGB").resize((W, H), Image.LANCZOS))
             t = fno / FPS
             age_b = (f0 + fi) / FPS - 0.12  # bubbles pop in just after the shot starts
+            if hook_img is not None and t < hook_end:
+                age_b = -1  # keep the hook title clear
+                hi = pop(hook_img, t)
+                im.paste(hi, ((W - hi.width) // 2, int(H * 0.16) + (hook_img.height - hi.height) // 2), hi)
+            if wait_img is not None and 2.0 <= t < 5.5:
+                wi = pop(wait_img, t - 2.0)
+                im.paste(wi, ((W - wi.width) // 2, int(H * 0.08)), wi)
+            if follow_img is not None and t >= last_start + 0.3:
+                fi_ = pop(follow_img, t - last_start - 0.3)
+                im.paste(fi_, ((W - fi_.width) // 2, int(H * 0.08)), fi_)
             if age_b > 0:
                 for (b, bx, by) in bubs:
                     if age_b < 0.12:
@@ -382,7 +468,7 @@ def main():
                 if age < 0.08:
                     sc = 0.9 + age / 0.08 * 0.1
                     ci2 = ci.resize((int(W * sc), int(ci.height * sc)), Image.LANCZOS)
-                    im.paste(ci2, ((W - ci2.width) // 2, cap_y + (ci.height - ci2.height) // 2), ci2)
+                    im.paste(ci2, (int(SAFE_CX - ci2.width * SAFE_CX / W), cap_y + (ci.height - ci2.height) // 2), ci2)
                 else:
                     im.paste(ci, (0, cap_y), ci)
             ff.stdin.write(im.tobytes())

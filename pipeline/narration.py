@@ -119,7 +119,7 @@ def build(shots, story, out_dir):
         out.append({
             "audio": audio,
             "words": words,
-            "pre": TWIST_PAUSE if i == twist else (0.5 if last else 0.0),
+            "pre": TWIST_PAUSE if i == twist else (0.3 if last else 0.0),
             "post": LINE_PAUSE,
             "twist": i == twist,
         })

@@ -13,7 +13,7 @@ python3 pipeline/make_video.py stories/FILE.json --stills   # check one frame pe
 python3 pipeline/make_video.py stories/FILE.json            # full render -> videos/DATE/SLUG.mp4
 ```
 
-Output: 1080x1920, 24 fps, H.264 + AAC, about 55-70 seconds. A full render takes about
+Output: 1080x1920, 30 fps, H.264 CRF 18 + AAC 192k 48 kHz stereo, 40-55 seconds. A full render takes about
 1 hour on 4 CPU cores. Renders are cached in `build/`, so a stopped run resumes.
 
 ## Sound
@@ -37,29 +37,30 @@ Older stories carry `"tts": "kokoro"` so re-rendering them keeps their original 
 A story is a JSON file in `stories/` named `DATE-slug.json`. Each shot is one narration
 line; the shot lasts as long as the line takes to say.
 
-Story recipe (what the reference videos do):
-1. Hook: `In this *world*, ...` states the rule of the world.
-2. Explain the rule with a quick example (2-3 shots).
-3. Leo is different and nobody understands why (kids tease, friend worries).
-4. The secret / reason is revealed (family, kindness, sacrifice).
-5. Emotional payoff, then a question to the viewer: `What would *you* ...?`
-
-Keep 23-28 lines (70-90 s), each under ~14 words. Wrap the key word in `*stars*` so the
-caption shows it in CAPS (otherwise one word is picked automatically). Use only original ideas.
+Format for reach (new videos, 40-55 s, 12-15 lines):
+1. Hook, first 2 s: line 1 is `In this *world*, [strange rule]...` and the picture SHOWS the
+   rule happening. `hook_text` (6 words or fewer) is shown big in the first ~3 s; a
+   "WAIT FOR THE END" tag appears at 2-5.5 s.
+2. Setup (2-3 lines), then a problem for Leo (he's different / mocked by the rival).
+3. Twist at about 80% of the video: mark it `"twist": true` (pause + heartbeat + music swell).
+4. Short emotional landing (1 line), shown with a close-up of Leo's face, not extra words.
+5. Last line: a question that makes people tag or share ("Who would you tag?"). A
+   "FOLLOW FOR THE NEXT STORY" card shows on the last shot. Make the last shot use the same
+   set and a similar camera as the first so the video loops.
+Cut every line that doesn't move the story. `python3 pipeline/make_video.py FILE --stills`
+prints the length and where the twist lands; aim for 45-52 s and 76-84%.
 
 Write the lines to be spoken: short sentences, everyday words that are easy to say, commas
-and `...` where a breath belongs ("And then... something glowed."). Mark the twist shot with
-`"twist": true` so it gets a pause, a heartbeat and a music swell.
+and `...` where a breath belongs ("And then... something glowed.").
 
-What makes these go viral (from the reference videos):
-- The first 2 seconds SHOW the rule happening (sparkles, a speech bubble, a big reaction), not just say it.
-- A rival (usually Tyler) who uses the rule selfishly, so Leo's choice stands out.
-- A setup early that pays off at the end (e.g. "real ones are worth a fortune").
-- Short comic speech bubbles (`"say": "NO."`) in 4-6 shots: insults, gasps, the key line.
-- Fast pictures: long lines are cut automatically into 2-3 camera angles; add `tilt` for shock.
-- Title in Title Case + one emoji, like `Every Compliment You Get Turns Into Gold Coins 😨`.
-- Caption: the premise, a teaser (`Leo had ZERO… until`), "Wait for the end", then
-  `#inthisworld #robloxstory #roblox #storytime #fyp`.
+Caption (under 250 characters, Canadian spelling): keyword first, `In this world, [rule]...
+Leo ... 🥹` + a question, then 3-5 hashtags: `#inthisworld #storytime` + 2-3 story tags such as
+`#emotionalstory #kindness #friendship #family`. Never #fyp, #foryou or #viral.
+Title in Title Case + one emoji.
+
+After rendering, `python3 pipeline/check_video.py stories/FILE.json` must pass (length,
+1080x1920 30 fps, 48 kHz stereo, -14 LUFS, true peak, voice over music, pauses, twist
+position, hook and caption rules) before the video is posted.
 
 ```json
 {
