@@ -29,8 +29,15 @@ TWIST_PAUSE = 1.1     # extra silence before the twist line
 def sentences(line):
     """Split a narration line into sentences; '...' inside a sentence stays as a breath."""
     text = line.replace("*", "").strip()
-    parts = re.split(r'(?<=[.!?])\s+(?=[A-Z"\'])', text)
-    return [p.strip() for p in parts if p.strip()]
+    parts = [p.strip() for p in re.split(r'(?<=[.!?])\s+(?=[A-Z"\'])', text) if p.strip()]
+    # the voice service returns nothing for one-word sentences: keep them with the one before
+    out = []
+    for p in parts:
+        if out and len(re.findall(r"[A-Za-z0-9']+", p)) < 2:
+            out[-1] = out[-1] + " " + p
+        else:
+            out.append(p)
+    return out
 
 
 async def _speak(text, voice, rate, volume, pitch, mp3, proxy):
@@ -95,7 +102,12 @@ def build(shots, story, out_dir):
         pieces, words, t = [], [], 0.0
         sents = sentences(shot["line"])
         for k, s in enumerate(sents):
-            a, w = speak(s, out_dir, voice=voice, rate=rate, volume=vol)
+            try:
+                a, w = speak(s, out_dir, voice=voice, rate=rate, volume=vol)
+            except RuntimeError:
+                if len(s.split()) > 2:
+                    raise
+                a, w = speak(s.rstrip(".!") + "...", out_dir, voice=voice, rate=rate, volume=vol)
             pieces.append(a)
             words += [[w0 + t, w1 + t, txt] for w0, w1, txt in w]
             t += len(a) / SR
