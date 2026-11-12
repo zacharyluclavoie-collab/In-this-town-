@@ -1,0 +1,348 @@
+{
+ "slug": "thinking-sparkles",
+ "date": "2026-11-12",
+ "title": "When Someone Thinks Of You, Pink Sparkles Appear 💖",
+ "caption": "In this world, when someone thinks about you, pink sparkles float around your head 💖 Leo's wouldn't stop all day... and the reason made him cry laughing 🥹 Who's thinking about you? #inthisworld #storytime #family #funnystory",
+ "hook_text": "SOMEONE IS THINKING ABOUT YOU",
+ "mood": "hopeful",
+ "shots": [
+  {
+   "line": "In this *world*, when someone thinks about you... pink sparkles float around your *head*.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "C",
+     "face": "laugh",
+     "act": "cheer",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    },
+    {
+     "who": "noah",
+     "at": "D",
+     "face": "smile",
+     "look": "mia"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "mia",
+     "noah"
+    ],
+    "front": "scene",
+    "height": "low",
+    "move": "zoom"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Most kids got a few sparkles a *day*.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "C",
+     "face": "happy",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    },
+    {
+     "who": "kid2",
+     "at": "D",
+     "face": "smile",
+     "look": "kid1"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "kid1",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "But one Tuesday, Leo's sparkles... would not *stop*.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "shocked",
+     "act": "lookaround",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "height": "low",
+    "move": "zoom",
+    "tilt": 8
+   }
+  },
+  {
+   "line": "In math. In gym. All through *lunch*.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "worried",
+     "act": "hold",
+     "prop": "tray",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Mia gasped. Leo had a secret *admirer*!",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "D",
+     "face": "laugh",
+     "act": "point",
+     "look": "leo",
+     "say": "WHO IS IT?!"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "worried",
+     "act": "shrug",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "mia",
+     "leo"
+    ],
+    "front": "scene"
+   },
+   "nocut": true
+  },
+  {
+   "line": "The whole cafeteria wanted to *know*.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "B",
+     "face": "shocked",
+     "look": "leo"
+    },
+    {
+     "who": "kid2",
+     "at": "C",
+     "face": "shocked",
+     "look": "leo"
+    },
+    {
+     "who": "noah",
+     "at": "D",
+     "face": "shocked",
+     "look": "leo"
+    },
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "scared",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    }
+   ],
+   "cam": {
+    "shot": "wide",
+    "on": [
+     "kid1",
+     "kid2",
+     "noah",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Tyler smirked. Probably just your *mom*.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "D",
+     "face": "smug",
+     "act": "point",
+     "look": "leo",
+     "say": "IT'S YOUR MOM!"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "act": "sad",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "So Leo texted his mom. Nope... not *her*.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "worried",
+     "act": "hold",
+     "prop": "phone",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "On the walk home, the sparkles got even *brighter*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "act": "run",
+     "to": "B",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "move": "pan_r"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Inside, someone was yelling at the *TV*.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "shocked",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push",
+    "tilt": 6
+   }
+  },
+  {
+   "line": "It was *Grandpa*... stuck on Leo's video game.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "SOFA",
+     "face": "angry",
+     "act": "hold",
+     "prop": "phone",
+     "say": "HOW DO I JUMP?!"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "grandpa",
+    "move": "zoom",
+    "tilt": -7
+   },
+   "twist": true
+  },
+  {
+   "line": "Leo laughed till he *cried*.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "laugh",
+     "act": "cry",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Who's thinking about *you*? Tag them.",
+   "set": "cafeteria",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "happy",
+     "act": "wave",
+     "fx": "sparkle",
+     "fx_color": "#ff7eb6"
+    },
+    {
+     "who": "mia",
+     "at": "D",
+     "face": "laugh",
+     "act": "wave"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "mia"
+    ],
+    "front": "scene",
+    "height": "low",
+    "move": "pull"
+   },
+   "nocut": true
+  }
+ ]
+}
