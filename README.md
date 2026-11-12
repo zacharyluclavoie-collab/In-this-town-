@@ -16,6 +16,22 @@ python3 pipeline/make_video.py stories/FILE.json            # full render -> vid
 Output: 1080x1920, 24 fps, H.264 + AAC, about 55-70 seconds. A full render takes about
 1 hour on 4 CPU cores. Renders are cached in `build/`, so a stopped run resumes.
 
+## Sound
+
+New videos use a warm storyteller voice, Microsoft Edge neural `en-US-AndrewMultilingualNeural`
+(free, via `edge-tts`; the network must allow `speech.platform.bing.com`). Each sentence is
+spoken separately at about 0.92x speed and stitched with pauses (0.45 s between sentences,
+0.55 s after a line, 1.1 s before the shot marked `"twist": true`); the last line is slower
+and softer. Captions follow the voice's own word timings.
+
+Mastering (`pipeline/mastering.py`): voice highpass 80 Hz, light denoise, de-esser, gentle
+compression, +3 dB at 3 kHz; piano bed ~8 dB under the voice and sidechain-ducked by it,
++4 dB swell from the twist, 1.5 s fade-in and 2 s fade-out; quiet whoosh/chime/heartbeat
+effects; two-pass loudnorm to -14 LUFS / -1.5 dBTP, 48 kHz stereo AAC 192k. Each render
+writes `build/SLUG/audio_report.json` (final LUFS, true peak, voice vs music).
+Older stories carry `"tts": "kokoro"` so re-rendering them keeps their original sound.
+`"narrator"` and `"rate"` in a story override the voice and speed.
+
 ## Writing a story
 
 A story is a JSON file in `stories/` named `DATE-slug.json`. Each shot is one narration
@@ -31,6 +47,10 @@ Story recipe (what the reference videos do):
 Keep 23-28 lines (70-90 s), each under ~14 words. Wrap the key word in `*stars*` so the
 caption shows it in CAPS (otherwise one word is picked automatically). Use only original ideas.
 
+Write the lines to be spoken: short sentences, everyday words that are easy to say, commas
+and `...` where a breath belongs ("And then... something glowed."). Mark the twist shot with
+`"twist": true` so it gets a pause, a heartbeat and a music swell.
+
 What makes these go viral (from the reference videos):
 - The first 2 seconds SHOW the rule happening (sparkles, a speech bubble, a big reaction), not just say it.
 - A rival (usually Tyler) who uses the rule selfishly, so Leo's choice stands out.
@@ -45,7 +65,7 @@ What makes these go viral (from the reference videos):
 {
   "slug": "short-name", "date": "YYYY-MM-DD",
   "caption": "TikTok caption with #inthisworld #story #storytime #emotional #fyp",
-  "voice": "am_michael", "speed": 1.08, "mood": "emotional|hopeful|tense|mystery",
+  "mood": "emotional|hopeful|tense|mystery",
   "cast": {"leo": {"shirt": "#8a8f96"}},
   "shots": [
     {"line": "In this *world*, ...", "set": "schoolyard", "time": "day",

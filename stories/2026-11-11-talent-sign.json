@@ -3,8 +3,6 @@
  "date": "2026-11-11",
  "title": "A Golden Sign Appears When You Find Your Talent 😨",
  "caption": "In this world, a golden sign appears over your head when you find your talent ✨ Every kid had one… except Leo 🥹 Wait for the end #inthisworld #robloxstory #roblox #storytime #fyp",
- "voice": "am_michael",
- "speed": 1.1,
  "mood": "hopeful",
  "cast": {
   "ruby": {
@@ -25,7 +23,7 @@
  },
  "shots": [
   {
-   "line": "In this *world*, a golden sign appears over your head when you find your *talent*.",
+   "line": "In this *world*, a golden sign appears over your head... the moment you find your *talent*.",
    "set": "schoolyard",
    "chars": [
     {
@@ -68,7 +66,7 @@
    }
   },
   {
-   "line": "By ten, every kid in class had one. Except *Leo*.",
+   "line": "By ten, every kid in class had one. Every kid... except *Leo*.",
    "set": "classroom",
    "chars": [
     {
@@ -127,7 +125,7 @@
    }
   },
   {
-   "line": "Soccer. He tripped over the *ball*.",
+   "line": "Soccer? He tripped over the *ball*.",
    "set": "schoolyard",
    "chars": [
     {
@@ -159,7 +157,7 @@
    ]
   },
   {
-   "line": "Painting. It looked like a *potato*.",
+   "line": "Painting? It looked like a *potato*.",
    "set": "classroom",
    "chars": [
     {
@@ -188,7 +186,7 @@
    }
   },
   {
-   "line": "Singing. Even the teacher covered her *ears*.",
+   "line": "Singing? Even the teacher covered her *ears*.",
    "set": "classroom",
    "chars": [
     {
@@ -206,7 +204,7 @@
    }
   },
   {
-   "line": "Tyler laughed. Some people just have *no* talent.",
+   "line": "Tyler laughed. Some people... just have *no* talent.",
    "set": "hallway",
    "chars": [
     {
@@ -237,7 +235,7 @@
    }
   },
   {
-   "line": "Every Saturday, Leo went with his mom to the hospital where she *worked*.",
+   "line": "Every Saturday, Leo went with his mom to the hospital. She was a *nurse*.",
    "set": "hospital",
    "chars": [
     {
@@ -292,7 +290,7 @@
    "nocut": true
   },
   {
-   "line": "Especially Ruby, who hadn't smiled in *weeks*.",
+   "line": "Like Ruby. She hadn't smiled in *weeks*.",
    "set": "hospital",
    "chars": [
     {
@@ -369,7 +367,7 @@
    }
   },
   {
-   "line": "So he did the princess voice. *Worse*.",
+   "line": "So he did the princess voice. Even *worse*.",
    "set": "hospital",
    "chars": [
     {
@@ -419,7 +417,7 @@
    }
   },
   {
-   "line": "And then... something *glowed*, right above Leo's head.",
+   "line": "And then... something *glowed*. Right above Leo's head.",
    "set": "hospital",
    "chars": [
     {
@@ -438,10 +436,11 @@
     "height": "low",
     "move": "zoom",
     "tilt": -8
-   }
+   },
+   "twist": true
   },
   {
-   "line": "His talent wasn't soccer. Or painting. It was making people *smile*.",
+   "line": "It wasn't soccer. It wasn't painting. His talent was making people *smile*.",
    "set": "hospital",
    "chars": [
     {
@@ -460,7 +459,7 @@
    "hold": 0.3
   },
   {
-   "line": "The doctor said, Kids who laugh get better *faster*.",
+   "line": "The doctor smiled. Kids who laugh, get better *faster*.",
    "set": "hospital",
    "chars": [
     {
@@ -524,7 +523,7 @@
    "nocut": true
   },
   {
-   "line": "And a month later, Ruby walked out of the hospital *laughing*.",
+   "line": "A month later, Ruby walked out of the hospital... *laughing*.",
    "set": "street",
    "chars": [
     {
@@ -609,7 +608,7 @@
    }
   },
   {
-   "line": "Turns out, the best talent isn't being the best. It's making someone *better*.",
+   "line": "The best talent isn't being the best. It's making someone else... feel *better*.",
    "set": "schoolyard",
    "chars": [
     {
@@ -631,7 +630,7 @@
    "hold": 0.3
   },
   {
-   "line": "What would *your* sign say?",
+   "line": "So... what would *your* sign say?",
    "set": "schoolyard",
    "chars": [
     {

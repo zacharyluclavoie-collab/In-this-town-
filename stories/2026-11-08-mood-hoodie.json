@@ -2,7 +2,7 @@
  "slug": "mood-hoodie",
  "date": "2026-11-08",
  "title": "In this world your hoodie shows your feelings",
- "caption": "In this world, your hoodie changes color with your feelings... and Leo's had been gray for months \ud83e\ude76 What color would yours be today? #inthisworld #story #storytime #emotional #fyp",
+ "caption": "In this world, your hoodie changes color with your feelings... and Leo's had been gray for months 🩶 What color would yours be today? #inthisworld #story #storytime #emotional #fyp",
  "voice": "am_michael",
  "speed": 1.08,
  "mood": "emotional",
@@ -565,5 +565,6 @@
     "move": "pull"
    }
   }
- ]
+ ],
+ "tts": "kokoro"
 }

@@ -24,7 +24,9 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 PIPE = os.path.join(ROOT, "pipeline")
 sys.path.insert(0, PIPE)
 import fx  # noqa: E402
+import mastering  # noqa: E402
 import music  # noqa: E402
+import narration  # noqa: E402
 import textures  # noqa: E402
 
 MODEL_DIR = os.environ.get("KOKORO_DIR", os.path.expanduser("~/.cache/inthisworld"))
@@ -166,19 +168,24 @@ def main():
 
     shots = story["shots"]
     lines = [s["line"] for s in shots]
-    clips = tts(lines, story.get("voice", "am_michael"), story.get("speed", 1.08), build)
+    edge = story.get("tts", "edge") == "edge"  # old stories keep the Kokoro voice they were made with
+    if edge:
+        nar = narration.build(shots, story, os.path.join(build, "tts"))
+    else:
+        nar = [{"audio": c, "words": [], "pre": 0.0, "post": GAP, "twist": False}
+               for c in tts(lines, story.get("voice", "am_michael"), story.get("speed", 1.08), build)]
+    clips = [n["audio"] for n in nar]
 
-    # timeline
+    # timeline: a shot's picture starts at t, its narration after an optional pause (before the twist)
     starts, durs = [], []
-    t = LEAD
-    for i, c in enumerate(clips):
-        d = len(c) / SR + GAP + shots[i].get("hold", 0.0)
-        if i == 0:
-            d += LEAD
-        starts.append(t if i else LEAD)
+    t = 0.0
+    for i, n in enumerate(nar):
+        lead = (LEAD if i == 0 else 0.0) + n["pre"]
+        d = lead + len(n["audio"]) / SR + n["post"] + shots[i].get("hold", 0.0)
+        starts.append(t + lead)
         durs.append(d)
-        t += len(c) / SR + GAP + shots[i].get("hold", 0.0)
-    durs[-1] += 0.6
+        t += d
+    durs[-1] += 0.6 if not edge else 1.6  # room for the music to fade out
     # round shot boundaries on the cumulative timeline so audio and video never drift
     bounds, acc = [0], 0.0
     for d in durs:
@@ -193,7 +200,7 @@ def main():
     voice = np.zeros(int(total * SR) + SR, dtype=np.float32)
     for st, c in zip(starts, clips):
         i = int(st * SR)
-        voice[i:i + len(c)] += c
+        voice[i:i + len(c)] += c[: max(0, len(voice) - i)]
     voice = voice[: int(total * SR)]
 
     # render shots: every narration line is cut into 1-3 camera parts
@@ -269,49 +276,72 @@ def main():
         print("stills:", sp, f"total {total:.1f}s, {len(parts)} cuts")
         return
 
-    # music + mix
-    bed = music.make(total, story.get("mood", "emotional"), seed=len(slug))
-    env = np.abs(voice)
-    k = int(0.25 * SR)
-    env = np.convolve(env, np.ones(k) / k, mode="same")
-    duck = 1 - 0.45 * np.clip(env / 0.05, 0, 1)
+    # music + sound effects
+    bed = music.make(total, story.get("mood", "emotional"), seed=len(slug))[: len(voice)]
+    if len(bed) < len(voice):
+        bed = np.pad(bed, (0, len(voice) - len(bed)))
     sfx = np.zeros_like(voice)
     shot_t = [b / FPS for b in bounds]
+    soft = 0.35 if edge else 1.0  # new mixes keep effects small
     for k, (i, j, f0, n, cam) in enumerate(parts):
         t0 = shot_t[i] + f0 / FPS
         if k:
-            fx.add(sfx, fx.whoosh(SR, seed=k), t0 - 0.16, SR, 0.5 if j == 0 else 0.3)
+            fx.add(sfx, fx.whoosh(SR, seed=k), t0 - 0.16, SR, (0.5 if j == 0 else 0.3) * soft)
         if j == 0:
             chs = shots[i].get("chars", [])
             if any(c.get("say") for c in chs):
-                fx.add(sfx, fx.pop(SR), t0 + 0.12, SR)
+                fx.add(sfx, fx.pop(SR), t0 + 0.12, SR, soft)
             if any(c.get("fx") == "sparkle" for c in chs):
-                fx.add(sfx, fx.shimmer(SR), t0 + 0.05, SR)
+                fx.add(sfx, fx.shimmer(SR), t0 + 0.05, SR, 1.6 * soft if edge else 1.0)
             if cam.get("move") == "zoom" or cam.get("shake"):
-                fx.add(sfx, fx.boom(SR), t0, SR)
-            if any(c.get("beat") for c in chs):  # loud heartbeat through the whole line
+                fx.add(sfx, fx.boom(SR), t0, SR, soft)
+            if any(c.get("beat") for c in chs):  # heartbeat through the whole line
                 hb = fx.heartbeat(SR)
                 tt = t0 + 0.05
                 while tt < shot_t[i + 1] - 0.3:
-                    fx.add(sfx, hb, tt, SR)
+                    fx.add(sfx, hb, tt, SR, soft)
                     tt += 0.62
-    mix = voice * 1.0 + bed * 0.16 * duck + sfx
-    mix /= max(1.0, np.max(np.abs(mix)) / 0.95)
+            if nar[i]["twist"]:  # two slow heartbeats in the silence before the twist
+                for b in range(2):
+                    fx.add(sfx, fx.heartbeat(SR), t0 + 0.1 + b * 0.55, SR, 0.6)
     wav = os.path.join(build, "mix.wav")
-    sf.write(wav, mix, SR)
+    report = None
+    if edge:
+        twist_i = next((i for i, n in enumerate(nar) if n["twist"]), None)
+        report = mastering.master(voice, bed, sfx, SR, build, wav,
+                                  twist_t=shot_t[twist_i] if twist_i is not None else None,
+                                  last_t=shot_t[len(shots) - 1])
+    else:
+        env = np.abs(voice)
+        k = int(0.25 * SR)
+        env = np.convolve(env, np.ones(k) / k, mode="same")
+        duck = 1 - 0.45 * np.clip(env / 0.05, 0, 1)
+        mix = voice * 1.0 + bed * 0.16 * duck + sfx
+        mix /= max(1.0, np.max(np.abs(mix)) / 0.95)
+        sf.write(wav, mix, SR)
 
-    # captions timeline
+    # captions timeline: word timings from the voice when we have them
     caps = []
-    for st, c, s in zip(starts, clips, shots):
+    for i, (st, c, s) in enumerate(zip(starts, clips, shots)):
         dur = len(c) / SR
         chunks = chunk_caption(s["line"])
-        weights = [max(4, len(x)) for x in chunks]
-        tot = sum(weights)
-        tt = st
-        for ch, w in zip(chunks, weights):
-            cd = dur * w / tot
-            caps.append((tt, tt + cd + (GAP if ch == chunks[-1] else 0), ch))
-            tt += cd
+        words = nar[i]["words"]
+        end_line = st + dur + (nar[i]["post"] if edge else GAP)
+        if words:
+            times, wi = [], 0
+            for ch in chunks:
+                times.append(st + words[min(wi, len(words) - 1)][0])
+                wi += len(ch.split())
+            for k, ch in enumerate(chunks):
+                caps.append((times[k], times[k + 1] if k + 1 < len(chunks) else end_line, ch))
+        else:
+            weights = [max(4, len(x)) for x in chunks]
+            tot = sum(weights)
+            tt = st
+            for ch, w in zip(chunks, weights):
+                cd = dur * w / tot
+                caps.append((tt, tt + cd + (GAP if ch == chunks[-1] else 0), ch))
+                tt += cd
     cap_imgs = {}
 
     out = a.out or os.path.join(ROOT, "videos", story.get("date", "undated"), slug + ".mp4")
@@ -321,7 +351,8 @@ def main():
     ff = subprocess.Popen([
         "ffmpeg", "-y", "-v", "error", "-f", "rawvideo", "-pix_fmt", "rgb24", "-s", f"{W}x{H}", "-r", str(FPS),
         "-i", "-", "-i", wav, "-c:v", "libx264", "-preset", "slow", "-crf", "18", "-pix_fmt", "yuv420p",
-        "-profile:v", "high", "-af", "loudnorm=I=-14:TP=-1.5:LRA=11", "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-movflags", "+faststart",
+        "-profile:v", "high"] + ([] if edge else ["-af", "loudnorm=I=-14:TP=-1.5:LRA=11"]) + [
+        "-c:a", "aac", "-b:a", "192k", "-ar", "48000", "-ac", "2", "-movflags", "+faststart",
         "-shortest", out], stdin=subprocess.PIPE)
     fno = 0
     cap_y = int(H * 0.60)
@@ -359,6 +390,11 @@ def main():
     ff.stdin.close()
     ff.wait()
     print("wrote", out, f"{total:.1f}s")
+    if report:
+        i_lufs, tp = mastering.ebur128(out)
+        report.update(final_lufs=i_lufs, true_peak_db=tp, voice=story.get("narrator", narration.VOICE))
+        json.dump(report, open(os.path.join(build, "audio_report.json"), "w"), indent=1)
+        print("audio:", json.dumps(report))
     if not a.keep and not a.preview:
         for (i, j, *_r) in parts:
             shutil.rmtree(os.path.join(build, f"shot_{i:02d}_{j}"), ignore_errors=True)
