@@ -1,8 +1,8 @@
 {
  "slug": "talent-sign",
  "date": "2026-11-11",
- "title": "A Golden Sign Appears When You Find Your Talent 😨",
- "caption": "In this world, a golden sign appears over your head when you find your talent ✨ Every kid had one… except Leo 🥹 Wait for the end #inthisworld #robloxstory #roblox #storytime #fyp",
+ "title": "Your Talent Appears As A Golden Sign Above Your Head ✨",
+ "caption": "In this world, your talent appears as a golden sign over your head ✨ Leo never got one... until a girl in a hospital bed laughed 🥹 Who always makes you smile? #inthisworld #storytime #emotionalstory #kindness",
  "mood": "hopeful",
  "cast": {
   "ruby": {
@@ -23,7 +23,7 @@
  },
  "shots": [
   {
-   "line": "In this *world*, a golden sign appears over your head... the moment you find your *talent*.",
+   "line": "In this *world*, your talent appears... as a golden sign over your *head*.",
    "set": "schoolyard",
    "chars": [
     {
@@ -63,10 +63,11 @@
     "on": "tyler",
     "height": "low",
     "move": "push"
-   }
+   },
+   "nocut": true
   },
   {
-   "line": "By ten, every kid in class had one. Every kid... except *Leo*.",
+   "line": "By ten, everyone had one. Everyone... except *Leo*.",
    "set": "classroom",
    "chars": [
     {
@@ -105,59 +106,27 @@
     ],
     "front": "scene",
     "move": "push"
-   }
-  },
-  {
-   "line": "So Leo tried *everything*.",
-   "set": "bedroom",
-   "chars": [
-    {
-     "who": "leo",
-     "at": "A",
-     "face": "determined",
-     "act": "nod"
-    }
-   ],
-   "cam": {
-    "shot": "medium",
-    "on": "leo",
-    "move": "zoom"
-   }
-  },
-  {
-   "line": "Soccer? He tripped over the *ball*.",
-   "set": "schoolyard",
-   "chars": [
-    {
-     "who": "leo",
-     "at": "A",
-     "face": "shocked",
-     "act": [
-      "scared",
-      "shake"
-     ],
-     "say": "OOF!"
-    }
-   ],
-   "cam": {
-    "shot": "medium",
-    "on": "leo",
-    "tilt": 8,
-    "move": "zoom"
    },
-   "props": [
+   "cams": [
     {
-     "kind": "ball",
-     "at": [
-      0.45,
-      -0.35,
-      0.15
-     ]
+     "shot": "wide",
+     "on": [
+      "mia",
+      "noah",
+      "leo"
+     ],
+     "front": "scene",
+     "move": "push"
+    },
+    {
+     "shot": "close",
+     "on": "leo",
+     "move": "push"
     }
    ]
   },
   {
-   "line": "Painting? It looked like a *potato*.",
+   "line": "He tried painting. It looked like a *potato*.",
    "set": "classroom",
    "chars": [
     {
@@ -186,25 +155,7 @@
    }
   },
   {
-   "line": "Singing? Even the teacher covered her *ears*.",
-   "set": "classroom",
-   "chars": [
-    {
-     "who": "teacher",
-     "at": "T",
-     "face": "worried",
-     "act": "shake"
-    }
-   ],
-   "cam": {
-    "shot": "medium",
-    "on": "teacher",
-    "move": "zoom",
-    "tilt": -7
-   }
-  },
-  {
-   "line": "Tyler laughed. Some people... just have *no* talent.",
+   "line": "Tyler laughed. No talent, no *sign*.",
    "set": "hallway",
    "chars": [
     {
@@ -235,7 +186,7 @@
    }
   },
   {
-   "line": "Every Saturday, Leo went with his mom to the hospital. She was a *nurse*.",
+   "line": "On Saturdays, Leo helped at the hospital, where his mom *worked*.",
    "set": "hospital",
    "chars": [
     {
@@ -262,35 +213,7 @@
    }
   },
   {
-   "line": "He sat with the kids who were stuck in *bed*.",
-   "set": "hospital",
-   "chars": [
-    {
-     "who": "ruby",
-     "at": "BED",
-     "face": "sad",
-     "act": "lie"
-    },
-    {
-     "who": "leo",
-     "at": "A",
-     "face": "worried",
-     "look": "ruby"
-    }
-   ],
-   "cam": {
-    "shot": "medium",
-    "on": [
-     "ruby",
-     "leo"
-    ],
-    "front": "scene",
-    "height": "high"
-   },
-   "nocut": true
-  },
-  {
-   "line": "Like Ruby. She hadn't smiled in *weeks*.",
+   "line": "That's where he met Ruby. She hadn't smiled in *weeks*.",
    "set": "hospital",
    "chars": [
     {
@@ -309,25 +232,7 @@
    "nocut": true
   },
   {
-   "line": "Leo didn't know what to say. So he read her a *story*.",
-   "set": "hospital",
-   "chars": [
-    {
-     "who": "leo",
-     "at": "A",
-     "face": "smile",
-     "act": "hold",
-     "prop": "book"
-    }
-   ],
-   "cam": {
-    "shot": "medium",
-    "on": "leo",
-    "move": "push"
-   }
-  },
-  {
-   "line": "He did the dragon's voice. *Badly*.",
+   "line": "So Leo read her a story, with a *terrible* dragon voice.",
    "set": "hospital",
    "chars": [
     {
@@ -367,29 +272,7 @@
    }
   },
   {
-   "line": "So he did the princess voice. Even *worse*.",
-   "set": "hospital",
-   "chars": [
-    {
-     "who": "leo",
-     "at": "A",
-     "face": "shocked",
-     "act": [
-      "talk",
-      "dance"
-     ],
-     "talk": true,
-     "say": "OH NO, MY SHOE!"
-    }
-   ],
-   "cam": {
-    "shot": "medium",
-    "on": "leo",
-    "angle": -20
-   }
-  },
-  {
-   "line": "Ruby laughed so hard, the nurses came *running*.",
+   "line": "Then she laughed so hard... the nurses came *running*.",
    "set": "hospital",
    "chars": [
     {
@@ -440,7 +323,7 @@
    "twist": true
   },
   {
-   "line": "It wasn't soccer. It wasn't painting. His talent was making people *smile*.",
+   "line": "His talent? Making people *smile*.",
    "set": "hospital",
    "chars": [
     {
@@ -455,182 +338,10 @@
     "shot": "medium",
     "on": "leo",
     "move": "push"
-   },
-   "hold": 0.3
-  },
-  {
-   "line": "The doctor smiled. Kids who laugh, get better *faster*.",
-   "set": "hospital",
-   "chars": [
-    {
-     "who": "doctor",
-     "at": "B",
-     "face": "smile",
-     "act": "talk",
-     "talk": true,
-     "look": "leo"
-    },
-    {
-     "who": "leo",
-     "at": "A",
-     "face": "happy",
-     "look": "doctor",
-     "tag": "SMILES",
-     "tag_color": "#ffd54f"
-    }
-   ],
-   "cam": {
-    "shot": "medium",
-    "on": [
-     "doctor",
-     "leo"
-    ],
-    "front": "scene"
    }
   },
   {
-   "line": "So every Saturday, Leo came back. With *new* voices.",
-   "set": "hospital",
-   "chars": [
-    {
-     "who": "leo",
-     "at": "A",
-     "face": "laugh",
-     "act": [
-      "hold",
-      "dance"
-     ],
-     "prop": "book",
-     "tag": "SMILES",
-     "tag_color": "#ffd54f"
-    },
-    {
-     "who": "ruby",
-     "at": "BED",
-     "face": "laugh",
-     "act": "lie"
-    }
-   ],
-   "cam": {
-    "shot": "full",
-    "on": [
-     "leo",
-     "ruby"
-    ],
-    "front": "scene",
-    "move": "push"
-   },
-   "nocut": true
-  },
-  {
-   "line": "A month later, Ruby walked out of the hospital... *laughing*.",
-   "set": "street",
-   "chars": [
-    {
-     "who": "ruby",
-     "at": "F",
-     "face": "laugh",
-     "act": "walk",
-     "to": "B"
-    },
-    {
-     "who": "leo",
-     "at": "A",
-     "face": "happy",
-     "act": "wave",
-     "tag": "SMILES",
-     "tag_color": "#ffd54f"
-    }
-   ],
-   "cam": {
-    "shot": "wide",
-    "on": [
-     "ruby",
-     "leo"
-    ],
-    "front": "scene"
-   }
-  },
-  {
-   "line": "On Monday, the whole class saw his *sign*.",
-   "set": "classroom",
-   "chars": [
-    {
-     "who": "mia",
-     "at": "S1",
-     "face": "shocked",
-     "tag": "ART",
-     "tag_color": "#ffd54f"
-    },
-    {
-     "who": "noah",
-     "at": "S2",
-     "face": "shocked",
-     "tag": "MATH",
-     "tag_color": "#ffd54f"
-    },
-    {
-     "who": "kid1",
-     "at": "S3",
-     "face": "shocked",
-     "tag": "DANCE",
-     "tag_color": "#ffd54f"
-    }
-   ],
-   "cam": {
-    "shot": "wide",
-    "on": [
-     "mia",
-     "noah",
-     "kid1"
-    ],
-    "front": "scene",
-    "move": "push"
-   }
-  },
-  {
-   "line": "Even Tyler had never seen one shine that *bright*.",
-   "set": "classroom",
-   "chars": [
-    {
-     "who": "tyler",
-     "at": "A",
-     "face": "shocked",
-     "tag": "SOCCER",
-     "tag_color": "#ffd54f"
-    }
-   ],
-   "cam": {
-    "shot": "close",
-    "on": "tyler",
-    "move": "zoom",
-    "tilt": 9
-   }
-  },
-  {
-   "line": "The best talent isn't being the best. It's making someone else... feel *better*.",
-   "set": "schoolyard",
-   "chars": [
-    {
-     "who": "leo",
-     "at": "A",
-     "face": "smile",
-     "tag": "SMILES",
-     "tag_color": "#ffd54f",
-     "fx": "sparkle",
-     "fx_color": "#ffd54f"
-    }
-   ],
-   "cam": {
-    "shot": "medium",
-    "on": "leo",
-    "height": "low",
-    "move": "push"
-   },
-   "hold": 0.3
-  },
-  {
-   "line": "So... what would *your* sign say?",
+   "line": "Who makes *you* smile? Tag them.",
    "set": "schoolyard",
    "chars": [
     {
@@ -655,10 +366,11 @@
      "ruby"
     ],
     "front": "scene",
+    "height": "low",
     "move": "pull"
    },
-   "time": "sunset",
-   "hold": 0.6
+   "nocut": true
   }
- ]
+ ],
+ "hook_text": "YOUR TALENT GLOWS ABOVE YOU"
 }
