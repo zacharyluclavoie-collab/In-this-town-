@@ -1,0 +1,374 @@
+{
+ "slug": "heavy-backpack",
+ "date": "2026-11-13",
+ "title": "Your Backpack Weighs As Much As Your Worries 🎒",
+ "caption": "In this world, your backpack weighs as much as your worries 🎒 Tyler's was the heaviest in town... and Leo found out why 🥹 Who would you help carry it? #inthisworld #storytime #emotionalstory #friendship",
+ "hook_text": "BACKPACKS WEIGH YOUR WORRIES",
+ "mood": "emotional",
+ "cast": {
+  "mia": {
+   "acc": [
+    "backpack"
+   ]
+  },
+  "kid1": {
+   "acc": [
+    "backpack"
+   ]
+  },
+  "kid2": {
+   "acc": [
+    "backpack"
+   ]
+  },
+  "tyler": {
+   "acc": [
+    "backpack"
+   ]
+  },
+  "leo": {
+   "acc": [
+    "backpack"
+   ]
+  },
+  "baby": {
+   "age": "baby",
+   "skin": "#f2c9a0",
+   "shirt": "#ffb3c7",
+   "pants": "#ffb3c7",
+   "top": "tshirt",
+   "hair": "short",
+   "hair_color": "#d9a441"
+  }
+ },
+ "shots": [
+  {
+   "line": "In this *world*, your backpack weighs as much as your *worries*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "A",
+     "face": "laugh",
+     "act": "jump",
+     "tag": "1 KG",
+     "tag_color": "#7fe7ff",
+     "fx": "sparkle",
+     "fx_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "mia",
+    "height": "low",
+    "move": "zoom"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Most kids carried almost *nothing*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "C",
+     "face": "happy",
+     "tag": "2 KG",
+     "tag_color": "#7fe7ff"
+    },
+    {
+     "who": "kid2",
+     "at": "B",
+     "face": "smile",
+     "tag": "1 KG",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "kid1",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "But Tyler's... was the heaviest in *town*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "angry",
+     "act": "sad",
+     "tag": "90 KG",
+     "tag_color": "#ff6b6b"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "tyler",
+    "height": "low",
+    "move": "zoom",
+    "tilt": 8
+   }
+  },
+  {
+   "line": "It made him slow. Grumpy. And *mean*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "angry",
+     "act": "point",
+     "look": "leo",
+     "say": "MOVE, LOSER!",
+     "tag": "90 KG",
+     "tag_color": "#ff6b6b"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "shocked",
+     "tag": "3 KG",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push",
+    "shake": true
+   },
+   "nocut": true
+  },
+  {
+   "line": "Everyone said he was just *lazy*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "B",
+     "face": "laugh",
+     "act": "point",
+     "say": "SO SLOW!"
+    },
+    {
+     "who": "kid2",
+     "at": "C",
+     "face": "laugh"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "kid1",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Tyler never said a word *back*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "sad",
+     "tag": "90 KG",
+     "tag_color": "#ff6b6b"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "tyler",
+    "move": "push"
+   }
+  },
+  {
+   "line": "But Leo kept wondering... what was *inside*?",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "worried",
+     "act": "lookaround",
+     "tag": "3 KG",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "So after school, he followed Tyler *home*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "sad",
+     "act": "walk",
+     "to": "B",
+     "tag": "90 KG",
+     "tag_color": "#ff6b6b"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "worried",
+     "act": "walk",
+     "to": "A"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "tyler",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "pan_r"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Tyler never stopped to play. He just rushed *inside*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "A",
+     "face": "worried",
+     "act": "run",
+     "to": "D",
+     "tag": "90 KG",
+     "tag_color": "#ff6b6b"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "tyler",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Leo crept closer. Through the window... he *saw* him.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "shocked",
+     "tag": "3 KG",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "zoom",
+    "tilt": -6
+   },
+   "nocut": true
+  },
+  {
+   "line": "Tyler was feeding his baby sister... all *alone*.",
+   "set": "livingroom",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "SOFA",
+     "face": "worried",
+     "look": "baby",
+     "tag": "90 KG",
+     "tag_color": "#ff6b6b"
+    },
+    {
+     "who": "baby",
+     "at": "SOFA2",
+     "face": "happy",
+     "look": "tyler"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "baby"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "twist": true,
+   "nocut": true
+  },
+  {
+   "line": "The next day... Leo carried *half*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "crying",
+     "tag": "45 KG",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Who would *you* help carry it? Tag them.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "happy",
+     "act": "wave",
+     "tag": "45 KG",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "smile",
+     "tag": "45 KG",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "tyler"
+    ],
+    "front": "scene",
+    "height": "low",
+    "move": "pull"
+   },
+   "nocut": true
+  }
+ ]
+}

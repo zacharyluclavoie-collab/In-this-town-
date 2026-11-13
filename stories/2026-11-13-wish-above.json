@@ -1,0 +1,303 @@
+{
+ "slug": "wish-above",
+ "date": "2026-11-13",
+ "title": "Your Biggest Wish Floats Above Your Head 🎂",
+ "caption": "In this world, your biggest wish floats above your head ✨ Leo's was always blank... until his little sister's birthday 🥹 Who would you do this for? #inthisworld #storytime #family #kindness",
+ "hook_text": "YOUR WISH FLOATS ABOVE YOU",
+ "mood": "emotional",
+ "shots": [
+  {
+   "line": "In this *world*, your biggest wish floats above your *head*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "lily",
+     "at": "A",
+     "face": "happy",
+     "act": "cheer",
+     "tag": "PARTY",
+     "tag_color": "#ffd54f",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "lily",
+    "height": "low",
+    "move": "zoom"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Leo's little sister Lily wished for a party... for three *years*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "lily",
+     "at": "A",
+     "face": "sad",
+     "tag": "PARTY",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "lily",
+    "move": "push"
+   }
+  },
+  {
+   "line": "But Mom worked two jobs. There was never enough *money*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "mom",
+     "at": "B",
+     "face": "sleepy",
+     "act": "sad",
+     "tag": "SLEEP",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "mom",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "And Leo's wish? It was always... *blank*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "neutral"
+    },
+    {
+     "who": "mia",
+     "at": "B",
+     "face": "shocked",
+     "look": "leo",
+     "tag": "PUPPY",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "mia"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Tyler laughed. Who wishes for *nothing*?",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "tyler",
+     "at": "B",
+     "face": "laugh",
+     "act": "point",
+     "look": "leo",
+     "say": "EMPTY HEAD!",
+     "tag": "PHONE",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "sad",
+     "act": "sad"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "tyler",
+     "leo"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "But every day after school... Leo *disappeared*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "determined",
+     "act": "run",
+     "to": "B"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "move": "pan_r"
+   },
+   "nocut": true
+  },
+  {
+   "line": "He shovelled snow. He washed cars. He saved every *coin*.",
+   "set": "street",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "determined",
+     "act": "hold",
+     "prop": "paper"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push"
+   }
+  },
+  {
+   "line": "Then Lily's birthday came. She didn't even ask for a *party*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "lily",
+     "at": "BED",
+     "face": "sad",
+     "act": "lie",
+     "tag": "PARTY",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "lily",
+    "height": "top",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Then... someone knocked on her *door*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "lily",
+     "at": "A",
+     "face": "shocked",
+     "tag": "PARTY",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "lily",
+    "move": "zoom",
+    "tilt": 7
+   },
+   "nocut": true
+  },
+  {
+   "line": "It was Leo... with a cake, and all her *friends*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "happy",
+     "act": "hold",
+     "prop": "cake"
+    },
+    {
+     "who": "kid1",
+     "at": [
+      -0.9,
+      0.7,
+      0
+     ],
+     "face": "laugh",
+     "act": "cheer",
+     "say": "SURPRISE!"
+    },
+    {
+     "who": "lily",
+     "at": "B",
+     "face": "shocked",
+     "look": "leo",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "kid1",
+     "leo",
+     "lily"
+    ],
+    "front": "scene",
+    "move": "push",
+    "tilt": -6
+   },
+   "twist": true,
+   "nocut": true
+  },
+  {
+   "line": "His wish was never blank. It was *hers*.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "crying",
+     "tag": "PARTY",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Who would *you* do this for? Tag them.",
+   "set": "bedroom",
+   "chars": [
+    {
+     "who": "lily",
+     "at": "A",
+     "face": "laugh",
+     "act": "cheer"
+    },
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "happy",
+     "act": "wave"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "lily",
+     "leo"
+    ],
+    "front": "scene",
+    "height": "low",
+    "move": "pull"
+   },
+   "nocut": true
+  }
+ ]
+}
