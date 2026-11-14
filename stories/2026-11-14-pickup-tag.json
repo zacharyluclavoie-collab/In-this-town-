@@ -1,0 +1,335 @@
+{
+ "slug": "pickup-tag",
+ "date": "2026-11-14",
+ "title": "A Tag Shows Who's Picking You Up 🏫",
+ "caption": "In this world, a tag over your head shows who's picking you up 🏫 Noah's always said nobody... until Leo's family showed up 🥹 Who showed up for you? #inthisworld #storytime #foundfamily #emotionalstory",
+ "hook_text": "HIS TAG ALWAYS SAID NOBODY",
+ "mood": "emotional",
+ "cast": {},
+ "shots": [
+  {
+   "line": "In this *world*, a tag over your head shows who's picking you *up*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "A",
+     "face": "laugh",
+     "act": "jump",
+     "tag": "MOM",
+     "tag_color": "#7fe7ff",
+     "fx": "sparkle",
+     "fx_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "mia",
+    "height": "low",
+    "move": "zoom"
+   },
+   "nocut": true
+  },
+  {
+   "line": "When the bell rang, everyone's tag lit *up*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "C",
+     "face": "happy",
+     "act": "cheer",
+     "tag": "DAD",
+     "tag_color": "#7fe7ff"
+    },
+    {
+     "who": "kid2",
+     "at": "B",
+     "face": "smile",
+     "tag": "NANA",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "kid1",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Everyone's... except *Noah's*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "noah",
+     "at": "A",
+     "face": "sad",
+     "tag": "NOBODY",
+     "tag_color": "#9aa3ad"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "noah",
+    "height": "low",
+    "move": "zoom",
+    "tilt": 8
+   }
+  },
+  {
+   "line": "So Noah waited at the gate. Every single *day*.",
+   "set": "schoolyard",
+   "time": "sunset",
+   "chars": [
+    {
+     "who": "noah",
+     "at": "A",
+     "face": "sad",
+     "act": "sad",
+     "tag": "NOBODY",
+     "tag_color": "#9aa3ad"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "noah",
+    "move": "pull"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Kids ran *past* him, laughing... and nobody ever *noticed*.",
+   "set": "schoolyard",
+   "time": "sunset",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "B",
+     "face": "laugh",
+     "act": "run",
+     "to": "D",
+     "tag": "DAD",
+     "tag_color": "#7fe7ff"
+    },
+    {
+     "who": "noah",
+     "at": "C",
+     "face": "sad",
+     "tag": "NOBODY",
+     "tag_color": "#9aa3ad"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "kid1",
+     "noah"
+    ],
+    "front": "scene",
+    "move": "pan_r"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Leo saw it... and it broke his *heart*.",
+   "set": "schoolyard",
+   "time": "sunset",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "worried",
+     "tag": "MOM",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "That night, Leo asked his mom a *question*.",
+   "set": "livingroom",
+   "time": "night",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "worried",
+     "act": "talk",
+     "talk": true,
+     "look": "mom"
+    },
+    {
+     "who": "mom",
+     "at": "C",
+     "face": "neutral",
+     "look": "leo"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "mom"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Mom smiled... and made a few phone *calls*.",
+   "set": "livingroom",
+   "time": "night",
+   "chars": [
+    {
+     "who": "mom",
+     "at": "A",
+     "face": "smile",
+     "act": [
+      "talk",
+      "hold"
+     ],
+     "prop": "phone",
+     "talk": true
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "mom",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Leo didn't tell Noah a single *thing*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "smug",
+     "act": "shrug",
+     "tag": "MOM",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "The next day, when the bell rang... Noah's tag *flickered*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "noah",
+     "at": "A",
+     "face": "shocked",
+     "tag": "???",
+     "tag_color": "#ffd54f",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "noah",
+    "move": "zoom",
+    "tilt": -6
+   },
+   "nocut": true
+  },
+  {
+   "line": "It said... *Leo's mom*.",
+   "set": "schoolyard",
+   "twist": true,
+   "chars": [
+    {
+     "who": "noah",
+     "at": "A",
+     "face": "crying",
+     "tag": "LEO'S MOM",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "mom",
+     "at": "B",
+     "face": "happy",
+     "act": "wave",
+     "look": "noah"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "noah",
+     "mom"
+    ],
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Family isn't who you're born with... it's who shows *up*.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "crying"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Who showed up for *you*? Tag them.",
+   "set": "schoolyard",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "happy",
+     "act": "wave",
+     "tag": "MOM",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "noah",
+     "at": "B",
+     "face": "laugh",
+     "tag": "MOM",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "noah"
+    ],
+    "front": "scene",
+    "height": "low",
+    "move": "pull"
+   },
+   "nocut": true
+  }
+ ]
+}

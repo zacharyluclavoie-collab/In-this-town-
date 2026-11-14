@@ -1,0 +1,345 @@
+{
+ "slug": "say-hi-count",
+ "date": "2026-11-14",
+ "title": "A Number Counts The Days Since Someone Said Hi 👋",
+ "caption": "In this world, a number over your head counts the days since someone said hi 👋 Mr. Ray's was 300... until Leo walked up 🥹 Who needs a hi from you today? #inthisworld #storytime #kindness #emotionalstory",
+ "hook_text": "NOBODY SAID HI FOR 300 DAYS",
+ "mood": "emotional",
+ "cast": {
+  "grandpa": {
+   "shirt": "#4a6fa5",
+   "pants": "#3b4a5c",
+   "top": "jacket",
+   "hair": "cap",
+   "hair_color": "#3b4a5c"
+  }
+ },
+ "shots": [
+  {
+   "line": "In this *world*, a number over your head counts the days since someone said *hi*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "mia",
+     "at": "A",
+     "face": "laugh",
+     "act": "jump",
+     "tag": "0",
+     "tag_color": "#7fe7ff",
+     "fx": "sparkle",
+     "fx_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "mia",
+    "height": "low",
+    "move": "zoom"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Most kids never got past *zero*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "kid1",
+     "at": "C",
+     "face": "happy",
+     "act": "wave",
+     "tag": "0",
+     "tag_color": "#7fe7ff"
+    },
+    {
+     "who": "kid2",
+     "at": "B",
+     "face": "smile",
+     "tag": "0",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "kid1",
+     "kid2"
+    ],
+    "front": "scene",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "But the janitor, Mr. Ray... his number was three *hundred*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "A",
+     "face": "neutral",
+     "tag": "300",
+     "tag_color": "#ff6b6b"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "grandpa",
+    "height": "low",
+    "move": "zoom",
+    "tilt": 8
+   },
+   "nocut": true
+  },
+  {
+   "line": "Nobody even knew his *name*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "kid2",
+     "at": "A",
+     "face": "neutral",
+     "act": "shrug",
+     "tag": "0",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "kid2",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Kids walked right *past* him. Every single day.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "A",
+     "face": "sad",
+     "tag": "300",
+     "tag_color": "#ff6b6b"
+    },
+    {
+     "who": "kid1",
+     "at": "C",
+     "face": "laugh",
+     "act": "walk",
+     "to": "E",
+     "tag": "0",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "grandpa",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "He just kept cleaning... quietly... *alone*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "A",
+     "face": "sad",
+     "act": "sad",
+     "tag": "300",
+     "tag_color": "#ff6b6b"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "grandpa",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Leo couldn't stop looking at that *number*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "worried",
+     "act": "lookaround",
+     "tag": "0",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Leo had walked past him too... a hundred *times*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "sad",
+     "act": "sad",
+     "tag": "0",
+     "tag_color": "#7fe7ff"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "move": "push",
+    "angle": 20
+   },
+   "nocut": true
+  },
+  {
+   "line": "So one morning... Leo walked right up to him.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "B",
+     "face": "determined",
+     "act": "walk",
+     "to": "A"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "And said the smallest word in the *world*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "happy",
+     "act": "wave",
+     "say": "HI, MR. RAY!",
+     "look": "grandpa"
+    },
+    {
+     "who": "grandpa",
+     "at": "B",
+     "face": "shocked",
+     "look": "leo",
+     "tag": "300",
+     "tag_color": "#ff6b6b"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": [
+     "leo",
+     "grandpa"
+    ],
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "The number started to *shake*...",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "A",
+     "face": "shocked",
+     "tag": "300",
+     "tag_color": "#ff6b6b"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "grandpa",
+    "move": "zoom",
+    "shake": true,
+    "tilt": -6
+   },
+   "nocut": true
+  },
+  {
+   "line": "Three hundred... *zero*. And Mr. Ray started to *cry*.",
+   "set": "hallway",
+   "twist": true,
+   "chars": [
+    {
+     "who": "grandpa",
+     "at": "A",
+     "face": "crying",
+     "tag": "0",
+     "tag_color": "#ffd54f",
+     "fx": "sparkle",
+     "fx_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "medium",
+    "on": "grandpa",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "One little hi... was all he *needed*.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "A",
+     "face": "crying"
+    }
+   ],
+   "cam": {
+    "shot": "close",
+    "on": "leo",
+    "move": "push"
+   },
+   "nocut": true
+  },
+  {
+   "line": "Who needs a hi from *you* today? Tag them.",
+   "set": "hallway",
+   "chars": [
+    {
+     "who": "leo",
+     "at": "C",
+     "face": "happy",
+     "act": "wave",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    },
+    {
+     "who": "grandpa",
+     "at": "B",
+     "face": "laugh",
+     "tag": "0",
+     "tag_color": "#ffd54f"
+    }
+   ],
+   "cam": {
+    "shot": "full",
+    "on": [
+     "leo",
+     "grandpa"
+    ],
+    "front": "scene",
+    "height": "low",
+    "move": "pull"
+   },
+   "nocut": true
+  }
+ ]
+}
